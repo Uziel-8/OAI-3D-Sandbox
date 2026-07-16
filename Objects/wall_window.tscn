@@ -1,0 +1,29 @@
+[gd_scene format=3 uid="uid://cq8ncs5pnq071"]
+
+[ext_resource type="PackedScene" uid="uid://clrx70nd8yk4d" path="res://Graphics/KayKit Dungeon/gltf/wall_archedwindow_open.gltf" id="1_j61c8"]
+
+[sub_resource type="BoxShape3D" id="BoxShape3D_3xd07"]
+size = Vector3(4, 1, 1)
+
+[sub_resource type="BoxShape3D" id="BoxShape3D_nn54l"]
+size = Vector3(4, 1.3000001, 1)
+
+[node name="WallWindow" type="Node3D" unique_id=1863010252]
+
+[node name="wall_archedwindow_open2" parent="." unique_id=260579001 instance=ExtResource("1_j61c8")]
+
+[node name="CollisionShape3D" type="CollisionShape3D" parent="." unique_id=684931032]
+transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, 0, 0.5, 0)
+shape = SubResource("BoxShape3D_3xd07")
+
+[node name="CollisionShape3D3" type="CollisionShape3D" parent="." unique_id=4221281]
+transform = Transform3D(-4.371139e-08, 1, 0, -1, -4.371139e-08, 0, 0, 0, 1, -1.5, 2, 0)
+shape = SubResource("BoxShape3D_3xd07")
+
+[node name="CollisionShape3D4" type="CollisionShape3D" parent="." unique_id=89662996]
+transform = Transform3D(-4.371139e-08, 1, 0, -1, -4.371139e-08, 0, 0, 0, 1, 1.5, 2, 0)
+shape = SubResource("BoxShape3D_3xd07")
+
+[node name="CollisionShape3D2" type="CollisionShape3D" parent="." unique_id=1385997742]
+transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, 0, 3.3500001, 0)
+shape = SubResource("BoxShape3D_nn54l")

@@ -1,0 +1,12 @@
+{
+  "permissions": {
+    "allow": [
+      "Bash(mkdir -p \"e:/GameDev/Godot/Projects/oai-3d-sandbox/Scripts/Magic\")",
+      "Bash(where godot *)",
+      "Bash(where godot4 *)"
+    ],
+    "additionalDirectories": [
+      "e:\\GameDev\\Godot\\Projects\\oai-3d-sandbox\\Scripts"
+    ]
+  }
+}

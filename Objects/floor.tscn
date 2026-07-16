@@ -1,0 +1,13 @@
+[gd_scene format=3 uid="uid://du6fbq63fqy6x"]
+
+[ext_resource type="PackedScene" uid="uid://dync5mxsh7gyj" path="res://Graphics/KayKit Dungeon/gltf/floor_wood_large_dark.gltf" id="1_aj0f1"]
+
+[sub_resource type="BoxShape3D" id="BoxShape3D_3xd07"]
+size = Vector3(4, 0.1, 4)
+
+[node name="Floor" type="StaticBody3D" unique_id=1997055678]
+
+[node name="floor_wood_large_dark2" parent="." unique_id=1664439913 instance=ExtResource("1_aj0f1")]
+
+[node name="CollisionShape3D" type="CollisionShape3D" parent="." unique_id=1026111040]
+shape = SubResource("BoxShape3D_3xd07")
