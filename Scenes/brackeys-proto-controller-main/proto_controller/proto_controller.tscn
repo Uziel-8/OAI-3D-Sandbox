@@ -2,8 +2,10 @@
 
 [ext_resource type="Script" uid="uid://vw2mmcf46ucy" path="res://Scenes/brackeys-proto-controller-main/proto_controller/proto_controller.gd" id="1_b6x57"]
 [ext_resource type="Script" uid="uid://c0314rs23apj5" path="res://Scripts/Magic/spell_caster.gd" id="2_caster"]
-[ext_resource type="Script" uid="uid://blkamiknbag62" path="res://Scripts/Magic/telekinesis_grab_spell.gd" id="3_grab"]
-[ext_resource type="Script" uid="uid://bjsqccjmod5hk" path="res://Scripts/Magic/telekinesis_push_spell.gd" id="4_push"]
+[ext_resource type="PackedScene" path="res://Scripts/Magic/telekinesis_grab_spell.tscn" id="3_grab"]
+[ext_resource type="PackedScene" path="res://Scripts/Magic/telekinesis_push_spell.tscn" id="4_push"]
+[ext_resource type="PackedScene" path="res://Scripts/Magic/fireball_spell.tscn" id="5_fireball"]
+[ext_resource type="PackedScene" path="res://Scripts/Magic/icebolt_spell.tscn" id="6_icebolt"]
 
 [sub_resource type="StandardMaterial3D" id="StandardMaterial3D_iof21"]
 albedo_color = Color(0.91806, 0.575202, 0.222449, 1)
@@ -15,63 +17,6 @@ height = 1.8
 [sub_resource type="CapsuleShape3D" id="CapsuleShape3D_iof21"]
 radius = 0.4
 height = 1.8
-
-[sub_resource type="Gradient" id="Gradient_grab_purple"]
-colors = PackedColorArray(0.75, 0.35, 1, 1, 0.35, 0.05, 0.75, 0)
-
-[sub_resource type="GradientTexture1D" id="GradientTexture1D_grab_purple"]
-gradient = SubResource("Gradient_grab_purple")
-
-[sub_resource type="ParticleProcessMaterial" id="ParticleProcessMaterial_grab"]
-emission_shape = 1
-emission_sphere_radius = 0.35
-direction = Vector3(0, 1, 0)
-spread = 60.0
-initial_velocity_min = 0.2
-initial_velocity_max = 0.6
-gravity = Vector3(0, 0.4, 0)
-scale_min = 0.4
-color_ramp = SubResource("GradientTexture1D_grab_purple")
-
-[sub_resource type="StandardMaterial3D" id="StandardMaterial3D_grab_particle"]
-transparency = 1
-shading_mode = 0
-albedo_color = Color(0.7, 0.3, 1, 0.9)
-billboard_mode = 1
-
-[sub_resource type="QuadMesh" id="QuadMesh_grab_particle"]
-material = SubResource("StandardMaterial3D_grab_particle")
-size = Vector2(0.08, 0.08)
-
-[sub_resource type="Gradient" id="Gradient_push_purple"]
-colors = PackedColorArray(0.8, 0.4, 1, 1, 0.4, 0.05, 0.8, 0)
-
-[sub_resource type="GradientTexture1D" id="GradientTexture1D_push_purple"]
-gradient = SubResource("Gradient_push_purple")
-
-[sub_resource type="ParticleProcessMaterial" id="ParticleProcessMaterial_push"]
-emission_shape = 1
-emission_sphere_radius = 0.2
-direction = Vector3(0, 0, 0)
-spread = 180.0
-initial_velocity_min = 3.0
-initial_velocity_max = 6.0
-gravity = Vector3(0, -2, 0)
-damping_min = 3.0
-damping_max = 5.0
-scale_min = 0.3
-scale_max = 0.8
-color_ramp = SubResource("GradientTexture1D_push_purple")
-
-[sub_resource type="StandardMaterial3D" id="StandardMaterial3D_push_particle"]
-transparency = 1
-shading_mode = 0
-albedo_color = Color(0.65, 0.25, 1, 0.9)
-billboard_mode = 1
-
-[sub_resource type="QuadMesh" id="QuadMesh_push_particle"]
-material = SubResource("StandardMaterial3D_push_particle")
-size = Vector2(0.1, 0.1)
 
 [node name="ProtoController" type="CharacterBody3D" unique_id=1601463080 groups=["player"]]
 script = ExtResource("1_b6x57")
@@ -107,33 +52,17 @@ transform = Transform3D(1, 0, 0, 0, 0.9396927, 0.34202018, 0, -0.34202018, 0.939
 [node name="SpellCaster" type="Node" parent="Head/SpringArm3D/Camera3D" unique_id=-367385854]
 script = ExtResource("2_caster")
 
-[node name="TelekinesisGrab" type="Node" parent="Head/SpringArm3D/Camera3D/SpellCaster" unique_id=-367385853]
-script = ExtResource("3_grab")
-max_grab_distance = 30.0
-max_hold_distance = 30.0
+[node name="TelekinesisGrab" parent="Head/SpringArm3D/Camera3D/SpellCaster" instance=ExtResource("3_grab")]
 trigger_action = "cast_primary"
 
-[node name="GrabParticles" type="GPUParticles3D" parent="Head/SpringArm3D/Camera3D/SpellCaster/TelekinesisGrab" unique_id=1337746165]
-emitting = false
-amount = 35
-lifetime = 0.8
-process_material = SubResource("ParticleProcessMaterial_grab")
-draw_pass_1 = SubResource("QuadMesh_grab_particle")
-
-[node name="TelekinesisPush" type="Node" parent="Head/SpringArm3D/Camera3D/SpellCaster" unique_id=-367385852]
-script = ExtResource("4_push")
-push_range = 15.0
-push_force = 15.0
+[node name="TelekinesisPush" parent="Head/SpringArm3D/Camera3D/SpellCaster" instance=ExtResource("4_push")]
 trigger_action = "cast_secondary"
 
-[node name="PushParticles" type="GPUParticles3D" parent="Head/SpringArm3D/Camera3D/SpellCaster/TelekinesisPush" unique_id=172762989]
-emitting = false
-amount = 50
-lifetime = 0.35
-one_shot = true
-explosiveness = 0.9
-process_material = SubResource("ParticleProcessMaterial_push")
-draw_pass_1 = SubResource("QuadMesh_push_particle")
+[node name="FireballSpell" parent="Head/SpringArm3D/Camera3D/SpellCaster" instance=ExtResource("5_fireball")]
+trigger_action = "spell_slot_3"
+
+[node name="IceboltSpell" parent="Head/SpringArm3D/Camera3D/SpellCaster" instance=ExtResource("6_icebolt")]
+trigger_action = "spell_slot_4"
 
 [node name="Crosshair" type="CanvasLayer" parent="Head/SpringArm3D/Camera3D" unique_id=692441020]
 

@@ -1,0 +1,42 @@
+[gd_scene load_steps=7 format=3]
+
+[ext_resource type="Script" uid="uid://blkamiknbag62" path="res://Scripts/Magic/telekinesis_grab_spell.gd" id="1_grab"]
+
+[sub_resource type="Gradient" id="Gradient_grab_purple"]
+colors = PackedColorArray(0.75, 0.35, 1, 1, 0.35, 0.05, 0.75, 0)
+
+[sub_resource type="GradientTexture1D" id="GradientTexture1D_grab_purple"]
+gradient = SubResource("Gradient_grab_purple")
+
+[sub_resource type="ParticleProcessMaterial" id="ParticleProcessMaterial_grab"]
+emission_shape = 1
+emission_sphere_radius = 0.35
+direction = Vector3(0, 1, 0)
+spread = 60.0
+initial_velocity_min = 0.2
+initial_velocity_max = 0.6
+gravity = Vector3(0, 0.4, 0)
+scale_min = 0.4
+color_ramp = SubResource("GradientTexture1D_grab_purple")
+
+[sub_resource type="StandardMaterial3D" id="StandardMaterial3D_grab_particle"]
+transparency = 1
+shading_mode = 0
+albedo_color = Color(0.7, 0.3, 1, 0.9)
+billboard_mode = 1
+
+[sub_resource type="QuadMesh" id="QuadMesh_grab_particle"]
+material = SubResource("StandardMaterial3D_grab_particle")
+size = Vector2(0.08, 0.08)
+
+[node name="TelekinesisGrab" type="Node"]
+script = ExtResource("1_grab")
+max_grab_distance = 30.0
+max_hold_distance = 30.0
+
+[node name="GrabParticles" type="GPUParticles3D" parent="."]
+emitting = false
+amount = 35
+lifetime = 0.8
+process_material = SubResource("ParticleProcessMaterial_grab")
+draw_pass_1 = SubResource("QuadMesh_grab_particle")

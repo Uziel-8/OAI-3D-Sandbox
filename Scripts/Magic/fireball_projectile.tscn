@@ -1,0 +1,105 @@
+[gd_scene load_steps=13 format=3]
+
+[ext_resource type="Script" path="res://Scripts/Magic/projectile.gd" id="1_proj"]
+
+[sub_resource type="SphereShape3D" id="SphereShape3D_hit"]
+radius = 0.2
+
+[sub_resource type="StandardMaterial3D" id="StandardMaterial3D_orb"]
+shading_mode = 0
+albedo_color = Color(1, 0.55, 0.15, 1)
+emission_enabled = true
+emission = Color(1, 0.4, 0.05, 1)
+emission_energy_multiplier = 3.5
+
+[sub_resource type="SphereMesh" id="SphereMesh_orb"]
+material = SubResource("StandardMaterial3D_orb")
+radius = 0.15
+height = 0.3
+
+[sub_resource type="Gradient" id="Gradient_trail"]
+colors = PackedColorArray(1, 0.7, 0.2, 1, 1, 0.25, 0.05, 0)
+
+[sub_resource type="GradientTexture1D" id="GradientTexture1D_trail"]
+gradient = SubResource("Gradient_trail")
+
+[sub_resource type="ParticleProcessMaterial" id="ParticleProcessMaterial_trail"]
+emission_shape = 1
+emission_sphere_radius = 0.06
+direction = Vector3(0, 0, 0)
+spread = 180.0
+initial_velocity_min = 0.1
+initial_velocity_max = 0.4
+gravity = Vector3(0, -0.3, 0)
+scale_min = 0.3
+scale_max = 0.7
+color_ramp = SubResource("GradientTexture1D_trail")
+
+[sub_resource type="StandardMaterial3D" id="StandardMaterial3D_trail_particle"]
+transparency = 1
+shading_mode = 0
+albedo_color = Color(1, 0.5, 0.15, 0.9)
+billboard_mode = 1
+
+[sub_resource type="QuadMesh" id="QuadMesh_trail_particle"]
+material = SubResource("StandardMaterial3D_trail_particle")
+size = Vector2(0.12, 0.12)
+
+[sub_resource type="ParticleProcessMaterial" id="ParticleProcessMaterial_impact"]
+emission_shape = 1
+emission_sphere_radius = 0.1
+direction = Vector3(0, 0, 0)
+spread = 180.0
+initial_velocity_min = 2.0
+initial_velocity_max = 5.0
+gravity = Vector3(0, -4, 0)
+scale_min = 0.3
+scale_max = 0.8
+color_ramp = SubResource("GradientTexture1D_trail")
+
+[sub_resource type="StandardMaterial3D" id="StandardMaterial3D_impact_particle"]
+transparency = 1
+shading_mode = 0
+albedo_color = Color(1, 0.6, 0.2, 0.95)
+billboard_mode = 1
+
+[sub_resource type="QuadMesh" id="QuadMesh_impact_particle"]
+material = SubResource("StandardMaterial3D_impact_particle")
+size = Vector2(0.16, 0.16)
+
+[node name="FireballProjectile" type="Area3D"]
+script = ExtResource("1_proj")
+speed = 18.0
+impact_force = 16.0
+
+[node name="CollisionShape3D" type="CollisionShape3D" parent="."]
+shape = SubResource("SphereShape3D_hit")
+
+[node name="Visual" type="Node3D" parent="."]
+
+[node name="Mesh" type="MeshInstance3D" parent="Visual"]
+cast_shadow = 0
+mesh = SubResource("SphereMesh_orb")
+
+[node name="Light" type="OmniLight3D" parent="Visual"]
+light_color = Color(1, 0.55, 0.2, 1)
+light_energy = 3.0
+shadow_enabled = false
+omni_range = 3.0
+
+[node name="Trail" type="GPUParticles3D" parent="Visual"]
+emitting = true
+amount = 40
+lifetime = 0.4
+local_coords = false
+process_material = SubResource("ParticleProcessMaterial_trail")
+draw_pass_1 = SubResource("QuadMesh_trail_particle")
+
+[node name="ImpactParticles" type="GPUParticles3D" parent="."]
+emitting = false
+one_shot = true
+explosiveness = 0.9
+amount = 40
+lifetime = 0.5
+process_material = SubResource("ParticleProcessMaterial_impact")
+draw_pass_1 = SubResource("QuadMesh_impact_particle")

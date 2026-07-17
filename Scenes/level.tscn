@@ -6,7 +6,7 @@
 [ext_resource type="PackedScene" uid="uid://cqbheaovqsylc" path="res://Objects/wall.tscn" id="4_0f350"]
 [ext_resource type="PackedScene" uid="uid://du6fbq63fqy6x" path="res://Objects/floor.tscn" id="4_81xng"]
 [ext_resource type="PackedScene" uid="uid://cq8ncs5pnq071" path="res://Objects/wall_window.tscn" id="5_8c0lf"]
-[ext_resource type="PackedScene" path="res://Enemies/SpiderWalker/spider_walker.tscn" id="7_8c0lf"]
+[ext_resource type="PackedScene" uid="uid://cx3tkq4j7pgev" path="res://Enemies/SpiderWalker/spider_walker.tscn" id="7_8c0lf"]
 
 [sub_resource type="ProceduralSkyMaterial" id="ProceduralSkyMaterial_5xgho"]
 sky_horizon_color = Color(0.66224277, 0.6717428, 0.6867428, 1)

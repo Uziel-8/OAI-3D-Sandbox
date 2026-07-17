@@ -10,6 +10,7 @@ var player: CharacterBody3D
 
 
 func _ready() -> void:
+	add_to_group("spell_caster")
 	player = get_tree().get_first_node_in_group("player")
 
 
@@ -40,3 +41,24 @@ func _physics_process(delta: float) -> void:
 			spell.end_cast()
 		elif spell.is_active:
 			spell.hold_cast(delta)
+
+
+## Equips spell_scene into the given trigger_action slot, replacing whatever
+## was equipped there (if anything). Passing null just clears the slot.
+## Used by the inventory's spellbook tab to swap spells at runtime.
+func equip_spell(trigger_action: String, spell_scene: PackedScene) -> void:
+	unequip_slot(trigger_action)
+	if spell_scene == null:
+		return
+	var spell: Spell = spell_scene.instantiate()
+	spell.trigger_action = trigger_action
+	add_child(spell)
+
+
+## Removes whatever spell currently occupies the given trigger_action slot, if any.
+func unequip_slot(trigger_action: String) -> void:
+	for child in get_children():
+		if child is Spell and child.trigger_action == trigger_action:
+			remove_child(child)
+			child.queue_free()
+			return

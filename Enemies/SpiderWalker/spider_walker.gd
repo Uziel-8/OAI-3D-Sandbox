@@ -7,6 +7,7 @@ class_name SpiderWalker
 ## runtime. No animation clips anywhere -- all leg motion is IK driven by
 ## SpiderGait (spider_gait.gd / spider_skeleton_builder.gd).
 
+@export var tag_data : TagData
 @export var move_speed: float = 2.5
 @export var turn_speed: float = 6.0
 @export var arrive_distance: float = 0.3
@@ -53,6 +54,7 @@ var _stagger_timer: float = 0.0
 func _ready() -> void:
 	# Wander is centered on wherever this instance was placed in the editor
 	# (or spawned at runtime) -- no external configuration needed.
+	print(tag_data.Tags)
 	_wander_origin = global_position
 	_wander_point = _wander_origin
 	_build_rig()

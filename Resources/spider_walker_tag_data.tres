@@ -1,0 +1,8 @@
+[gd_resource type="Resource" script_class="TagData" format=3 uid="uid://bm6d0wrai56ib"]
+
+[ext_resource type="Script" uid="uid://p3cpakyrmb8s" path="res://Resources/tag_data.gd" id="1_xkv6l"]
+
+[resource]
+script = ExtResource("1_xkv6l")
+tags = Array[int]([0, 1, 2])
+metadata/_custom_type_script = "uid://p3cpakyrmb8s"

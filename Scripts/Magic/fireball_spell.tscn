@@ -1,0 +1,45 @@
+[gd_scene load_steps=8 format=3]
+
+[ext_resource type="Script" path="res://Scripts/Magic/projectile_spell.gd" id="1_spell"]
+[ext_resource type="PackedScene" path="res://Scripts/Magic/fireball_projectile.tscn" id="2_proj"]
+
+[sub_resource type="Gradient" id="Gradient_muzzle"]
+colors = PackedColorArray(1, 0.75, 0.3, 1, 1, 0.3, 0.05, 0)
+
+[sub_resource type="GradientTexture1D" id="GradientTexture1D_muzzle"]
+gradient = SubResource("Gradient_muzzle")
+
+[sub_resource type="ParticleProcessMaterial" id="ParticleProcessMaterial_muzzle"]
+emission_shape = 1
+emission_sphere_radius = 0.15
+direction = Vector3(0, 0, 0)
+spread = 180.0
+initial_velocity_min = 1.0
+initial_velocity_max = 3.0
+gravity = Vector3(0, 0.2, 0)
+scale_min = 0.3
+scale_max = 0.7
+color_ramp = SubResource("GradientTexture1D_muzzle")
+
+[sub_resource type="StandardMaterial3D" id="StandardMaterial3D_muzzle_particle"]
+transparency = 1
+shading_mode = 0
+albedo_color = Color(1, 0.6, 0.2, 0.95)
+billboard_mode = 1
+
+[sub_resource type="QuadMesh" id="QuadMesh_muzzle_particle"]
+material = SubResource("StandardMaterial3D_muzzle_particle")
+size = Vector2(0.14, 0.14)
+
+[node name="FireballSpell" type="Node"]
+script = ExtResource("1_spell")
+projectile_scene = ExtResource("2_proj")
+
+[node name="MuzzleParticles" type="GPUParticles3D" parent="."]
+emitting = false
+one_shot = true
+explosiveness = 0.9
+amount = 20
+lifetime = 0.3
+process_material = SubResource("ParticleProcessMaterial_muzzle")
+draw_pass_1 = SubResource("QuadMesh_muzzle_particle")
