@@ -1,0 +1,103 @@
+[gd_scene load_steps=14 format=3]
+
+[ext_resource type="PackedScene" path="res://Enemies/SpiderWalker/spider_walker.tscn" id="1_spider"]
+
+[sub_resource type="ProceduralSkyMaterial" id="ProceduralSkyMaterial_1"]
+
+[sub_resource type="Sky" id="Sky_1"]
+sky_material = SubResource("ProceduralSkyMaterial_1")
+
+[sub_resource type="Environment" id="Environment_1"]
+background_mode = 2
+sky = SubResource("Sky_1")
+
+[sub_resource type="BoxShape3D" id="BoxShape3D_floor"]
+size = Vector3(24, 1, 24)
+
+[sub_resource type="BoxMesh" id="BoxMesh_floor"]
+size = Vector3(24, 1, 24)
+
+[sub_resource type="BoxShape3D" id="BoxShape3D_ramp"]
+size = Vector3(3, 0.4, 4)
+
+[sub_resource type="BoxMesh" id="BoxMesh_ramp"]
+size = Vector3(3, 0.4, 4)
+
+[sub_resource type="BoxShape3D" id="BoxShape3D_ramp2"]
+size = Vector3(3, 0.4, 3)
+
+[sub_resource type="BoxMesh" id="BoxMesh_ramp2"]
+size = Vector3(3, 0.4, 3)
+
+[sub_resource type="BoxShape3D" id="BoxShape3D_box1"]
+size = Vector3(2, 0.8, 2)
+
+[sub_resource type="BoxMesh" id="BoxMesh_box1"]
+size = Vector3(2, 0.8, 2)
+
+[sub_resource type="BoxShape3D" id="BoxShape3D_box2"]
+size = Vector3(1.5, 0.5, 1.5)
+
+[sub_resource type="BoxMesh" id="BoxMesh_box2"]
+size = Vector3(1.5, 0.5, 1.5)
+
+[node name="SpiderWalkerTest" type="Node3D"]
+
+[node name="WorldEnvironment" type="WorldEnvironment" parent="."]
+environment = SubResource("Environment_1")
+
+[node name="DirectionalLight3D" type="DirectionalLight3D" parent="."]
+transform = Transform3D(0.8137977, -0.4409696, 0.3785223, 0, 0.6499144, 0.7599422, -0.5810731, -0.6182767, 0.5288467, 0, 5, 0)
+shadow_enabled = true
+
+[node name="Camera3D" type="Camera3D" parent="."]
+transform = Transform3D(1, 0, 0, 0, 0.9063078, 0.4226183, 0, -0.4226183, 0.9063078, 0, 6, 10)
+current = true
+
+[node name="Floor" type="StaticBody3D" parent="."]
+transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, 0, -0.5, 0)
+
+[node name="CollisionShape3D" type="CollisionShape3D" parent="Floor"]
+shape = SubResource("BoxShape3D_floor")
+
+[node name="MeshInstance3D" type="MeshInstance3D" parent="Floor"]
+mesh = SubResource("BoxMesh_floor")
+
+[node name="Ramp1" type="StaticBody3D" parent="."]
+transform = Transform3D(1, 0, 0, 0, 0.9659258, 0.258819, 0, -0.258819, 0.9659258, 4, 0.2, 0)
+
+[node name="CollisionShape3D" type="CollisionShape3D" parent="Ramp1"]
+shape = SubResource("BoxShape3D_ramp")
+
+[node name="MeshInstance3D" type="MeshInstance3D" parent="Ramp1"]
+mesh = SubResource("BoxMesh_ramp")
+
+[node name="Ramp2" type="StaticBody3D" parent="."]
+transform = Transform3D(0.9396926, 0, 0.3420201, 0, 1, 0, -0.3420201, 0, 0.9396926, -4, 0.2, 3)
+
+[node name="CollisionShape3D" type="CollisionShape3D" parent="Ramp2"]
+shape = SubResource("BoxShape3D_ramp2")
+
+[node name="MeshInstance3D" type="MeshInstance3D" parent="Ramp2"]
+mesh = SubResource("BoxMesh_ramp2")
+
+[node name="Box1" type="StaticBody3D" parent="."]
+transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, 0, 0.4, -5)
+
+[node name="CollisionShape3D" type="CollisionShape3D" parent="Box1"]
+shape = SubResource("BoxShape3D_box1")
+
+[node name="MeshInstance3D" type="MeshInstance3D" parent="Box1"]
+mesh = SubResource("BoxMesh_box1")
+
+[node name="Box2" type="StaticBody3D" parent="."]
+transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, -2, 0.25, -2)
+
+[node name="CollisionShape3D" type="CollisionShape3D" parent="Box2"]
+shape = SubResource("BoxShape3D_box2")
+
+[node name="MeshInstance3D" type="MeshInstance3D" parent="Box2"]
+mesh = SubResource("BoxMesh_box2")
+
+[node name="SpiderWalker" parent="." instance=ExtResource("1_spider")]
+transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, 0, 2, 0)

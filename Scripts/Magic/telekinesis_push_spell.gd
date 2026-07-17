@@ -2,7 +2,9 @@ extends Spell
 class_name TelekinesisPushSpell
 
 ## Instant force blast: raycasts to find a point of impact, then applies a
-## radial impulse to every RigidBody3D in a small sphere around it.
+## radial impulse to everything in a small sphere around it that exposes an
+## apply_impulse() method -- RigidBody3D has this built in; other actors
+## (e.g. SpiderWalker) can opt in by implementing the same method/signature.
 
 @export var push_range: float = 8.0
 @export var push_radius: float = 1.75
@@ -38,7 +40,7 @@ func start_cast() -> void:
 	var hits := cam.get_world_3d().direct_space_state.intersect_shape(shape_query, 16)
 	for hit in hits:
 		var body: Node = hit.collider
-		if not (body is RigidBody3D):
+		if not body.has_method("apply_impulse"):
 			continue
 		var offset = body.global_position - origin
 		var dir = offset.normalized() if offset.length() > 0.01 else -cam.global_transform.basis.z

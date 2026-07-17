@@ -1,0 +1,47 @@
+[gd_scene load_steps=5 format=3]
+
+[ext_resource type="Script" path="res://Enemies/SpiderWalker/spider_walker.gd" id="1_walker"]
+[ext_resource type="Script" path="res://Enemies/SpiderWalker/spider_skeleton_builder.gd" id="2_skel"]
+[ext_resource type="Script" path="res://Enemies/SpiderWalker/spider_gait.gd" id="3_gait"]
+
+[sub_resource type="CapsuleShape3D" id="CapsuleShape3D_body"]
+radius = 0.35
+height = 1.1
+
+[node name="SpiderWalker" type="CharacterBody3D"]
+script = ExtResource("1_walker")
+
+[node name="CollisionShape3D" type="CollisionShape3D" parent="."]
+shape = SubResource("CapsuleShape3D_body")
+
+[node name="Visual" type="Node3D" parent="."]
+
+[node name="Skeleton3D" type="Skeleton3D" parent="Visual"]
+script = ExtResource("2_skel")
+
+[node name="FootTargets" type="Node3D" parent="."]
+
+[node name="FootTarget0" type="Marker3D" parent="FootTargets"]
+
+[node name="FootTarget1" type="Marker3D" parent="FootTargets"]
+
+[node name="FootTarget2" type="Marker3D" parent="FootTargets"]
+
+[node name="FootTarget3" type="Marker3D" parent="FootTargets"]
+
+[node name="Legs" type="Node3D" parent="."]
+
+[node name="RayCast0" type="RayCast3D" parent="Legs"]
+target_position = Vector3(0, -3, 0)
+
+[node name="RayCast1" type="RayCast3D" parent="Legs"]
+target_position = Vector3(0, -3, 0)
+
+[node name="RayCast2" type="RayCast3D" parent="Legs"]
+target_position = Vector3(0, -3, 0)
+
+[node name="RayCast3" type="RayCast3D" parent="Legs"]
+target_position = Vector3(0, -3, 0)
+
+[node name="GaitController" type="Node" parent="."]
+script = ExtResource("3_gait")
