@@ -4,6 +4,9 @@
 [ext_resource type="Resource" uid="uid://bm6d0wrai56ib" path="res://Resources/spider_walker_tag_data.tres" id="2_k16aq"]
 [ext_resource type="Script" uid="uid://crbt7dm7unehv" path="res://Enemies/SpiderWalker/spider_skeleton_builder.gd" id="2_skel"]
 [ext_resource type="Script" uid="uid://dsii286ydx0he" path="res://Enemies/SpiderWalker/spider_gait.gd" id="3_gait"]
+[ext_resource type="PackedScene" uid="uid://4ba3dst1sxrk" path="res://Components/damage_dealer.tscn" id="4_dealer"]
+[ext_resource type="PackedScene" uid="uid://dvito1lehljda" path="res://Components/damage_receiver.tscn" id="5_receiver"]
+[ext_resource type="PackedScene" path="res://Components/health_bar_3d.tscn" id="6_healthbar"]
 
 [sub_resource type="CapsuleShape3D" id="CapsuleShape3D_body"]
 radius = 0.35
@@ -47,3 +50,14 @@ target_position = Vector3(0, -3, 0)
 
 [node name="GaitController" type="Node" parent="." unique_id=79954975]
 script = ExtResource("3_gait")
+
+[node name="DamageDealer" parent="." instance=ExtResource("4_dealer")]
+damage = 10.0
+cooldown = 1.0
+
+[node name="DamageReceiver" parent="." instance=ExtResource("5_receiver")]
+max_health = 50.0
+xp_reward = 25.0
+
+[node name="HealthBar3D" parent="." instance=ExtResource("6_healthbar")]
+transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, 0, 1.1, 0)

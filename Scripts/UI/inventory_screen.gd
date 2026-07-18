@@ -12,14 +12,14 @@ const SlotScene := preload("res://Scenes/UI/inventory_slot.tscn")
 const SpellSlotScene := preload("res://Scenes/UI/spell_slot.tscn")
 
 ## NOTE: nodes that are themselves PackedScene instances (InventorySlot/SpellSlot/
-## ItemTooltip) are looked up by explicit $path, not %unique_name -- Godot 4.7.1
-## corrupts sibling parent-resolution when unique_name_in_owner is set as a
-## property override on an *instanced* node (reproduced in isolation; every
-## node after the first such instance silently gets flattened onto the scene
-## root during PackedScene::instantiate()). Plain built-in node types are
-## unaffected and keep using %unique_name as normal.
-const _CHAR_PATH := "Center/Frame/Tabs/Inventory/CharacterPanel/CharVBox/PaperDollCenter/PaperDoll/"
-const _SPELL_PATH := "Center/Frame/Tabs/Spellbook/LoadoutPanel/LoadoutVBox/"
+## ItemTooltip) are looked up by explicit $path, not %unique_name, per the
+## Godot 4.7.1 gotcha in CLAUDE.md. Plain built-in node types use %unique_name
+## as normal. (A "vanished parent" cascade hit this file once before -- that
+## turned out to be a stale parent= path left over from wrapping Header/Tabs
+## in a new Layout container, not an engine bug. Verify paths against actual
+## node nesting before assuming unique_name_in_owner is at fault again.)
+const _CHAR_PATH := "Center/Frame/Layout/Tabs/Inventory/CharacterPanel/CharVBox/PaperDollCenter/PaperDoll/"
+const _SPELL_PATH := "Center/Frame/Layout/Tabs/Spellbook/LoadoutPanel/LoadoutVBox/"
 
 @onready var _item_grid: GridContainer = %ItemGrid
 @onready var _weight_bar: ProgressBar = %WeightBar
@@ -27,6 +27,15 @@ const _SPELL_PATH := "Center/Frame/Tabs/Spellbook/LoadoutPanel/LoadoutVBox/"
 @onready var _armor_value_label: Label = %ArmorValueLabel
 @onready var _close_button: Button = %CloseButton
 @onready var _spell_grid: GridContainer = %SpellGrid
+
+@onready var _level_label: Label = %LevelLabel
+@onready var _xp_bar: ProgressBar = %XPBar
+@onready var _xp_label: Label = %XPLabel
+@onready var _points_label: Label = %PointsLabel
+@onready var _attributes_grid: GridContainer = %Attributes
+@onready var _cs_health_bar: ProgressBar = %HealthBar
+@onready var _cs_mana_bar: ProgressBar = %ManaBar
+@onready var _cs_stamina_bar: ProgressBar = %StaminaBar
 
 @onready var _tooltip: ItemTooltip = $Tooltip
 
@@ -58,6 +67,7 @@ func _ready() -> void:
 	on_inventory_changed()
 	_populate_spellbook()
 	_connect_loadout_slots()
+	_setup_progression()
 
 func _unhandled_input(event: InputEvent) -> void:
 	if event.is_action_pressed("inventory"):
@@ -76,6 +86,9 @@ func toggle() -> void:
 func open() -> void:
 	is_open = true
 	visible = true
+	_refresh_character_stats()
+	_refresh_progression()
+	_set_hud_visible(false)
 	get_tree().paused = true
 	Input.mouse_mode = Input.MOUSE_MODE_VISIBLE
 
@@ -83,8 +96,29 @@ func close() -> void:
 	is_open = false
 	visible = false
 	_tooltip.hide_tooltip()
+	_set_hud_visible(true)
 	get_tree().paused = false
 	Input.mouse_mode = Input.MOUSE_MODE_CAPTURED
+
+func _set_hud_visible(shown: bool) -> void:
+	var hud := get_tree().get_first_node_in_group("hud")
+	if hud and hud.has_method("set_hud_visible"):
+		hud.set_hud_visible(shown)
+
+## Pulls the character-sheet vitals from the real sources (player DamageReceiver
+## for health, PlayerState for mana/stamina). Called on open; values can't change
+## while the sheet is up since opening pauses the tree.
+func _refresh_character_stats() -> void:
+	var receiver := get_tree().get_first_node_in_group("player_health") as DamageReceiver
+	if receiver:
+		_cs_health_bar.max_value = receiver.max_health
+		_cs_health_bar.value = receiver.health
+	var state := get_node_or_null("/root/PlayerState")
+	if state:
+		_cs_mana_bar.max_value = state.max_mana
+		_cs_mana_bar.value = state.mana
+		_cs_stamina_bar.max_value = state.max_stamina
+		_cs_stamina_bar.value = state.stamina
 
 func _build_grid() -> void:
 	for i in range(GRID_COLUMNS * GRID_ROWS):
@@ -235,3 +269,87 @@ func _on_loadout_spell_changed(slot: SpellSlot) -> void:
 		return
 	var scene: PackedScene = slot.spell.scene if slot.spell else null
 	caster.equip_spell(slot.trigger_action, scene)
+
+# --- Progression (XP / level / attribute allocation) ---------------------------
+# Character-sheet display for the PlayerProgression autoload. Attribute rows are
+# built here from progression.ATTRIBUTES rather than hand-placed in the scene, so
+# the source of truth for which attributes exist lives in one place.
+
+const _ATTR_DISPLAY_NAMES := {
+	"STR": "Strength", "DEX": "Dexterity", "INT": "Intellect",
+	"VIT": "Vitality", "LUK": "Luck",
+}
+
+var _attr_value_labels: Dictionary = {}
+var _attr_plus_buttons: Dictionary = {}
+
+func _progression() -> ProgressionSystem:
+	return get_node_or_null("/root/PlayerProgression") as ProgressionSystem
+
+func _setup_progression() -> void:
+	var prog := _progression()
+	if prog == null:
+		return
+	_build_attribute_rows(prog)
+	prog.experience_gained.connect(_on_progression_changed.unbind(3))
+	prog.leveled_up.connect(_on_progression_changed.unbind(3))
+	prog.points_changed.connect(_on_progression_changed.unbind(2))
+	prog.attribute_changed.connect(_on_attribute_value_changed)
+	_refresh_progression()
+
+func _build_attribute_rows(prog: ProgressionSystem) -> void:
+	for child in _attributes_grid.get_children():
+		child.queue_free()
+	_attr_value_labels.clear()
+	_attr_plus_buttons.clear()
+	for attr in prog.ATTRIBUTES:
+		var name_label := Label.new()
+		name_label.text = _ATTR_DISPLAY_NAMES.get(attr, attr)
+		name_label.add_theme_color_override("font_color", Color(0.65, 0.62, 0.58))
+		name_label.add_theme_font_size_override("font_size", 13)
+
+		var value_label := Label.new()
+		value_label.text = str(prog.attributes[attr])
+		value_label.custom_minimum_size = Vector2(32, 0)
+		value_label.add_theme_font_size_override("font_size", 13)
+
+		var plus := Button.new()
+		plus.text = "+"
+		plus.custom_minimum_size = Vector2(30, 0)
+		plus.focus_mode = Control.FOCUS_NONE
+		plus.pressed.connect(_on_attribute_plus_pressed.bind(attr))
+
+		_attributes_grid.add_child(name_label)
+		_attributes_grid.add_child(value_label)
+		_attributes_grid.add_child(plus)
+		_attr_value_labels[attr] = value_label
+		_attr_plus_buttons[attr] = plus
+
+func _on_attribute_plus_pressed(attribute: String) -> void:
+	var prog := _progression()
+	if prog:
+		prog.spend_attribute_point(attribute)
+
+func _on_progression_changed() -> void:
+	_refresh_progression()
+
+func _on_attribute_value_changed(attribute: String, value: int) -> void:
+	if _attr_value_labels.has(attribute):
+		_attr_value_labels[attribute].text = str(value)
+
+func _refresh_progression() -> void:
+	var prog := _progression()
+	if prog == null:
+		return
+	var to_next := prog.xp_to_next()
+	_level_label.text = "Level %d  •  Vagrant" % prog.level
+	_xp_bar.max_value = to_next
+	_xp_bar.value = prog.current_xp
+	_xp_label.text = "%d / %d XP" % [int(prog.current_xp), int(to_next)]
+	_points_label.text = "Attribute Points: %d      Skill Points: %d" % [prog.attribute_points, prog.skill_points]
+	_points_label.visible = prog.attribute_points > 0 or prog.skill_points > 0
+	for attr in _attr_value_labels:
+		_attr_value_labels[attr].text = str(prog.attributes[attr])
+	# Allocation buttons only appear when there are points to spend.
+	for attr in _attr_plus_buttons:
+		_attr_plus_buttons[attr].visible = prog.attribute_points > 0

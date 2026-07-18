@@ -1,0 +1,37 @@
+[gd_scene load_steps=6 format=3]
+
+[ext_resource type="Script" path="res://Components/health_bar_3d.gd" id="1_hb"]
+
+[sub_resource type="QuadMesh" id="QuadMesh_bg"]
+size = Vector2(0.9, 0.12)
+
+[sub_resource type="StandardMaterial3D" id="Mat_bg"]
+transparency = 1
+shading_mode = 0
+albedo_color = Color(0.04, 0.04, 0.05, 0.85)
+cull_mode = 2
+no_depth_test = true
+
+[sub_resource type="QuadMesh" id="QuadMesh_fill"]
+size = Vector2(0.9, 0.12)
+
+[sub_resource type="StandardMaterial3D" id="Mat_fill"]
+shading_mode = 0
+albedo_color = Color(0.35, 0.8, 0.3, 1)
+cull_mode = 2
+no_depth_test = true
+render_priority = 1
+
+[node name="HealthBar3D" type="Node3D"]
+script = ExtResource("1_hb")
+
+[node name="Background" type="MeshInstance3D" parent="."]
+cast_shadow = 0
+mesh = SubResource("QuadMesh_bg")
+material_override = SubResource("Mat_bg")
+
+[node name="Fill" type="MeshInstance3D" parent="."]
+transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, 0, 0, 0.01)
+cast_shadow = 0
+mesh = SubResource("QuadMesh_fill")
+surface_material_override/0 = SubResource("Mat_fill")

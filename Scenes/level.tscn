@@ -48,6 +48,22 @@ transform = Transform3D(-2, 0, 3.019916e-07, 0, 2, 0, -3.019916e-07, 0, -2, 27.7
 transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, 0, 2.4645534, -7.202213)
 chase_player = true
 
+[node name="SpiderWalker2" parent="." unique_id=1466709724 instance=ExtResource("7_8c0lf")]
+transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, -1.9000006, 2.764554, -15.202213)
+chase_player = true
+
+[node name="SpiderWalker3" parent="." unique_id=435179433 instance=ExtResource("7_8c0lf")]
+transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, -7.9000006, 1.5645533, -18.702213)
+chase_player = true
+
+[node name="SpiderWalker4" parent="." unique_id=1003662317 instance=ExtResource("7_8c0lf")]
+transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, -5.8000007, 2.4645538, -18.102213)
+chase_player = true
+
+[node name="SpiderWalker5" parent="." unique_id=657044591 instance=ExtResource("7_8c0lf")]
+transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, -5.9000006, 3.764553, -14.702213)
+chase_player = true
+
 [node name="Barrels" type="Node3D" parent="." unique_id=1249771163]
 
 [node name="Barrel" parent="Barrels" unique_id=1793100144 instance=ExtResource("3_wqkje")]

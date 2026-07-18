@@ -1,4 +1,4 @@
-[gd_resource type="Theme" format=3]
+[gd_resource type="Theme" format=3 uid="uid://dscwnj6lasakq"]
 
 [sub_resource type="StyleBoxFlat" id="StyleBoxFlat_button_normal"]
 content_margin_left = 12.0
@@ -50,39 +50,6 @@ corner_radius_bottom_left = 6
 
 [sub_resource type="StyleBoxEmpty" id="StyleBoxEmpty_sep"]
 
-[sub_resource type="StyleBoxEmpty" id="StyleBoxEmpty_tab_panel"]
-
-[sub_resource type="StyleBoxFlat" id="StyleBoxFlat_tab_selected"]
-content_margin_left = 18.0
-content_margin_top = 8.0
-content_margin_right = 18.0
-content_margin_bottom = 8.0
-bg_color = Color(0.13, 0.11, 0.08, 0.95)
-border_width_left = 1
-border_width_top = 1
-border_width_right = 1
-border_color = Color(0.78, 0.62, 0.32, 0.9)
-corner_radius_top_left = 8
-corner_radius_top_right = 8
-
-[sub_resource type="StyleBoxFlat" id="StyleBoxFlat_tab_unselected"]
-content_margin_left = 18.0
-content_margin_top = 8.0
-content_margin_right = 18.0
-content_margin_bottom = 8.0
-bg_color = Color(0.07, 0.065, 0.075, 0.7)
-corner_radius_top_left = 8
-corner_radius_top_right = 8
-
-[sub_resource type="StyleBoxFlat" id="StyleBoxFlat_tab_hovered"]
-content_margin_left = 18.0
-content_margin_top = 8.0
-content_margin_right = 18.0
-content_margin_bottom = 8.0
-bg_color = Color(0.1, 0.09, 0.09, 0.85)
-corner_radius_top_left = 8
-corner_radius_top_right = 8
-
 [sub_resource type="StyleBoxFlat" id="StyleBoxFlat_subpanel"]
 content_margin_left = 16.0
 content_margin_top = 14.0
@@ -113,6 +80,39 @@ corner_radius_top_right = 4
 corner_radius_bottom_right = 4
 corner_radius_bottom_left = 4
 
+[sub_resource type="StyleBoxFlat" id="StyleBoxFlat_tab_hovered"]
+content_margin_left = 18.0
+content_margin_top = 8.0
+content_margin_right = 18.0
+content_margin_bottom = 8.0
+bg_color = Color(0.1, 0.09, 0.09, 0.85)
+corner_radius_top_left = 8
+corner_radius_top_right = 8
+
+[sub_resource type="StyleBoxFlat" id="StyleBoxFlat_tab_selected"]
+content_margin_left = 18.0
+content_margin_top = 8.0
+content_margin_right = 18.0
+content_margin_bottom = 8.0
+bg_color = Color(0.13, 0.11, 0.08, 0.95)
+border_width_left = 1
+border_width_top = 1
+border_width_right = 1
+border_color = Color(0.78, 0.62, 0.32, 0.9)
+corner_radius_top_left = 8
+corner_radius_top_right = 8
+
+[sub_resource type="StyleBoxFlat" id="StyleBoxFlat_tab_unselected"]
+content_margin_left = 18.0
+content_margin_top = 8.0
+content_margin_right = 18.0
+content_margin_bottom = 8.0
+bg_color = Color(0.07, 0.065, 0.075, 0.7)
+corner_radius_top_left = 8
+corner_radius_top_right = 8
+
+[sub_resource type="StyleBoxEmpty" id="StyleBoxEmpty_tab_panel"]
+
 [resource]
 default_font_size = 16
 Button/colors/font_color = Color(0.88, 0.85, 0.8, 1)
@@ -130,13 +130,13 @@ PanelContainer/styles/panel = SubResource("StyleBoxFlat_subpanel")
 ProgressBar/colors/font_color = Color(0.92, 0.9, 0.85, 1)
 ProgressBar/styles/background = SubResource("StyleBoxFlat_progress_bg")
 ProgressBar/styles/fill = SubResource("StyleBoxFlat_progress_fill")
+TabBar/colors/font_hovered_color = Color(0.85, 0.8, 0.7, 1)
 TabBar/colors/font_selected_color = Color(0.95, 0.86, 0.6, 1)
 TabBar/colors/font_unselected_color = Color(0.6, 0.58, 0.55, 1)
-TabBar/colors/font_hovered_color = Color(0.85, 0.8, 0.7, 1)
 TabBar/font_sizes/font_size = 15
+TabBar/styles/tab_hovered = SubResource("StyleBoxFlat_tab_hovered")
 TabBar/styles/tab_selected = SubResource("StyleBoxFlat_tab_selected")
 TabBar/styles/tab_unselected = SubResource("StyleBoxFlat_tab_unselected")
-TabBar/styles/tab_hovered = SubResource("StyleBoxFlat_tab_hovered")
 TabContainer/styles/panel = SubResource("StyleBoxEmpty_tab_panel")
 TabContainer/styles/tabbar_background = SubResource("StyleBoxEmpty_tab_panel")
 VSeparator/styles/separator = SubResource("StyleBoxEmpty_sep")

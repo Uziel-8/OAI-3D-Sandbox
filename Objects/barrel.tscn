@@ -1,6 +1,7 @@
 [gd_scene format=3 uid="uid://b3mxd4md0rime"]
 
 [ext_resource type="PackedScene" uid="uid://b8rm8yy3l0ci0" path="res://Graphics/Pirate/barrel.glb" id="1_sfr48"]
+[ext_resource type="PackedScene" uid="uid://dvito1lehljda" path="res://Components/damage_receiver.tscn" id="2_receiver"]
 
 [sub_resource type="CapsuleShape3D" id="CapsuleShape3D_3xd07"]
 radius = 0.3
@@ -13,3 +14,6 @@ height = 0.6875
 [node name="CollisionShape3D" type="CollisionShape3D" parent="." unique_id=792436158]
 transform = Transform3D(2, 0, 0, 0, 2, 0, 0, 0, 2, 0, 0.6125002, 0)
 shape = SubResource("CapsuleShape3D_3xd07")
+
+[node name="DamageReceiver" parent="." instance=ExtResource("2_receiver")]
+max_health = 20.0

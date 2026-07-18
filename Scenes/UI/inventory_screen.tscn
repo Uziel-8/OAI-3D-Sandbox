@@ -128,46 +128,71 @@ layout_mode = 2
 layout_mode = 2
 size_flags_vertical = 3
 
-[node name="Inventory" type="HBoxContainer" parent="Screen/Center/Frame/Tabs"]
+[node name="Inventory" type="HBoxContainer" parent="Screen/Center/Frame/Layout/Tabs"]
 layout_mode = 2
 theme_override_constants/separation = 20
 
-[node name="CharacterPanel" type="PanelContainer" parent="Screen/Center/Frame/Tabs/Inventory"]
+[node name="CharacterPanel" type="PanelContainer" parent="Screen/Center/Frame/Layout/Tabs/Inventory"]
 layout_mode = 2
 custom_minimum_size = Vector2(420, 0)
 
-[node name="CharVBox" type="VBoxContainer" parent="Screen/Center/Frame/Tabs/Inventory/CharacterPanel"]
+[node name="CharVBox" type="VBoxContainer" parent="Screen/Center/Frame/Layout/Tabs/Inventory/CharacterPanel"]
 layout_mode = 2
 theme_override_constants/separation = 10
 
-[node name="CharacterName" type="Label" parent="Screen/Center/Frame/Tabs/Inventory/CharacterPanel/CharVBox"]
+[node name="CharacterName" type="Label" parent="Screen/Center/Frame/Layout/Tabs/Inventory/CharacterPanel/CharVBox"]
 layout_mode = 2
 theme_override_font_sizes/font_size = 22
 text = "Wanderer"
 
-[node name="LevelLabel" type="Label" parent="Screen/Center/Frame/Tabs/Inventory/CharacterPanel/CharVBox"]
+[node name="LevelLabel" type="Label" parent="Screen/Center/Frame/Layout/Tabs/Inventory/CharacterPanel/CharVBox"]
+unique_name_in_owner = true
 layout_mode = 2
 theme_override_colors/font_color = Color(0.65, 0.62, 0.58, 1)
 theme_override_font_sizes/font_size = 14
 text = "Level 1  •  Vagrant"
 
-[node name="Sep2" type="HSeparator" parent="Screen/Center/Frame/Tabs/Inventory/CharacterPanel/CharVBox"]
+[node name="XPBar" type="ProgressBar" parent="Screen/Center/Frame/Layout/Tabs/Inventory/CharacterPanel/CharVBox"]
+unique_name_in_owner = true
+layout_mode = 2
+custom_minimum_size = Vector2(0, 10)
+max_value = 100.0
+value = 0.0
+show_percentage = false
+
+[node name="XPLabel" type="Label" parent="Screen/Center/Frame/Layout/Tabs/Inventory/CharacterPanel/CharVBox"]
+unique_name_in_owner = true
+layout_mode = 2
+theme_override_colors/font_color = Color(0.65, 0.62, 0.58, 1)
+theme_override_font_sizes/font_size = 12
+text = "0 / 100 XP"
+
+[node name="PointsLabel" type="Label" parent="Screen/Center/Frame/Layout/Tabs/Inventory/CharacterPanel/CharVBox"]
+unique_name_in_owner = true
+visible = false
+layout_mode = 2
+theme_override_colors/font_color = Color(0.95, 0.82, 0.45, 1)
+theme_override_font_sizes/font_size = 13
+text = "Attribute Points: 0      Skill Points: 0"
+
+[node name="Sep2" type="HSeparator" parent="Screen/Center/Frame/Layout/Tabs/Inventory/CharacterPanel/CharVBox"]
 layout_mode = 2
 
-[node name="StatsBars" type="VBoxContainer" parent="Screen/Center/Frame/Tabs/Inventory/CharacterPanel/CharVBox"]
+[node name="StatsBars" type="VBoxContainer" parent="Screen/Center/Frame/Layout/Tabs/Inventory/CharacterPanel/CharVBox"]
 layout_mode = 2
 theme_override_constants/separation = 6
 
-[node name="HealthRow" type="HBoxContainer" parent="Screen/Center/Frame/Tabs/Inventory/CharacterPanel/CharVBox/StatsBars"]
+[node name="HealthRow" type="HBoxContainer" parent="Screen/Center/Frame/Layout/Tabs/Inventory/CharacterPanel/CharVBox/StatsBars"]
 layout_mode = 2
 
-[node name="HealthLabel" type="Label" parent="Screen/Center/Frame/Tabs/Inventory/CharacterPanel/CharVBox/StatsBars/HealthRow"]
+[node name="HealthLabel" type="Label" parent="Screen/Center/Frame/Layout/Tabs/Inventory/CharacterPanel/CharVBox/StatsBars/HealthRow"]
 layout_mode = 2
 custom_minimum_size = Vector2(70, 0)
 theme_override_font_sizes/font_size = 13
 text = "Health"
 
-[node name="HealthBar" type="ProgressBar" parent="Screen/Center/Frame/Tabs/Inventory/CharacterPanel/CharVBox/StatsBars/HealthRow"]
+[node name="HealthBar" type="ProgressBar" parent="Screen/Center/Frame/Layout/Tabs/Inventory/CharacterPanel/CharVBox/StatsBars/HealthRow"]
+unique_name_in_owner = true
 layout_mode = 2
 size_flags_horizontal = 3
 custom_minimum_size = Vector2(0, 16)
@@ -175,16 +200,17 @@ max_value = 100.0
 value = 82.0
 show_percentage = false
 
-[node name="StaminaRow" type="HBoxContainer" parent="Screen/Center/Frame/Tabs/Inventory/CharacterPanel/CharVBox/StatsBars"]
+[node name="StaminaRow" type="HBoxContainer" parent="Screen/Center/Frame/Layout/Tabs/Inventory/CharacterPanel/CharVBox/StatsBars"]
 layout_mode = 2
 
-[node name="StaminaLabel" type="Label" parent="Screen/Center/Frame/Tabs/Inventory/CharacterPanel/CharVBox/StatsBars/StaminaRow"]
+[node name="StaminaLabel" type="Label" parent="Screen/Center/Frame/Layout/Tabs/Inventory/CharacterPanel/CharVBox/StatsBars/StaminaRow"]
 layout_mode = 2
 custom_minimum_size = Vector2(70, 0)
 theme_override_font_sizes/font_size = 13
 text = "Stamina"
 
-[node name="StaminaBar" type="ProgressBar" parent="Screen/Center/Frame/Tabs/Inventory/CharacterPanel/CharVBox/StatsBars/StaminaRow"]
+[node name="StaminaBar" type="ProgressBar" parent="Screen/Center/Frame/Layout/Tabs/Inventory/CharacterPanel/CharVBox/StatsBars/StaminaRow"]
+unique_name_in_owner = true
 layout_mode = 2
 size_flags_horizontal = 3
 custom_minimum_size = Vector2(0, 16)
@@ -193,16 +219,17 @@ max_value = 100.0
 value = 70.0
 show_percentage = false
 
-[node name="ManaRow" type="HBoxContainer" parent="Screen/Center/Frame/Tabs/Inventory/CharacterPanel/CharVBox/StatsBars"]
+[node name="ManaRow" type="HBoxContainer" parent="Screen/Center/Frame/Layout/Tabs/Inventory/CharacterPanel/CharVBox/StatsBars"]
 layout_mode = 2
 
-[node name="ManaLabel" type="Label" parent="Screen/Center/Frame/Tabs/Inventory/CharacterPanel/CharVBox/StatsBars/ManaRow"]
+[node name="ManaLabel" type="Label" parent="Screen/Center/Frame/Layout/Tabs/Inventory/CharacterPanel/CharVBox/StatsBars/ManaRow"]
 layout_mode = 2
 custom_minimum_size = Vector2(70, 0)
 theme_override_font_sizes/font_size = 13
 text = "Mana"
 
-[node name="ManaBar" type="ProgressBar" parent="Screen/Center/Frame/Tabs/Inventory/CharacterPanel/CharVBox/StatsBars/ManaRow"]
+[node name="ManaBar" type="ProgressBar" parent="Screen/Center/Frame/Layout/Tabs/Inventory/CharacterPanel/CharVBox/StatsBars/ManaRow"]
+unique_name_in_owner = true
 layout_mode = 2
 size_flags_horizontal = 3
 custom_minimum_size = Vector2(0, 16)
@@ -211,94 +238,44 @@ max_value = 100.0
 value = 45.0
 show_percentage = false
 
-[node name="Sep3" type="HSeparator" parent="Screen/Center/Frame/Tabs/Inventory/CharacterPanel/CharVBox"]
+[node name="Sep3" type="HSeparator" parent="Screen/Center/Frame/Layout/Tabs/Inventory/CharacterPanel/CharVBox"]
 layout_mode = 2
 
-[node name="Attributes" type="GridContainer" parent="Screen/Center/Frame/Tabs/Inventory/CharacterPanel/CharVBox"]
+[node name="Attributes" type="GridContainer" parent="Screen/Center/Frame/Layout/Tabs/Inventory/CharacterPanel/CharVBox"]
+unique_name_in_owner = true
 layout_mode = 2
 theme_override_constants/h_separation = 18
 theme_override_constants/v_separation = 6
-columns = 2
+columns = 3
 
-[node name="STRLabel" type="Label" parent="Screen/Center/Frame/Tabs/Inventory/CharacterPanel/CharVBox/Attributes"]
+[node name="ArmorRow" type="HBoxContainer" parent="Screen/Center/Frame/Layout/Tabs/Inventory/CharacterPanel/CharVBox"]
 layout_mode = 2
-theme_override_colors/font_color = Color(0.65, 0.62, 0.58, 1)
-theme_override_font_sizes/font_size = 13
-text = "Strength"
+theme_override_constants/separation = 18
 
-[node name="STRValue" type="Label" parent="Screen/Center/Frame/Tabs/Inventory/CharacterPanel/CharVBox/Attributes"]
-layout_mode = 2
-theme_override_font_sizes/font_size = 13
-text = "12"
-
-[node name="DEXLabel" type="Label" parent="Screen/Center/Frame/Tabs/Inventory/CharacterPanel/CharVBox/Attributes"]
-layout_mode = 2
-theme_override_colors/font_color = Color(0.65, 0.62, 0.58, 1)
-theme_override_font_sizes/font_size = 13
-text = "Dexterity"
-
-[node name="DEXValue" type="Label" parent="Screen/Center/Frame/Tabs/Inventory/CharacterPanel/CharVBox/Attributes"]
-layout_mode = 2
-theme_override_font_sizes/font_size = 13
-text = "10"
-
-[node name="INTLabel" type="Label" parent="Screen/Center/Frame/Tabs/Inventory/CharacterPanel/CharVBox/Attributes"]
-layout_mode = 2
-theme_override_colors/font_color = Color(0.65, 0.62, 0.58, 1)
-theme_override_font_sizes/font_size = 13
-text = "Intellect"
-
-[node name="INTValue" type="Label" parent="Screen/Center/Frame/Tabs/Inventory/CharacterPanel/CharVBox/Attributes"]
-layout_mode = 2
-theme_override_font_sizes/font_size = 13
-text = "8"
-
-[node name="VITLabel" type="Label" parent="Screen/Center/Frame/Tabs/Inventory/CharacterPanel/CharVBox/Attributes"]
-layout_mode = 2
-theme_override_colors/font_color = Color(0.65, 0.62, 0.58, 1)
-theme_override_font_sizes/font_size = 13
-text = "Vitality"
-
-[node name="VITValue" type="Label" parent="Screen/Center/Frame/Tabs/Inventory/CharacterPanel/CharVBox/Attributes"]
-layout_mode = 2
-theme_override_font_sizes/font_size = 13
-text = "14"
-
-[node name="LUKLabel" type="Label" parent="Screen/Center/Frame/Tabs/Inventory/CharacterPanel/CharVBox/Attributes"]
-layout_mode = 2
-theme_override_colors/font_color = Color(0.65, 0.62, 0.58, 1)
-theme_override_font_sizes/font_size = 13
-text = "Luck"
-
-[node name="LUKValue" type="Label" parent="Screen/Center/Frame/Tabs/Inventory/CharacterPanel/CharVBox/Attributes"]
-layout_mode = 2
-theme_override_font_sizes/font_size = 13
-text = "9"
-
-[node name="ArmorLabel" type="Label" parent="Screen/Center/Frame/Tabs/Inventory/CharacterPanel/CharVBox/Attributes"]
+[node name="ArmorLabel" type="Label" parent="Screen/Center/Frame/Layout/Tabs/Inventory/CharacterPanel/CharVBox/ArmorRow"]
 layout_mode = 2
 theme_override_colors/font_color = Color(0.65, 0.62, 0.58, 1)
 theme_override_font_sizes/font_size = 13
 text = "Armor"
 
-[node name="ArmorValueLabel" type="Label" parent="Screen/Center/Frame/Tabs/Inventory/CharacterPanel/CharVBox/Attributes"]
+[node name="ArmorValueLabel" type="Label" parent="Screen/Center/Frame/Layout/Tabs/Inventory/CharacterPanel/CharVBox/ArmorRow"]
 unique_name_in_owner = true
 layout_mode = 2
 theme_override_font_sizes/font_size = 13
 text = "0"
 
-[node name="Sep4" type="HSeparator" parent="Screen/Center/Frame/Tabs/Inventory/CharacterPanel/CharVBox"]
+[node name="Sep4" type="HSeparator" parent="Screen/Center/Frame/Layout/Tabs/Inventory/CharacterPanel/CharVBox"]
 layout_mode = 2
 
-[node name="PaperDollCenter" type="CenterContainer" parent="Screen/Center/Frame/Tabs/Inventory/CharacterPanel/CharVBox"]
+[node name="PaperDollCenter" type="CenterContainer" parent="Screen/Center/Frame/Layout/Tabs/Inventory/CharacterPanel/CharVBox"]
 layout_mode = 2
 size_flags_vertical = 3
 
-[node name="PaperDoll" type="Control" parent="Screen/Center/Frame/Tabs/Inventory/CharacterPanel/CharVBox/PaperDollCenter"]
+[node name="PaperDoll" type="Control" parent="Screen/Center/Frame/Layout/Tabs/Inventory/CharacterPanel/CharVBox/PaperDollCenter"]
 layout_mode = 2
 custom_minimum_size = Vector2(380, 400)
 
-[node name="HeadShape" type="Panel" parent="Screen/Center/Frame/Tabs/Inventory/CharacterPanel/CharVBox/PaperDollCenter/PaperDoll"]
+[node name="HeadShape" type="Panel" parent="Screen/Center/Frame/Layout/Tabs/Inventory/CharacterPanel/CharVBox/PaperDollCenter/PaperDoll"]
 layout_mode = 1
 anchors_preset = 0
 offset_left = 149.0
@@ -308,7 +285,7 @@ offset_bottom = 77.0
 mouse_filter = 2
 theme_override_styles/panel = SubResource("StyleBoxFlat_head")
 
-[node name="TorsoShape" type="Panel" parent="Screen/Center/Frame/Tabs/Inventory/CharacterPanel/CharVBox/PaperDollCenter/PaperDoll"]
+[node name="TorsoShape" type="Panel" parent="Screen/Center/Frame/Layout/Tabs/Inventory/CharacterPanel/CharVBox/PaperDollCenter/PaperDoll"]
 layout_mode = 1
 anchors_preset = 0
 offset_left = 20.0
@@ -318,7 +295,7 @@ offset_bottom = 332.0
 mouse_filter = 2
 theme_override_styles/panel = SubResource("StyleBoxFlat_torso")
 
-[node name="HeadSlot" parent="Screen/Center/Frame/Tabs/Inventory/CharacterPanel/CharVBox/PaperDollCenter/PaperDoll" instance=ExtResource("3_slot")]
+[node name="HeadSlot" parent="Screen/Center/Frame/Layout/Tabs/Inventory/CharacterPanel/CharVBox/PaperDollCenter/PaperDoll" instance=ExtResource("3_slot")]
 layout_mode = 1
 anchors_preset = 0
 offset_left = 154.0
@@ -329,7 +306,7 @@ is_equipment_slot = true
 accepted_equip_slot = 1
 empty_glyph = "Hd"
 
-[node name="AmuletSlot" parent="Screen/Center/Frame/Tabs/Inventory/CharacterPanel/CharVBox/PaperDollCenter/PaperDoll" instance=ExtResource("3_slot")]
+[node name="AmuletSlot" parent="Screen/Center/Frame/Layout/Tabs/Inventory/CharacterPanel/CharVBox/PaperDollCenter/PaperDoll" instance=ExtResource("3_slot")]
 layout_mode = 1
 anchors_preset = 0
 offset_left = 154.0
@@ -340,7 +317,7 @@ is_equipment_slot = true
 accepted_equip_slot = 8
 empty_glyph = "Am"
 
-[node name="ChestSlot" parent="Screen/Center/Frame/Tabs/Inventory/CharacterPanel/CharVBox/PaperDollCenter/PaperDoll" instance=ExtResource("3_slot")]
+[node name="ChestSlot" parent="Screen/Center/Frame/Layout/Tabs/Inventory/CharacterPanel/CharVBox/PaperDollCenter/PaperDoll" instance=ExtResource("3_slot")]
 layout_mode = 1
 anchors_preset = 0
 offset_left = 154.0
@@ -351,7 +328,7 @@ is_equipment_slot = true
 accepted_equip_slot = 2
 empty_glyph = "Ch"
 
-[node name="MainHandSlot" parent="Screen/Center/Frame/Tabs/Inventory/CharacterPanel/CharVBox/PaperDollCenter/PaperDoll" instance=ExtResource("3_slot")]
+[node name="MainHandSlot" parent="Screen/Center/Frame/Layout/Tabs/Inventory/CharacterPanel/CharVBox/PaperDollCenter/PaperDoll" instance=ExtResource("3_slot")]
 layout_mode = 1
 anchors_preset = 0
 offset_left = 20.0
@@ -362,7 +339,7 @@ is_equipment_slot = true
 accepted_equip_slot = 6
 empty_glyph = "MH"
 
-[node name="OffHandSlot" parent="Screen/Center/Frame/Tabs/Inventory/CharacterPanel/CharVBox/PaperDollCenter/PaperDoll" instance=ExtResource("3_slot")]
+[node name="OffHandSlot" parent="Screen/Center/Frame/Layout/Tabs/Inventory/CharacterPanel/CharVBox/PaperDollCenter/PaperDoll" instance=ExtResource("3_slot")]
 layout_mode = 1
 anchors_preset = 0
 offset_left = 288.0
@@ -373,7 +350,7 @@ is_equipment_slot = true
 accepted_equip_slot = 7
 empty_glyph = "OH"
 
-[node name="LegsSlot" parent="Screen/Center/Frame/Tabs/Inventory/CharacterPanel/CharVBox/PaperDollCenter/PaperDoll" instance=ExtResource("3_slot")]
+[node name="LegsSlot" parent="Screen/Center/Frame/Layout/Tabs/Inventory/CharacterPanel/CharVBox/PaperDollCenter/PaperDoll" instance=ExtResource("3_slot")]
 layout_mode = 1
 anchors_preset = 0
 offset_left = 154.0
@@ -384,7 +361,7 @@ is_equipment_slot = true
 accepted_equip_slot = 3
 empty_glyph = "Lg"
 
-[node name="HandsSlot" parent="Screen/Center/Frame/Tabs/Inventory/CharacterPanel/CharVBox/PaperDollCenter/PaperDoll" instance=ExtResource("3_slot")]
+[node name="HandsSlot" parent="Screen/Center/Frame/Layout/Tabs/Inventory/CharacterPanel/CharVBox/PaperDollCenter/PaperDoll" instance=ExtResource("3_slot")]
 layout_mode = 1
 anchors_preset = 0
 offset_left = 20.0
@@ -395,7 +372,7 @@ is_equipment_slot = true
 accepted_equip_slot = 5
 empty_glyph = "Gl"
 
-[node name="RingSlot" parent="Screen/Center/Frame/Tabs/Inventory/CharacterPanel/CharVBox/PaperDollCenter/PaperDoll" instance=ExtResource("3_slot")]
+[node name="RingSlot" parent="Screen/Center/Frame/Layout/Tabs/Inventory/CharacterPanel/CharVBox/PaperDollCenter/PaperDoll" instance=ExtResource("3_slot")]
 layout_mode = 1
 anchors_preset = 0
 offset_left = 288.0
@@ -406,7 +383,7 @@ is_equipment_slot = true
 accepted_equip_slot = 9
 empty_glyph = "Rg"
 
-[node name="BootsSlot" parent="Screen/Center/Frame/Tabs/Inventory/CharacterPanel/CharVBox/PaperDollCenter/PaperDoll" instance=ExtResource("3_slot")]
+[node name="BootsSlot" parent="Screen/Center/Frame/Layout/Tabs/Inventory/CharacterPanel/CharVBox/PaperDollCenter/PaperDoll" instance=ExtResource("3_slot")]
 layout_mode = 1
 anchors_preset = 0
 offset_left = 154.0
@@ -417,53 +394,53 @@ is_equipment_slot = true
 accepted_equip_slot = 4
 empty_glyph = "Bt"
 
-[node name="Sep5" type="VSeparator" parent="Screen/Center/Frame/Tabs/Inventory"]
+[node name="Sep5" type="VSeparator" parent="Screen/Center/Frame/Layout/Tabs/Inventory"]
 layout_mode = 2
 
-[node name="InventoryPanel" type="PanelContainer" parent="Screen/Center/Frame/Tabs/Inventory"]
+[node name="InventoryPanel" type="PanelContainer" parent="Screen/Center/Frame/Layout/Tabs/Inventory"]
 layout_mode = 2
 size_flags_horizontal = 3
 
-[node name="InvVBox" type="VBoxContainer" parent="Screen/Center/Frame/Tabs/Inventory/InventoryPanel"]
+[node name="InvVBox" type="VBoxContainer" parent="Screen/Center/Frame/Layout/Tabs/Inventory/InventoryPanel"]
 layout_mode = 2
 theme_override_constants/separation = 10
 
-[node name="Toolbar" type="HBoxContainer" parent="Screen/Center/Frame/Tabs/Inventory/InventoryPanel/InvVBox"]
+[node name="Toolbar" type="HBoxContainer" parent="Screen/Center/Frame/Layout/Tabs/Inventory/InventoryPanel/InvVBox"]
 layout_mode = 2
 
-[node name="BackpackTitle" type="Label" parent="Screen/Center/Frame/Tabs/Inventory/InventoryPanel/InvVBox/Toolbar"]
+[node name="BackpackTitle" type="Label" parent="Screen/Center/Frame/Layout/Tabs/Inventory/InventoryPanel/InvVBox/Toolbar"]
 layout_mode = 2
 theme_override_colors/font_color = Color(0.95, 0.86, 0.6, 1)
 theme_override_font_sizes/font_size = 20
 text = "Backpack"
 
-[node name="ToolbarSpacer" type="Control" parent="Screen/Center/Frame/Tabs/Inventory/InventoryPanel/InvVBox/Toolbar"]
+[node name="ToolbarSpacer" type="Control" parent="Screen/Center/Frame/Layout/Tabs/Inventory/InventoryPanel/InvVBox/Toolbar"]
 layout_mode = 2
 size_flags_horizontal = 3
 
-[node name="WeightLabel" type="Label" parent="Screen/Center/Frame/Tabs/Inventory/InventoryPanel/InvVBox/Toolbar"]
+[node name="WeightLabel" type="Label" parent="Screen/Center/Frame/Layout/Tabs/Inventory/InventoryPanel/InvVBox/Toolbar"]
 unique_name_in_owner = true
 layout_mode = 2
 theme_override_colors/font_color = Color(0.65, 0.62, 0.58, 1)
 theme_override_font_sizes/font_size = 14
 text = "0.0 / 60.0 kg"
 
-[node name="WeightBar" type="ProgressBar" parent="Screen/Center/Frame/Tabs/Inventory/InventoryPanel/InvVBox"]
+[node name="WeightBar" type="ProgressBar" parent="Screen/Center/Frame/Layout/Tabs/Inventory/InventoryPanel/InvVBox"]
 unique_name_in_owner = true
 layout_mode = 2
 custom_minimum_size = Vector2(0, 8)
 max_value = 60.0
 show_percentage = false
 
-[node name="Sep6" type="HSeparator" parent="Screen/Center/Frame/Tabs/Inventory/InventoryPanel/InvVBox"]
+[node name="Sep6" type="HSeparator" parent="Screen/Center/Frame/Layout/Tabs/Inventory/InventoryPanel/InvVBox"]
 layout_mode = 2
 
-[node name="GridScroll" type="ScrollContainer" parent="Screen/Center/Frame/Tabs/Inventory/InventoryPanel/InvVBox"]
+[node name="GridScroll" type="ScrollContainer" parent="Screen/Center/Frame/Layout/Tabs/Inventory/InventoryPanel/InvVBox"]
 layout_mode = 2
 size_flags_vertical = 3
 horizontal_scroll_mode = 0
 
-[node name="ItemGrid" type="GridContainer" parent="Screen/Center/Frame/Tabs/Inventory/InventoryPanel/InvVBox/GridScroll"]
+[node name="ItemGrid" type="GridContainer" parent="Screen/Center/Frame/Layout/Tabs/Inventory/InventoryPanel/InvVBox/GridScroll"]
 unique_name_in_owner = true
 layout_mode = 2
 size_flags_horizontal = 3
@@ -471,137 +448,137 @@ theme_override_constants/h_separation = 10
 theme_override_constants/v_separation = 10
 columns = 8
 
-[node name="Spellbook" type="HBoxContainer" parent="Screen/Center/Frame/Tabs"]
+[node name="Spellbook" type="HBoxContainer" parent="Screen/Center/Frame/Layout/Tabs"]
 layout_mode = 2
 theme_override_constants/separation = 20
 
-[node name="LoadoutPanel" type="PanelContainer" parent="Screen/Center/Frame/Tabs/Spellbook"]
+[node name="LoadoutPanel" type="PanelContainer" parent="Screen/Center/Frame/Layout/Tabs/Spellbook"]
 layout_mode = 2
 custom_minimum_size = Vector2(420, 0)
 
-[node name="LoadoutVBox" type="VBoxContainer" parent="Screen/Center/Frame/Tabs/Spellbook/LoadoutPanel"]
+[node name="LoadoutVBox" type="VBoxContainer" parent="Screen/Center/Frame/Layout/Tabs/Spellbook/LoadoutPanel"]
 layout_mode = 2
 theme_override_constants/separation = 10
 
-[node name="LoadoutTitle" type="Label" parent="Screen/Center/Frame/Tabs/Spellbook/LoadoutPanel/LoadoutVBox"]
+[node name="LoadoutTitle" type="Label" parent="Screen/Center/Frame/Layout/Tabs/Spellbook/LoadoutPanel/LoadoutVBox"]
 layout_mode = 2
 theme_override_colors/font_color = Color(0.95, 0.86, 0.6, 1)
 theme_override_font_sizes/font_size = 20
 text = "Active Spells"
 
-[node name="LoadoutHint" type="Label" parent="Screen/Center/Frame/Tabs/Spellbook/LoadoutPanel/LoadoutVBox"]
+[node name="LoadoutHint" type="Label" parent="Screen/Center/Frame/Layout/Tabs/Spellbook/LoadoutPanel/LoadoutVBox"]
 layout_mode = 2
 theme_override_colors/font_color = Color(0.65, 0.62, 0.58, 1)
 theme_override_font_sizes/font_size = 13
 autowrap_mode = 3
 text = "Drag a spell from the spellbook onto a slot to equip it. Double-click a slot to clear it."
 
-[node name="Sep1" type="HSeparator" parent="Screen/Center/Frame/Tabs/Spellbook/LoadoutPanel/LoadoutVBox"]
+[node name="LoadoutSep" type="HSeparator" parent="Screen/Center/Frame/Layout/Tabs/Spellbook/LoadoutPanel/LoadoutVBox"]
 layout_mode = 2
 
-[node name="PrimaryRow" type="HBoxContainer" parent="Screen/Center/Frame/Tabs/Spellbook/LoadoutPanel/LoadoutVBox"]
+[node name="PrimaryRow" type="HBoxContainer" parent="Screen/Center/Frame/Layout/Tabs/Spellbook/LoadoutPanel/LoadoutVBox"]
 layout_mode = 2
 theme_override_constants/separation = 12
 
-[node name="PrimaryLabel" type="Label" parent="Screen/Center/Frame/Tabs/Spellbook/LoadoutPanel/LoadoutVBox/PrimaryRow"]
+[node name="PrimaryLabel" type="Label" parent="Screen/Center/Frame/Layout/Tabs/Spellbook/LoadoutPanel/LoadoutVBox/PrimaryRow"]
 layout_mode = 2
 size_flags_vertical = 4
 custom_minimum_size = Vector2(280, 0)
 text = "Primary Cast — LMB"
 
-[node name="PrimarySlot" parent="Screen/Center/Frame/Tabs/Spellbook/LoadoutPanel/LoadoutVBox/PrimaryRow" instance=ExtResource("5_spellslot")]
+[node name="PrimarySlot" parent="Screen/Center/Frame/Layout/Tabs/Spellbook/LoadoutPanel/LoadoutVBox/PrimaryRow" instance=ExtResource("5_spellslot")]
 layout_mode = 2
 is_loadout_slot = true
 trigger_action = "cast_primary"
 empty_glyph = "—"
 
-[node name="SecondaryRow" type="HBoxContainer" parent="Screen/Center/Frame/Tabs/Spellbook/LoadoutPanel/LoadoutVBox"]
+[node name="SecondaryRow" type="HBoxContainer" parent="Screen/Center/Frame/Layout/Tabs/Spellbook/LoadoutPanel/LoadoutVBox"]
 layout_mode = 2
 theme_override_constants/separation = 12
 
-[node name="SecondaryLabel" type="Label" parent="Screen/Center/Frame/Tabs/Spellbook/LoadoutPanel/LoadoutVBox/SecondaryRow"]
+[node name="SecondaryLabel" type="Label" parent="Screen/Center/Frame/Layout/Tabs/Spellbook/LoadoutPanel/LoadoutVBox/SecondaryRow"]
 layout_mode = 2
 size_flags_vertical = 4
 custom_minimum_size = Vector2(280, 0)
 text = "Secondary Cast — RMB"
 
-[node name="SecondarySlot" parent="Screen/Center/Frame/Tabs/Spellbook/LoadoutPanel/LoadoutVBox/SecondaryRow" instance=ExtResource("5_spellslot")]
+[node name="SecondarySlot" parent="Screen/Center/Frame/Layout/Tabs/Spellbook/LoadoutPanel/LoadoutVBox/SecondaryRow" instance=ExtResource("5_spellslot")]
 layout_mode = 2
 is_loadout_slot = true
 trigger_action = "cast_secondary"
 empty_glyph = "—"
 
-[node name="Slot3Row" type="HBoxContainer" parent="Screen/Center/Frame/Tabs/Spellbook/LoadoutPanel/LoadoutVBox"]
+[node name="Slot3Row" type="HBoxContainer" parent="Screen/Center/Frame/Layout/Tabs/Spellbook/LoadoutPanel/LoadoutVBox"]
 layout_mode = 2
 theme_override_constants/separation = 12
 
-[node name="Slot3Label" type="Label" parent="Screen/Center/Frame/Tabs/Spellbook/LoadoutPanel/LoadoutVBox/Slot3Row"]
+[node name="Slot3Label" type="Label" parent="Screen/Center/Frame/Layout/Tabs/Spellbook/LoadoutPanel/LoadoutVBox/Slot3Row"]
 layout_mode = 2
 size_flags_vertical = 4
 custom_minimum_size = Vector2(280, 0)
 text = "Spell Slot 3 — Q"
 
-[node name="Slot3Slot" parent="Screen/Center/Frame/Tabs/Spellbook/LoadoutPanel/LoadoutVBox/Slot3Row" instance=ExtResource("5_spellslot")]
+[node name="Slot3Slot" parent="Screen/Center/Frame/Layout/Tabs/Spellbook/LoadoutPanel/LoadoutVBox/Slot3Row" instance=ExtResource("5_spellslot")]
 layout_mode = 2
 is_loadout_slot = true
 trigger_action = "spell_slot_3"
 empty_glyph = "—"
 
-[node name="Slot4Row" type="HBoxContainer" parent="Screen/Center/Frame/Tabs/Spellbook/LoadoutPanel/LoadoutVBox"]
+[node name="Slot4Row" type="HBoxContainer" parent="Screen/Center/Frame/Layout/Tabs/Spellbook/LoadoutPanel/LoadoutVBox"]
 layout_mode = 2
 theme_override_constants/separation = 12
 
-[node name="Slot4Label" type="Label" parent="Screen/Center/Frame/Tabs/Spellbook/LoadoutPanel/LoadoutVBox/Slot4Row"]
+[node name="Slot4Label" type="Label" parent="Screen/Center/Frame/Layout/Tabs/Spellbook/LoadoutPanel/LoadoutVBox/Slot4Row"]
 layout_mode = 2
 size_flags_vertical = 4
 custom_minimum_size = Vector2(280, 0)
 text = "Spell Slot 4 — E"
 
-[node name="Slot4Slot" parent="Screen/Center/Frame/Tabs/Spellbook/LoadoutPanel/LoadoutVBox/Slot4Row" instance=ExtResource("5_spellslot")]
+[node name="Slot4Slot" parent="Screen/Center/Frame/Layout/Tabs/Spellbook/LoadoutPanel/LoadoutVBox/Slot4Row" instance=ExtResource("5_spellslot")]
 layout_mode = 2
 is_loadout_slot = true
 trigger_action = "spell_slot_4"
 empty_glyph = "—"
 
-[node name="Sep7" type="VSeparator" parent="Screen/Center/Frame/Tabs/Spellbook"]
+[node name="Sep7" type="VSeparator" parent="Screen/Center/Frame/Layout/Tabs/Spellbook"]
 layout_mode = 2
 
-[node name="KnownSpellsPanel" type="PanelContainer" parent="Screen/Center/Frame/Tabs/Spellbook"]
+[node name="KnownSpellsPanel" type="PanelContainer" parent="Screen/Center/Frame/Layout/Tabs/Spellbook"]
 layout_mode = 2
 size_flags_horizontal = 3
 
-[node name="KnownVBox" type="VBoxContainer" parent="Screen/Center/Frame/Tabs/Spellbook/KnownSpellsPanel"]
+[node name="KnownVBox" type="VBoxContainer" parent="Screen/Center/Frame/Layout/Tabs/Spellbook/KnownSpellsPanel"]
 layout_mode = 2
 theme_override_constants/separation = 10
 
-[node name="Toolbar" type="HBoxContainer" parent="Screen/Center/Frame/Tabs/Spellbook/KnownSpellsPanel/KnownVBox"]
+[node name="SpellToolbar" type="HBoxContainer" parent="Screen/Center/Frame/Layout/Tabs/Spellbook/KnownSpellsPanel/KnownVBox"]
 layout_mode = 2
 
-[node name="SpellbookTitle" type="Label" parent="Screen/Center/Frame/Tabs/Spellbook/KnownSpellsPanel/KnownVBox/Toolbar"]
+[node name="SpellbookTitle" type="Label" parent="Screen/Center/Frame/Layout/Tabs/Spellbook/KnownSpellsPanel/KnownVBox/SpellToolbar"]
 layout_mode = 2
 theme_override_colors/font_color = Color(0.95, 0.86, 0.6, 1)
 theme_override_font_sizes/font_size = 20
 text = "Spellbook"
 
-[node name="ToolbarSpacer" type="Control" parent="Screen/Center/Frame/Tabs/Spellbook/KnownSpellsPanel/KnownVBox/Toolbar"]
+[node name="SpellToolbarSpacer" type="Control" parent="Screen/Center/Frame/Layout/Tabs/Spellbook/KnownSpellsPanel/KnownVBox/SpellToolbar"]
 layout_mode = 2
 size_flags_horizontal = 3
 
-[node name="HintLabel" type="Label" parent="Screen/Center/Frame/Tabs/Spellbook/KnownSpellsPanel/KnownVBox/Toolbar"]
+[node name="HintLabel" type="Label" parent="Screen/Center/Frame/Layout/Tabs/Spellbook/KnownSpellsPanel/KnownVBox/SpellToolbar"]
 layout_mode = 2
 theme_override_colors/font_color = Color(0.65, 0.62, 0.58, 1)
 theme_override_font_sizes/font_size = 14
 text = "Known Spells"
 
-[node name="Sep2" type="HSeparator" parent="Screen/Center/Frame/Tabs/Spellbook/KnownSpellsPanel/KnownVBox"]
+[node name="KnownSep" type="HSeparator" parent="Screen/Center/Frame/Layout/Tabs/Spellbook/KnownSpellsPanel/KnownVBox"]
 layout_mode = 2
 
-[node name="SpellGridScroll" type="ScrollContainer" parent="Screen/Center/Frame/Tabs/Spellbook/KnownSpellsPanel/KnownVBox"]
+[node name="SpellGridScroll" type="ScrollContainer" parent="Screen/Center/Frame/Layout/Tabs/Spellbook/KnownSpellsPanel/KnownVBox"]
 layout_mode = 2
 size_flags_vertical = 3
 horizontal_scroll_mode = 0
 
-[node name="SpellGrid" type="GridContainer" parent="Screen/Center/Frame/Tabs/Spellbook/KnownSpellsPanel/KnownVBox/SpellGridScroll"]
+[node name="SpellGrid" type="GridContainer" parent="Screen/Center/Frame/Layout/Tabs/Spellbook/KnownSpellsPanel/KnownVBox/SpellGridScroll"]
 unique_name_in_owner = true
 layout_mode = 2
 size_flags_horizontal = 3

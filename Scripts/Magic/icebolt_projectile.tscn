@@ -1,6 +1,7 @@
 [gd_scene load_steps=13 format=3]
 
 [ext_resource type="Script" path="res://Scripts/Magic/projectile.gd" id="1_proj"]
+[ext_resource type="PackedScene" uid="uid://4ba3dst1sxrk" path="res://Components/damage_dealer.tscn" id="2_dealer"]
 
 [sub_resource type="SphereShape3D" id="SphereShape3D_hit"]
 radius = 0.18
@@ -103,3 +104,6 @@ amount = 35
 lifetime = 0.5
 process_material = SubResource("ParticleProcessMaterial_impact")
 draw_pass_1 = SubResource("QuadMesh_impact_particle")
+
+[node name="DamageDealer" parent="." instance=ExtResource("2_dealer")]
+damage = 15.0

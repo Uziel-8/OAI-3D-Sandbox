@@ -43,6 +43,8 @@ const KNEE_LIFT := 0.18
 @onready var _gait: Node = $GaitController
 @onready var _foot_targets: Node3D = $FootTargets
 @onready var _leg_rays: Node3D = $Legs
+## Optional touch-damage component; a spider without one is harmless to bump.
+@onready var _damage_dealer: DamageDealer = get_node_or_null("DamageDealer")
 
 var _player: Node3D
 var _wander_origin: Vector3
@@ -111,6 +113,13 @@ func _physics_process(delta: float) -> void:
 	# velocity is NOT multiplied by delta here -- move_and_slide() expects
 	# velocity in units/second and integrates it internally.
 	move_and_slide()
+	if _damage_dealer:
+		# Touch damage on contact with the player; the dealer's own cooldown
+		# keeps this from landing every physics frame while touching.
+		for i in get_slide_collision_count():
+			var collider := get_slide_collision(i).get_collider()
+			if collider is Node and collider.is_in_group("player"):
+				_damage_dealer.try_deal(collider)
 	if is_instance_valid(_gait) and _gait.has_method("update_gait"):
 		_gait.update_gait(delta)
 

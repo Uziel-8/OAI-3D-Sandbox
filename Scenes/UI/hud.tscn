@@ -1,0 +1,256 @@
+[gd_scene load_steps=8 format=3]
+
+[ext_resource type="Script" path="res://Scripts/UI/hud.gd" id="1_hud"]
+[ext_resource type="Theme" path="res://Scenes/UI/inventory_theme.tres" id="2_theme"]
+
+[sub_resource type="StyleBoxFlat" id="Fill_health"]
+bg_color = Color(0.8, 0.26, 0.26, 1)
+corner_radius_top_left = 3
+corner_radius_top_right = 3
+corner_radius_bottom_right = 3
+corner_radius_bottom_left = 3
+
+[sub_resource type="StyleBoxFlat" id="Fill_mana"]
+bg_color = Color(0.28, 0.5, 0.85, 1)
+corner_radius_top_left = 3
+corner_radius_top_right = 3
+corner_radius_bottom_right = 3
+corner_radius_bottom_left = 3
+
+[sub_resource type="StyleBoxFlat" id="Fill_stamina"]
+bg_color = Color(0.45, 0.7, 0.3, 1)
+corner_radius_top_left = 3
+corner_radius_top_right = 3
+corner_radius_bottom_right = 3
+corner_radius_bottom_left = 3
+
+[sub_resource type="StyleBoxFlat" id="Fill_xp"]
+bg_color = Color(0.9, 0.72, 0.32, 1)
+corner_radius_top_left = 2
+corner_radius_top_right = 2
+corner_radius_bottom_right = 2
+corner_radius_bottom_left = 2
+
+[sub_resource type="StyleBoxFlat" id="Toast_bg"]
+bg_color = Color(0.05, 0.045, 0.06, 0.72)
+corner_radius_top_left = 8
+corner_radius_top_right = 8
+corner_radius_bottom_right = 8
+corner_radius_bottom_left = 8
+content_margin_left = 24.0
+content_margin_top = 12.0
+content_margin_right = 24.0
+content_margin_bottom = 12.0
+
+[node name="HUD" type="CanvasLayer"]
+layer = 5
+script = ExtResource("1_hud")
+
+[node name="Root" type="Control" parent="."]
+theme = ExtResource("2_theme")
+anchors_preset = 15
+anchor_right = 1.0
+anchor_bottom = 1.0
+grow_horizontal = 2
+grow_vertical = 2
+mouse_filter = 2
+
+[node name="ObjectivePanel" type="PanelContainer" parent="Root"]
+layout_mode = 1
+offset_left = 16.0
+offset_top = 16.0
+offset_right = 372.0
+offset_bottom = 108.0
+mouse_filter = 2
+
+[node name="ObjVBox" type="VBoxContainer" parent="Root/ObjectivePanel"]
+layout_mode = 2
+mouse_filter = 2
+theme_override_constants/separation = 4
+
+[node name="ObjectiveTitle" type="Label" parent="Root/ObjectivePanel/ObjVBox"]
+unique_name_in_owner = true
+layout_mode = 2
+mouse_filter = 2
+theme_override_colors/font_color = Color(0.95, 0.86, 0.6, 1)
+theme_override_font_sizes/font_size = 15
+text = "OBJECTIVE"
+
+[node name="ObjectiveText" type="Label" parent="Root/ObjectivePanel/ObjVBox"]
+unique_name_in_owner = true
+layout_mode = 2
+mouse_filter = 2
+theme_override_colors/font_color = Color(0.82, 0.8, 0.76, 1)
+theme_override_font_sizes/font_size = 13
+autowrap_mode = 3
+text = "Objective text"
+
+[node name="GoldPanel" type="PanelContainer" parent="Root"]
+layout_mode = 1
+anchor_left = 1.0
+anchor_right = 1.0
+offset_left = -150.0
+offset_top = 16.0
+offset_right = -16.0
+offset_bottom = 52.0
+grow_horizontal = 0
+mouse_filter = 2
+
+[node name="GoldBox" type="HBoxContainer" parent="Root/GoldPanel"]
+layout_mode = 2
+mouse_filter = 2
+theme_override_constants/separation = 8
+alignment = 1
+
+[node name="Coin" type="ColorRect" parent="Root/GoldPanel/GoldBox"]
+custom_minimum_size = Vector2(16, 16)
+layout_mode = 2
+size_flags_vertical = 4
+mouse_filter = 2
+color = Color(0.95, 0.78, 0.28, 1)
+
+[node name="GoldLabel" type="Label" parent="Root/GoldPanel/GoldBox"]
+unique_name_in_owner = true
+layout_mode = 2
+mouse_filter = 2
+theme_override_colors/font_color = Color(0.95, 0.86, 0.6, 1)
+theme_override_font_sizes/font_size = 16
+text = "0"
+
+[node name="Vitals" type="VBoxContainer" parent="Root"]
+layout_mode = 1
+anchor_top = 1.0
+anchor_bottom = 1.0
+offset_left = 16.0
+offset_top = -150.0
+offset_right = 292.0
+offset_bottom = -46.0
+grow_vertical = 0
+mouse_filter = 2
+theme_override_constants/separation = 6
+
+[node name="HealthRow" type="HBoxContainer" parent="Root/Vitals"]
+layout_mode = 2
+mouse_filter = 2
+theme_override_constants/separation = 8
+
+[node name="HealthTag" type="Label" parent="Root/Vitals/HealthRow"]
+custom_minimum_size = Vector2(34, 0)
+layout_mode = 2
+mouse_filter = 2
+theme_override_colors/font_color = Color(0.82, 0.8, 0.76, 1)
+theme_override_font_sizes/font_size = 12
+text = "HP"
+
+[node name="HealthBar" type="ProgressBar" parent="Root/Vitals/HealthRow"]
+unique_name_in_owner = true
+custom_minimum_size = Vector2(0, 16)
+layout_mode = 2
+size_flags_horizontal = 3
+mouse_filter = 2
+theme_override_styles/fill = SubResource("Fill_health")
+max_value = 100.0
+value = 100.0
+show_percentage = false
+
+[node name="ManaRow" type="HBoxContainer" parent="Root/Vitals"]
+layout_mode = 2
+mouse_filter = 2
+theme_override_constants/separation = 8
+
+[node name="ManaTag" type="Label" parent="Root/Vitals/ManaRow"]
+custom_minimum_size = Vector2(34, 0)
+layout_mode = 2
+mouse_filter = 2
+theme_override_colors/font_color = Color(0.82, 0.8, 0.76, 1)
+theme_override_font_sizes/font_size = 12
+text = "MP"
+
+[node name="ManaBar" type="ProgressBar" parent="Root/Vitals/ManaRow"]
+unique_name_in_owner = true
+custom_minimum_size = Vector2(0, 16)
+layout_mode = 2
+size_flags_horizontal = 3
+mouse_filter = 2
+theme_override_styles/fill = SubResource("Fill_mana")
+max_value = 100.0
+value = 100.0
+show_percentage = false
+
+[node name="StaminaRow" type="HBoxContainer" parent="Root/Vitals"]
+layout_mode = 2
+mouse_filter = 2
+theme_override_constants/separation = 8
+
+[node name="StaminaTag" type="Label" parent="Root/Vitals/StaminaRow"]
+custom_minimum_size = Vector2(34, 0)
+layout_mode = 2
+mouse_filter = 2
+theme_override_colors/font_color = Color(0.82, 0.8, 0.76, 1)
+theme_override_font_sizes/font_size = 12
+text = "SP"
+
+[node name="StaminaBar" type="ProgressBar" parent="Root/Vitals/StaminaRow"]
+unique_name_in_owner = true
+custom_minimum_size = Vector2(0, 16)
+layout_mode = 2
+size_flags_horizontal = 3
+mouse_filter = 2
+theme_override_styles/fill = SubResource("Fill_stamina")
+max_value = 100.0
+value = 100.0
+show_percentage = false
+
+[node name="XPStrip" type="HBoxContainer" parent="Root"]
+layout_mode = 1
+anchor_top = 1.0
+anchor_right = 1.0
+anchor_bottom = 1.0
+offset_left = 16.0
+offset_top = -34.0
+offset_right = -16.0
+offset_bottom = -16.0
+grow_vertical = 0
+mouse_filter = 2
+theme_override_constants/separation = 8
+
+[node name="LevelLabel" type="Label" parent="Root/XPStrip"]
+unique_name_in_owner = true
+custom_minimum_size = Vector2(46, 0)
+layout_mode = 2
+mouse_filter = 2
+theme_override_colors/font_color = Color(0.95, 0.86, 0.6, 1)
+theme_override_font_sizes/font_size = 12
+text = "Lv 1"
+
+[node name="XPBar" type="ProgressBar" parent="Root/XPStrip"]
+unique_name_in_owner = true
+custom_minimum_size = Vector2(0, 10)
+layout_mode = 2
+size_flags_horizontal = 3
+size_flags_vertical = 4
+mouse_filter = 2
+theme_override_styles/fill = SubResource("Fill_xp")
+max_value = 100.0
+value = 0.0
+show_percentage = false
+
+[node name="LevelUpToast" type="Label" parent="Root"]
+unique_name_in_owner = true
+layout_mode = 1
+anchor_left = 0.5
+anchor_top = 0.22
+anchor_right = 0.5
+anchor_bottom = 0.22
+offset_left = -320.0
+offset_right = 320.0
+offset_bottom = 90.0
+grow_horizontal = 2
+grow_vertical = 2
+mouse_filter = 2
+theme_override_colors/font_color = Color(0.98, 0.88, 0.55, 1)
+theme_override_font_sizes/font_size = 30
+theme_override_styles/normal = SubResource("Toast_bg")
+text = "LEVEL UP!"
+horizontal_alignment = 1
+vertical_alignment = 1

@@ -17,6 +17,9 @@ config/icon="res://icon.svg"
 
 [autoload]
 
+PlayerProgression="*res://Scripts/Progression/player_progression.gd"
+PlayerState="*res://Scripts/Player/player_state.gd"
+HUD="*res://Scenes/UI/hud.tscn"
 InventoryUI="*res://Scenes/UI/inventory_screen.tscn"
 
 [display]

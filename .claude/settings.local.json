@@ -3,7 +3,32 @@
     "allow": [
       "Bash(mkdir -p \"e:/GameDev/Godot/Projects/oai-3d-sandbox/Scripts/Magic\")",
       "Bash(where godot *)",
-      "Bash(where godot4 *)"
+      "Bash(where godot4 *)",
+      "Bash(\"/c/Program Files \\(x86\\)/Steam/steamapps/common/Godot Engine/godot.windows.opt.tools.64.exe\" --headless --path \"e:/GameDev/Godot/Projects/oai-3d-sandbox\" --check-only --quit)",
+      "PowerShell(& \"C:\\\\Program Files \\(x86\\)\\\\Steam\\\\steamapps\\\\common\\\\Godot Engine\\\\godot.windows.opt.tools.64.exe\" --headless --path \"e:\\\\GameDev\\\\Godot\\\\Projects\\\\oai-3d-sandbox\" --check-only --quit 2>&1)",
+      "PowerShell(& \"E:\\\\SteamLibrary\\\\steamapps\\\\common\\\\Godot Engine\\\\godot.windows.opt.tools.64.exe\" --headless --path \"e:\\\\GameDev\\\\Godot\\\\Projects\\\\oai-3d-sandbox\" --check-only --quit 2>&1)",
+      "Bash(awk '$1>1')",
+      "PowerShell(& \"E:\\\\SteamLibrary\\\\steamapps\\\\common\\\\Godot Engine\\\\godot.windows.opt.tools.64.exe\" --headless --path \"e:\\\\GameDev\\\\Godot\\\\Projects\\\\oai-3d-sandbox\" res://_scratch_repro.tscn --quit-after 2 2>&1)",
+      "Read(//c/Users/Blade/AppData/Local/Temp/**)",
+      "Bash(cp Scenes/UI/spell_slot.tscn _scratch_spellslot_nouniq.tscn)",
+      "Bash(cp Scenes/UI/inventory_slot.tscn _scratch_invslot_nouniq.tscn)",
+      "Bash(sed -i '/unique_name_in_owner = true/d' _scratch_spellslot_nouniq.tscn _scratch_invslot_nouniq.tscn)",
+      "Bash(cp \"Scenes/UI/inventory_screen.tscn\" \"_scratch_inv_test.tscn\")",
+      "Bash(sed -i -e 's#path=\"res://Scenes/UI/inventory_slot.tscn\"#path=\"res://_scratch_invslot_nouniq.tscn\"#' -e 's#path=\"res://Scenes/UI/spell_slot.tscn\"#path=\"res://_scratch_spellslot_nouniq.tscn\"#' _scratch_inv_test.tscn)",
+      "Bash(sed -i '473,605d' _scratch_inv_test.tscn)",
+      "Bash(sed -i '134,468d' _scratch_inv_test.tscn)",
+      "Bash(cp _scratch_inv_test.tscn _scratch_inv_test_bak.tscn)",
+      "Bash(sed -i '/\\\\[node name=\"Tooltip\" parent=\"Screen\" instance=ExtResource\\(\"4_tooltip\"\\)\\\\]/,$d' _scratch_inv_test.tscn)",
+      "Bash(cp _scratch_inv_test_bak.tscn _scratch_inv_test.tscn)",
+      "Bash(sed -i '/^script = ExtResource\\(\"1_script\"\\)$/d' _scratch_inv_test.tscn)",
+      "Bash(python3 -)",
+      "Bash(rm -f _scratch_repro.tscn _scratch_repro2.tscn _scratch_repro3.tscn _scratch_repro4.tscn _scratch_inv_test.tscn _scratch_inv_test_bak.tscn _scratch_spellslot_nouniq.tscn _scratch_invslot_nouniq.tscn)",
+      "Bash(rm -rf .godot/imported)",
+      "Bash(cat \"/c/Users/Blade/AppData/Local/Temp/gfinal2.txt\")",
+      "PowerShell(& \"E:\\\\SteamLibrary\\\\steamapps\\\\common\\\\Godot Engine\\\\godot.windows.opt.tools.64.exe\" --headless --editor --path \"e:\\\\GameDev\\\\Godot\\\\Projects\\\\oai-3d-sandbox\" --quit-after 20 2>&1)",
+      "PowerShell(& \"E:\\\\SteamLibrary\\\\steamapps\\\\common\\\\Godot Engine\\\\godot.windows.opt.tools.64.exe\" --headless --path \"e:\\\\GameDev\\\\Godot\\\\Projects\\\\oai-3d-sandbox\" res://Scenes/level.tscn --quit-after 120 2>&1)",
+      "PowerShell(& \"E:\\\\SteamLibrary\\\\steamapps\\\\common\\\\Godot Engine\\\\godot.windows.opt.tools.64.exe\" --headless --path \"e:\\\\GameDev\\\\Godot\\\\Projects\\\\oai-3d-sandbox\" --script res://_scratch_prog_test.gd 2>&1)",
+      "PowerShell(& \"E:\\\\SteamLibrary\\\\steamapps\\\\common\\\\Godot Engine\\\\godot.windows.opt.tools.64.exe\" --headless --path \"e:\\\\GameDev\\\\Godot\\\\Projects\\\\oai-3d-sandbox\" res://Scenes/level.tscn --quit-after 90 2>&1)"
     ],
     "additionalDirectories": [
       "e:\\GameDev\\Godot\\Projects\\oai-3d-sandbox\\Scripts"

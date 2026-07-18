@@ -14,6 +14,8 @@ class_name Projectile
 
 @onready var _visual: Node3D = $Visual
 @onready var _impact_particles: GPUParticles3D = $ImpactParticles
+## Optional DamageDealer child; projectiles without one just knock back.
+@onready var _damage_dealer: DamageDealer = get_node_or_null("DamageDealer")
 
 var _direction: Vector3 = Vector3.FORWARD
 var _exclude_rid: RID
@@ -52,6 +54,8 @@ func _impact(body: Node) -> void:
 	_spent = true
 	if body and body.has_method("apply_impulse"):
 		body.apply_impulse(_direction * impact_force, global_position)
+	if body and _damage_dealer:
+		_damage_dealer.try_deal(body)
 	_visual.visible = false
 	set_physics_process(false)
 	monitoring = false
