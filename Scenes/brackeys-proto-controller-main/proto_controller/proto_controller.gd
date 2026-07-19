@@ -25,6 +25,9 @@ extends CharacterBody3D
 @export var jump_velocity : float = 4.5
 ## How fast do we run?
 @export var sprint_speed : float = 10.0
+## Stamina drained per second while sprint-moving (spent via the PlayerState
+## autoload; sprinting stops when the pool can't cover the frame's cost).
+@export var sprint_stamina_drain : float = 20.0
 ## How fast do we freefly?
 @export var freefly_speed : float = 25.0
 
@@ -95,8 +98,9 @@ func _physics_process(delta: float) -> void:
 		if Input.is_action_just_pressed(input_jump) and is_on_floor():
 			velocity.y = jump_velocity
 
-	# Modify speed based on sprinting
-	if can_sprint and Input.is_action_pressed(input_sprint):
+	# Modify speed based on sprinting (sprinting while moving drains stamina;
+	# when it can't be paid, speed falls back to walking)
+	if can_sprint and Input.is_action_pressed(input_sprint) and _try_pay_sprint(delta):
 			move_speed = sprint_speed
 	else:
 		move_speed = base_speed
@@ -140,6 +144,19 @@ func enable_freefly():
 func disable_freefly():
 	collider.disabled = false
 	freeflying = false
+
+
+## Drains sprint stamina for this frame via the PlayerState autoload. Free when
+## standing still, when there's no PlayerState (test scenes), or if the pool
+## covers the cost; returns false (blocking sprint speed) once stamina is dry.
+func _try_pay_sprint(delta: float) -> bool:
+	var input_dir := Input.get_vector(input_left, input_right, input_forward, input_back)
+	if input_dir == Vector2.ZERO:
+		return true
+	var state := get_node_or_null("/root/PlayerState")
+	if state == null:
+		return true
+	return state.spend_stamina(sprint_stamina_drain * delta)
 
 
 func capture_mouse():

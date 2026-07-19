@@ -50,3 +50,10 @@ func start_cast() -> void:
 	projectile.global_position = spawn_pos
 	if projectile.has_method("launch"):
 		projectile.launch(direction, player.get_rid())
+
+	# Magic damage scales with INT/WIL: each projectile instance's dealer is
+	# fresh, so scaling it here never compounds across casts.
+	var dealer := projectile.get_node_or_null("DamageDealer") as DamageDealer
+	var prog := get_node_or_null("/root/PlayerProgression") as ProgressionSystem
+	if dealer and prog:
+		dealer.damage *= prog.magic_damage_multiplier()

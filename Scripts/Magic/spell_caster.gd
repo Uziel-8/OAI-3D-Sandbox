@@ -29,11 +29,11 @@ func _physics_process(delta: float) -> void:
 		var spell: Spell = child
 
 		if spell.instant:
-			if Input.is_action_just_pressed(spell.trigger_action) and spell.can_cast():
+			if Input.is_action_just_pressed(spell.trigger_action) and spell.can_cast() and spell.try_pay_cost():
 				spell.start_cast()
 			continue
 
-		if not spell.is_active and Input.is_action_just_pressed(spell.trigger_action) and spell.can_cast():
+		if not spell.is_active and Input.is_action_just_pressed(spell.trigger_action) and spell.can_cast() and spell.try_pay_cost():
 			spell.is_active = true
 			spell.start_cast()
 		elif spell.is_active and Input.is_action_just_released(spell.trigger_action):

@@ -26,12 +26,28 @@ enum DeathBehavior {
 ## Experience awarded to the player when this body dies. 0 = grants none
 ## (right for the player and neutral props); enemies set this above 0.
 @export var xp_reward: float = 0.0
+## Passive health regenerated per second while alive (0 = none). The player's
+## is driven by CON via PlayerProgression; enemies/props can set it per instance.
+@export var health_regen: float = 0.0
 
 var health: float
 
 
 func _ready() -> void:
 	health = max_health
+	health_changed.emit(health, max_health)
+
+
+func _process(delta: float) -> void:
+	if health_regen > 0.0 and health > 0.0 and health < max_health:
+		heal(health_regen * delta)
+
+
+## Changes max_health at runtime (e.g. CON increased), keeping current health
+## (clamped) rather than refilling, and notifying bound UI.
+func set_max_health(new_max: float) -> void:
+	max_health = new_max
+	health = minf(health, max_health)
 	health_changed.emit(health, max_health)
 
 

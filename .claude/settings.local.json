@@ -30,7 +30,9 @@
       "PowerShell(& \"E:\\\\SteamLibrary\\\\steamapps\\\\common\\\\Godot Engine\\\\godot.windows.opt.tools.64.exe\" --headless --path \"e:\\\\GameDev\\\\Godot\\\\Projects\\\\oai-3d-sandbox\" --script res://_scratch_prog_test.gd 2>&1)",
       "PowerShell(& \"E:\\\\SteamLibrary\\\\steamapps\\\\common\\\\Godot Engine\\\\godot.windows.opt.tools.64.exe\" --headless --path \"e:\\\\GameDev\\\\Godot\\\\Projects\\\\oai-3d-sandbox\" res://Scenes/level.tscn --quit-after 90 2>&1)",
       "PowerShell(& \"E:\\\\SteamLibrary\\\\steamapps\\\\common\\\\Godot Engine\\\\godot.windows.opt.tools.64.exe\" --headless --path \"e:\\\\GameDev\\\\Godot\\\\Projects\\\\oai-3d-sandbox\" res://_scratch_spawn_test.tscn --quit-after 150 2>&1)",
-      "PowerShell(& \"E:\\\\SteamLibrary\\\\steamapps\\\\common\\\\Godot Engine\\\\godot.windows.opt.tools.64.exe\" --headless --path \"e:\\\\GameDev\\\\Godot\\\\Projects\\\\oai-3d-sandbox\" --script res://_scratch_obj_test.gd 2>&1)"
+      "PowerShell(& \"E:\\\\SteamLibrary\\\\steamapps\\\\common\\\\Godot Engine\\\\godot.windows.opt.tools.64.exe\" --headless --path \"e:\\\\GameDev\\\\Godot\\\\Projects\\\\oai-3d-sandbox\" --script res://_scratch_obj_test.gd 2>&1)",
+      "Bash(python -)",
+      "PowerShell(& \"E:\\\\SteamLibrary\\\\steamapps\\\\common\\\\Godot Engine\\\\godot.windows.opt.tools.64.exe\" --headless --path \"e:\\\\GameDev\\\\Godot\\\\Projects\\\\oai-3d-sandbox\" res://_scratch_stats_test.tscn 2>&1)"
     ],
     "additionalDirectories": [
       "e:\\GameDev\\Godot\\Projects\\oai-3d-sandbox\\Scripts"

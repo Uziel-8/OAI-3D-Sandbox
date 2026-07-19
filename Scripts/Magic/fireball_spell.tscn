@@ -33,6 +33,7 @@ size = Vector2(0.14, 0.14)
 
 [node name="FireballSpell" type="Node"]
 script = ExtResource("1_spell")
+mana_cost = 15.0
 projectile_scene = ExtResource("2_proj")
 
 [node name="MuzzleParticles" type="GPUParticles3D" parent="."]

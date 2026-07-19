@@ -285,8 +285,7 @@ func _on_loadout_spell_changed(slot: SpellSlot) -> void:
 # the source of truth for which attributes exist lives in one place.
 
 const _ATTR_DISPLAY_NAMES := {
-	"STR": "Strength", "DEX": "Dexterity", "INT": "Intellect",
-	"VIT": "Vitality", "LUK": "Luck",
+	"CON": "Constitution", "DEX": "Dexterity", "INT": "Intelligence", "WIL": "Willpower",
 }
 
 var _attr_value_labels: Dictionary = {}

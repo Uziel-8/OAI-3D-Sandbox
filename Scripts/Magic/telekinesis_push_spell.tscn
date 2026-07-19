@@ -34,6 +34,7 @@ size = Vector2(0.1, 0.1)
 
 [node name="TelekinesisPush" type="Node"]
 script = ExtResource("1_push")
+mana_cost = 5.0
 push_range = 15.0
 push_force = 15.0
 
