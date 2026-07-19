@@ -51,13 +51,13 @@ target_position = Vector3(0, -3, 0)
 [node name="GaitController" type="Node" parent="." unique_id=79954975]
 script = ExtResource("3_gait")
 
-[node name="DamageDealer" parent="." instance=ExtResource("4_dealer")]
-damage = 10.0
+[node name="DamageDealer" parent="." unique_id=42462939 instance=ExtResource("4_dealer")]
 cooldown = 1.0
 
-[node name="DamageReceiver" parent="." instance=ExtResource("5_receiver")]
+[node name="DamageReceiver" parent="." unique_id=543719465 instance=ExtResource("5_receiver")]
 max_health = 50.0
 xp_reward = 25.0
 
-[node name="HealthBar3D" parent="." instance=ExtResource("6_healthbar")]
+[node name="HealthBar3D" parent="." unique_id=1471280850 instance=ExtResource("6_healthbar")]
 transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, 0, 1.1, 0)
+hide_when_full = true

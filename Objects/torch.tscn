@@ -1,0 +1,17 @@
+[gd_scene format=3 uid="uid://cpvew8y2sqp5e"]
+
+[ext_resource type="PackedScene" uid="uid://d3dund8boxcs0" path="res://Graphics/KayKit Dungeon/gltf/torch_mounted.gltf" id="1_yseja"]
+[ext_resource type="Script" uid="uid://btho6ax4rvb5j" path="res://Scripts/Environment/torch_flicker.gd" id="2_vo3cf"]
+
+[sub_resource type="BoxShape3D" id="BoxShape3D_3xd07"]
+size = Vector3(0.5, 1, 0.5)
+
+[node name="Torch" type="OmniLight3D" unique_id=849798539]
+script = ExtResource("2_vo3cf")
+
+[node name="torch_mounted2" parent="." unique_id=561994592 instance=ExtResource("1_yseja")]
+
+[node name="StaticBody3D" type="StaticBody3D" parent="." unique_id=20799695]
+
+[node name="CollisionShape3D" type="CollisionShape3D" parent="StaticBody3D" unique_id=2067663894]
+shape = SubResource("BoxShape3D_3xd07")

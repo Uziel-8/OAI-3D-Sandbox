@@ -49,6 +49,7 @@ func _process(_delta: float) -> void:
 
 func _on_health_changed(_amount: float, remaining: float, _source: Node) -> void:
 	_refresh(remaining / _receiver.max_health)
+	visible = true
 
 
 func _on_died(_source: Node) -> void:

@@ -19,7 +19,7 @@ class_name SpiderWalker
 @export_group("Player Chase")
 ## If true, chases the first node in the "player" group whenever one exists
 ## in the scene, falling back to wandering if none is found.
-@export var chase_player: bool = false
+@export var chase_player: bool = true
 
 @export_group("Knockback")
 ## How long, after apply_impulse() lands, AI locomotion is suspended so the

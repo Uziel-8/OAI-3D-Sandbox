@@ -18,14 +18,13 @@ var _entries: Array[JournalEntry] = []
 
 func _ready() -> void:
 	add_to_group("menu_screen")
+	add_to_group("journal_screen")
 	visible = false
 	_close_button.pressed.connect(close)
 	_entry_list.item_selected.connect(_on_entry_selected)
-	for entry in MockJournal.starting_entries():
-		add_entry(entry)
-	if not _entries.is_empty():
-		_entry_list.select(0)
-		_show_entry(0)
+	# Generic fallback log; a level's LevelObjectives node replaces this on load
+	# with that level's own entries (see set_entries).
+	set_entries(MockJournal.starting_entries())
 
 
 func _unhandled_input(event: InputEvent) -> void:
@@ -67,6 +66,21 @@ func add_entry(entry: JournalEntry) -> int:
 	_entries.append(entry)
 	_entry_list.add_item(entry.title)
 	return _entries.size() - 1
+
+
+## Replaces the whole journal with the given entries and selects the first one.
+## Used by a level's LevelObjectives node so each level shows its own log.
+func set_entries(entries: Array[JournalEntry]) -> void:
+	_entries.clear()
+	_entry_list.clear()
+	for entry in entries:
+		add_entry(entry)
+	if _entries.is_empty():
+		_entry_title.text = ""
+		_entry_body.text = ""
+	else:
+		_entry_list.select(0)
+		_show_entry(0)
 
 
 func _on_entry_selected(index: int) -> void:

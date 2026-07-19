@@ -46,8 +46,8 @@ func _ready() -> void:
 	get_tree().node_added.connect(_on_node_added)
 	_bind_player_health.call_deferred()
 
-	set_objective("Remove the Foreman",
-		"Drive the dock foreman out of the port. How is up to you — force, bribery, misdirection.")
+	# Neutral default; each level's LevelObjectives node sets its own objective.
+	set_objective("No Objective", "Your current objective will appear here.")
 
 
 func _on_node_added(node: Node) -> void:

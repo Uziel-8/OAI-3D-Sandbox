@@ -2,6 +2,9 @@
 
 [ext_resource type="PackedScene" uid="uid://bs72ogkvdd7d6" path="res://Scenes/brackeys-proto-controller-main/proto_controller/proto_controller.tscn" id="1_v3rpw"]
 [ext_resource type="Script" uid="uid://btho6ax4rvb5j" path="res://Scripts/Environment/torch_flicker.gd" id="2_smnlx"]
+[ext_resource type="PackedScene" uid="uid://cpvew8y2sqp5e" path="res://Objects/torch.tscn" id="3_12fag"]
+[ext_resource type="PackedScene" uid="uid://c0f3nu440pltv" path="res://Enemies/Spawner/enemy_spawner.tscn" id="4_t7v2y"]
+[ext_resource type="Script" uid="uid://w63empltnlfy" path="res://Scripts/Level/level_objectives.gd" id="5_lvlobj"]
 
 [sub_resource type="ProceduralSkyMaterial" id="ProceduralSkyMaterial_v3rpw"]
 sky_top_color = Color(0.68738997, 0.654418, 0.84101385, 1)
@@ -22,6 +25,11 @@ glow_enabled = true
 [node name="WorldEnvironment" type="WorldEnvironment" parent="." unique_id=961564677]
 environment = SubResource("Environment_12fag")
 
+[node name="LevelObjectives" type="Node" parent="." unique_id=788944696]
+script = ExtResource("5_lvlobj")
+objective_title = "Breach the Keep"
+objective_text = "The foreman's paymaster holes up in this keep, and the nests inside spill spiders without end. Find and destroy what's feeding them, then reach the inner hall."
+
 [node name="DirectionalLight3D" type="DirectionalLight3D" parent="." unique_id=275904808]
 transform = Transform3D(-0.8660254, -0.43301278, 0.25, 0, 0.49999997, 0.86602545, -0.50000006, 0.75, -0.43301266, 0, 0, 0)
 light_color = Color(0.7326706, 0.5353322, 0.34816834, 1)
@@ -29,20 +37,10 @@ shadow_enabled = true
 
 [node name="Floor" type="CSGBox3D" parent="." unique_id=853777073]
 use_collision = true
-size = Vector3(61.4, 1, 78.1)
+size = Vector3(60, 1, 75)
 
 [node name="ProtoController" parent="." unique_id=1601463080 instance=ExtResource("1_v3rpw")]
 transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, 18, 0.8, -22)
-
-[node name="CSGBox3D" type="CSGBox3D" parent="." unique_id=52727068]
-transform = Transform3D(0, 0, 1.0000001, 0, 1, 0, -1.0000001, 0, 0, 12.5, 5.1499996, -36.9)
-use_collision = true
-size = Vector3(1, 9.5, 33.2)
-
-[node name="CSGBox3D2" type="CSGBox3D" parent="." unique_id=2021660246]
-transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, 29.5, 5.1499996, -20.800001)
-use_collision = true
-size = Vector3(1, 9.5, 33.2)
 
 [node name="CSGBox3D9" type="CSGBox3D" parent="." unique_id=100798052]
 transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, 30, 5, 27)
@@ -73,41 +71,6 @@ size = Vector3(1, 9.5, 18)
 transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, 0, -3, -1)
 operation = 2
 size = Vector3(2, 3, 3)
-
-[node name="CSGBox3D3" type="CSGBox3D" parent="." unique_id=230953929]
-transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, -3.5, 5.1499996, -29.900002)
-use_collision = true
-size = Vector3(1, 9.5, 15)
-
-[node name="CSGBox3D4" type="CSGBox3D" parent="." unique_id=676135451]
-transform = Transform3D(-4.3711395e-08, 1, -4.850992e-15, -0.86602545, -3.7855166e-08, -0.5, -0.5, -2.185569e-08, 0.86602545, 0.5, 1, -26)
-use_collision = true
-size = Vector3(1, 9.5, 9)
-
-[node name="CSGBox3D6" type="CSGBox3D" parent="." unique_id=1464727409]
-transform = Transform3D(0.5, -2.1855694e-08, -0.86602545, -0.86602545, -3.7855173e-08, -0.5, -2.1855698e-08, 1, -3.7855173e-08, 7, 5, -35)
-use_collision = true
-size = Vector3(1, 9.5, 10)
-
-[node name="CSGBox3D5" type="CSGBox3D" parent="." unique_id=970663408]
-transform = Transform3D(-4.3711392e-08, 1, -1.2150996e-15, -1.0000001, -4.371139e-08, 0, 0, 1.7763568e-15, 1.0000001, 0.5, 3, -35)
-use_collision = true
-size = Vector3(1, 9.5, 10)
-
-[node name="CSGBox3D7" type="CSGBox3D" parent="." unique_id=1850320235]
-transform = Transform3D(-4.3711392e-08, 1, -1.2150996e-15, -1.0000001, -4.371139e-08, 0, 0, 1.7763568e-15, 1.0000001, 24, 5, -32)
-use_collision = true
-size = Vector3(1, 9.5, 10)
-
-[node name="CSGBox3D8" type="CSGBox3D" parent="." unique_id=2091408392]
-transform = Transform3D(1.0000001, 3.5527137e-15, -5.2765448e-23, -3.5527137e-15, 1, -1.2150996e-15, 0, 1.7763568e-15, 1.0000001, 19, 3, -32)
-use_collision = true
-size = Vector3(1, 5, 10)
-
-[node name="OmniLight3D" type="OmniLight3D" parent="." unique_id=1319743450]
-transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, 26, 4, -34)
-light_color = Color(0.9340804, 0.9340805, 0.93408036, 1)
-script = ExtResource("2_smnlx")
 
 [node name="OmniLight3D2" type="OmniLight3D" parent="." unique_id=269104850]
 transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, 14, 2, 35)
@@ -154,3 +117,205 @@ transform = Transform3D(1, 0, 0, 0, -0.17364821, 0.9848078, 0, -0.9848078, -0.17
 light_energy = 7.0
 spot_range = 9.259
 spot_attenuation = 0.6
+
+[node name="MainStructure" type="CSGCombiner3D" parent="." unique_id=860115595]
+use_collision = true
+
+[node name="CSGBox3D" type="CSGBox3D" parent="MainStructure" unique_id=52727068]
+transform = Transform3D(0, 0, 1.0000001, 0, 1, 0, -1.0000001, 0, 0, 12, 5, -39)
+use_collision = true
+size = Vector3(1, 10, 35)
+
+[node name="CSGBox3D17" type="CSGBox3D" parent="MainStructure" unique_id=1204388989]
+transform = Transform3D(0, 0, 1.0000001, 0, 1, 0, -1.0000001, 0, 0, 12, 15, -39)
+use_collision = true
+size = Vector3(1, 10, 35)
+
+[node name="CSGBox3D2" type="CSGBox3D" parent="MainStructure" unique_id=2021660246]
+transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, 30, 5, -22)
+use_collision = true
+size = Vector3(1, 10, 35)
+
+[node name="CSGBox3D16" type="CSGBox3D" parent="MainStructure" unique_id=1433854267]
+transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, 30, 15, -22)
+use_collision = true
+size = Vector3(1, 10, 35)
+
+[node name="CSGBox3D3" type="CSGBox3D" parent="MainStructure" unique_id=230953929]
+transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, -5, 5, -32)
+use_collision = true
+size = Vector3(1, 10, 15)
+
+[node name="CSGBox3D18" type="CSGBox3D" parent="MainStructure" unique_id=89180428]
+transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, -5, 14, -21.5)
+use_collision = true
+size = Vector3(1, 12, 36)
+
+[node name="CSGBox3D" type="CSGBox3D" parent="MainStructure/CSGBox3D18" unique_id=368490560]
+transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, 0, -3, 12)
+operation = 2
+size = Vector3(1, 5, 3)
+
+[node name="CSGBox3D4" type="CSGBox3D" parent="MainStructure" unique_id=676135451]
+transform = Transform3D(-4.37114e-08, 1, -5.4020657e-15, -0.86602545, -3.7855152e-08, -0.5, -0.5, -2.1855685e-08, 0.86602545, 0, 1, -25)
+use_collision = true
+size = Vector3(1, 10, 10)
+
+[node name="CSGBox3D6" type="CSGBox3D" parent="MainStructure" unique_id=1464727409]
+transform = Transform3D(0.5, -2.1855694e-08, -0.86602545, -0.86602545, -3.7855173e-08, -0.5, -2.1855698e-08, 1, -3.7855173e-08, 8, 5, -34)
+use_collision = true
+size = Vector3(1, 10, 10)
+
+[node name="CSGBox3D5" type="CSGBox3D" parent="MainStructure" unique_id=970663408]
+transform = Transform3D(-4.3711392e-08, 1, -1.2150996e-15, -1.0000001, -4.371139e-08, 0, 0, 1.7763568e-15, 1.0000001, 0, 3, -34)
+use_collision = true
+size = Vector3(1, 10, 10)
+
+[node name="CSGBox3D7" type="CSGBox3D" parent="MainStructure" unique_id=1850320235]
+transform = Transform3D(-4.3711392e-08, 1, -1.2150996e-15, -1.0000001, -4.371139e-08, 0, 0, 1.7763568e-15, 1.0000001, 24, 5, -32)
+use_collision = true
+size = Vector3(1, 9.5, 10)
+
+[node name="CSGBox3D14" type="CSGBox3D" parent="MainStructure" unique_id=967627606]
+transform = Transform3D(-4.3711392e-08, 1, -1.2150996e-15, -1.0000001, -4.371139e-08, 0, 0, 1.7763568e-15, 1.0000001, 21, 8, -21)
+use_collision = true
+size = Vector3(1, 18, 35)
+
+[node name="CSGBox3D20" type="CSGBox3D" parent="MainStructure" unique_id=621209199]
+transform = Transform3D(-4.3711392e-08, 1, -1.2150996e-15, -1.0000001, -4.371139e-08, 0, 0, 1.7763568e-15, 1.0000001, -17.5, 8, -29.5)
+use_collision = true
+size = Vector3(1, 25, 18)
+
+[node name="CSGBox3D19" type="CSGBox3D" parent="MainStructure" unique_id=579101890]
+transform = Transform3D(-4.3711392e-08, 1, -1.2150996e-15, -1.0000001, -4.371139e-08, 0, 0, 1.7763568e-15, 1.0000001, 12.5, 20, -21)
+use_collision = true
+size = Vector3(1, 35, 35)
+
+[node name="CSGBox3D15" type="CSGBox3D" parent="MainStructure" unique_id=1319354212]
+transform = Transform3D(1.9106857e-15, -4.371139e-08, -1.0000001, -1.0000001, -4.3711392e-08, 4.3169005e-30, -4.3711395e-08, 1, -4.3711392e-08, -8.5, 8, -12)
+use_collision = true
+size = Vector3(1, 18, 42)
+
+[node name="CSGBox3D8" type="CSGBox3D" parent="MainStructure" unique_id=2091408392]
+transform = Transform3D(1.0000001, 3.5527137e-15, -5.2765448e-23, -3.5527137e-15, 1, -1.2150996e-15, 0, 1.7763568e-15, 1.0000001, 19, 3, -32)
+use_collision = true
+size = Vector3(1, 5, 10)
+
+[node name="CSGCylinder3D" type="CSGCylinder3D" parent="MainStructure" unique_id=640912590]
+transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, -5, 4.078887, -4)
+height = 7.698242
+
+[node name="CSGCylinder3D4" type="CSGCylinder3D" parent="MainStructure" unique_id=1146332440]
+transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, 13, 4.078887, -4)
+height = 7.698242
+
+[node name="CSGCylinder3D2" type="CSGCylinder3D" parent="MainStructure" unique_id=1726064922]
+transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, -26, 4.078887, -4)
+height = 7.698242
+
+[node name="CSGCylinder3D3" type="CSGCylinder3D" parent="MainStructure" unique_id=1471276362]
+transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, -26, 4.078887, -35)
+height = 7.698242
+
+[node name="MainStructTorches" type="Node3D" parent="." unique_id=1792701396]
+
+[node name="Torch" parent="MainStructTorches" unique_id=617857715 instance=ExtResource("3_12fag")]
+transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, 26, 12, -38)
+_base_energy = 2.0
+_base_range = 15.0
+
+[node name="Torch2" parent="MainStructTorches" unique_id=777199549 instance=ExtResource("3_12fag")]
+transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, -3, 12, -15)
+_base_energy = 2.0
+_base_range = 15.0
+
+[node name="Torch3" parent="MainStructTorches" unique_id=1875965595 instance=ExtResource("3_12fag")]
+transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, -3, 12, -8)
+_base_energy = 2.0
+_base_range = 15.0
+
+[node name="Torch4" parent="MainStructTorches" unique_id=1027455570 instance=ExtResource("3_12fag")]
+transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, 29, 12, -8)
+_base_energy = 2.0
+_base_range = 15.0
+
+[node name="Torch5" parent="MainStructTorches" unique_id=226358841 instance=ExtResource("3_12fag")]
+transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, 29, 12, -23)
+_base_energy = 2.0
+_base_range = 15.0
+
+[node name="Torch6" parent="MainStructTorches" unique_id=386950556 instance=ExtResource("3_12fag")]
+transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, 29, 4, -6)
+_base_energy = 2.0
+_base_range = 15.0
+
+[node name="Torch7" parent="MainStructTorches" unique_id=701201780 instance=ExtResource("3_12fag")]
+transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, 29, 3, -34)
+_base_energy = 2.0
+_base_range = 15.0
+
+[node name="Torch8" parent="MainStructTorches" unique_id=228205534 instance=ExtResource("3_12fag")]
+transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, 20, 3, -34)
+_base_energy = 2.0
+_base_range = 15.0
+
+[node name="Torch9" parent="MainStructTorches" unique_id=972447078 instance=ExtResource("3_12fag")]
+transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, 18, 3, -34)
+_base_energy = 2.0
+_base_range = 15.0
+
+[node name="Torch10" parent="MainStructTorches" unique_id=626683690 instance=ExtResource("3_12fag")]
+transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, -4, 5, -25)
+_base_energy = 2.0
+_base_range = 15.0
+
+[node name="Torch11" parent="MainStructTorches" unique_id=78986486 instance=ExtResource("3_12fag")]
+transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, -4, 5, -4)
+_base_energy = 2.0
+_base_range = 15.0
+
+[node name="Torch17" parent="MainStructTorches" unique_id=1647676931 instance=ExtResource("3_12fag")]
+transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, -6, 5, -4)
+_base_energy = 2.0
+_base_range = 15.0
+
+[node name="Torch13" parent="MainStructTorches" unique_id=1395015986 instance=ExtResource("3_12fag")]
+transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, -25, 5, -4)
+_base_energy = 2.0
+_base_range = 15.0
+
+[node name="Torch18" parent="MainStructTorches" unique_id=437891645 instance=ExtResource("3_12fag")]
+transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, -27, 5, -4)
+_base_energy = 2.0
+_base_range = 15.0
+
+[node name="Torch14" parent="MainStructTorches" unique_id=1750700377 instance=ExtResource("3_12fag")]
+transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, -25, 5, -34)
+_base_energy = 2.0
+_base_range = 15.0
+
+[node name="Torch15" parent="MainStructTorches" unique_id=1891910941 instance=ExtResource("3_12fag")]
+transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, -7, 5, -34)
+_base_energy = 2.0
+_base_range = 15.0
+
+[node name="Torch12" parent="MainStructTorches" unique_id=2106091325 instance=ExtResource("3_12fag")]
+transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, 12, 5, -4)
+_base_energy = 2.0
+_base_range = 15.0
+
+[node name="Torch16" parent="MainStructTorches" unique_id=1074354820 instance=ExtResource("3_12fag")]
+transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, 14, 5, -4)
+_base_energy = 2.0
+_base_range = 15.0
+
+[node name="Barrels" type="Node3D" parent="." unique_id=1922137351]
+
+[node name="EnemySpawner" parent="." unique_id=1640676459 instance=ExtResource("4_t7v2y")]
+transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, 20, 2, 26)
+
+[node name="EnemySpawner3" parent="." unique_id=1041810950 instance=ExtResource("4_t7v2y")]
+transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, -17, 2, 26)
+
+[node name="EnemySpawner4" parent="." unique_id=2140106802 instance=ExtResource("4_t7v2y")]
+transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, -17, 10, -21)

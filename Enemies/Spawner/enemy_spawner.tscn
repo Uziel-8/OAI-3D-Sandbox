@@ -1,0 +1,40 @@
+[gd_scene format=3 uid="uid://c0f3nu440pltv"]
+
+[ext_resource type="Script" uid="uid://b0npthclm3q0w" path="res://Enemies/Spawner/enemy_spawner.gd" id="1_spawner"]
+[ext_resource type="PackedScene" uid="uid://cx3tkq4j7pgev" path="res://Enemies/SpiderWalker/spider_walker.tscn" id="2_spider"]
+[ext_resource type="PackedScene" uid="uid://dvito1lehljda" path="res://Components/damage_receiver.tscn" id="3_receiver"]
+[ext_resource type="PackedScene" path="res://Components/health_bar_3d.tscn" id="4_healthbar"]
+
+[sub_resource type="StandardMaterial3D" id="Mat_spawner"]
+albedo_color = Color(0.16, 0.06, 0.07, 1)
+roughness = 0.7
+emission_enabled = true
+emission = Color(0.7, 0.12, 0.12, 1)
+emission_energy_multiplier = 0.9
+
+[sub_resource type="BoxMesh" id="BoxMesh_spawner"]
+material = SubResource("Mat_spawner")
+size = Vector3(1.2, 1.4, 1.2)
+
+[sub_resource type="BoxShape3D" id="BoxShape_spawner"]
+size = Vector3(1.2, 1.4, 1.2)
+
+[node name="EnemySpawner" type="StaticBody3D" unique_id=2140106802]
+script = ExtResource("1_spawner")
+enemy_scene = ExtResource("2_spider")
+
+[node name="Mesh" type="MeshInstance3D" parent="." unique_id=485239090]
+transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, 0, 0.7, 0)
+mesh = SubResource("BoxMesh_spawner")
+
+[node name="CollisionShape3D" type="CollisionShape3D" parent="." unique_id=1285951675]
+transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, 0, 0.7, 0)
+shape = SubResource("BoxShape_spawner")
+
+[node name="DamageReceiver" parent="." unique_id=223156783 instance=ExtResource("3_receiver")]
+max_health = 60.0
+xp_reward = 40.0
+
+[node name="HealthBar3D" parent="." unique_id=594342602 instance=ExtResource("4_healthbar")]
+transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, 0, 1.7, 0)
+hide_when_full = true

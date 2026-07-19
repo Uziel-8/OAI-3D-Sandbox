@@ -8,6 +8,24 @@
 [ext_resource type="PackedScene" uid="uid://du6fbq63fqy6x" path="res://Objects/floor.tscn" id="4_81xng"]
 [ext_resource type="PackedScene" uid="uid://cq8ncs5pnq071" path="res://Objects/wall_window.tscn" id="5_8c0lf"]
 [ext_resource type="PackedScene" uid="uid://cx3tkq4j7pgev" path="res://Enemies/SpiderWalker/spider_walker.tscn" id="7_8c0lf"]
+[ext_resource type="Script" path="res://Scripts/Level/level_objectives.gd" id="8_lvlobj"]
+[ext_resource type="Script" path="res://Scripts/UI/journal_entry.gd" id="9_entry"]
+
+[sub_resource type="Resource" id="Entry_docks"]
+script = ExtResource("9_entry")
+title = "Arrival at the Docks"
+body = "Salt, tar, and rot. The harbour district runs on cheap labour and cheaper loyalty, its warehouses stacked to the rafters with crates nobody asks about.
+
+Barrels everywhere — some full, some not. Worth remembering that a heavy thing dropped from a height asks no questions."
+category = "Lore"
+
+[sub_resource type="Resource" id="Entry_telekinesis"]
+script = ExtResource("9_entry")
+title = "On the Art of Telekinesis"
+body = "The Force discipline is blunt but honest: what you can see, you can shove. Reach out to hold a thing at arm's length, then release to send it flying. A firm push clears a path — or a person.
+
+The scholars insist there is subtlety to be learned. For now, there is leverage."
+category = "Lore"
 
 [sub_resource type="ProceduralSkyMaterial" id="ProceduralSkyMaterial_5xgho"]
 sky_horizon_color = Color(0.66224277, 0.6717428, 0.6867428, 1)
@@ -30,6 +48,12 @@ shadow_enabled = true
 
 [node name="WorldEnvironment" type="WorldEnvironment" parent="." unique_id=629858973]
 environment = SubResource("Environment_vonw3")
+
+[node name="LevelObjectives" type="Node" parent="."]
+script = ExtResource("8_lvlobj")
+objective_title = "Remove the Foreman"
+objective_text = "The dockmaster wants Karrick, the yard foreman, gone from the port — quietly or otherwise. Force, bribery, persuasion, or misdirection; the method is yours to choose."
+journal_entries = Array[JournalEntry]([SubResource("Entry_docks"), SubResource("Entry_telekinesis")])
 
 [node name="Floor" type="CSGBox3D" parent="." unique_id=372578064]
 use_collision = true
