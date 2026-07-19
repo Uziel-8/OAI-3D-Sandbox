@@ -59,6 +59,7 @@ var _grid_slots: Array[InventorySlot] = []
 
 func _ready() -> void:
 	add_to_group("inventory_screen")
+	add_to_group("menu_screen")
 	visible = false
 	_close_button.pressed.connect(close)
 	_build_grid()
@@ -84,6 +85,7 @@ func toggle() -> void:
 		open()
 
 func open() -> void:
+	_close_other_menus()
 	is_open = true
 	visible = true
 	_refresh_character_stats()
@@ -104,6 +106,13 @@ func _set_hud_visible(shown: bool) -> void:
 	var hud := get_tree().get_first_node_in_group("hud")
 	if hud and hud.has_method("set_hud_visible"):
 		hud.set_hud_visible(shown)
+
+## Closes any other open menu screen (journal/inventory) so only one is up at a
+## time -- otherwise closing one would unpause/recapture the mouse under another.
+func _close_other_menus() -> void:
+	for menu in get_tree().get_nodes_in_group("menu_screen"):
+		if menu != self and menu.is_open:
+			menu.close()
 
 ## Pulls the character-sheet vitals from the real sources (player DamageReceiver
 ## for health, PlayerState for mana/stamina). Called on open; values can't change

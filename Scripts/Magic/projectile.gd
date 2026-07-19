@@ -40,7 +40,13 @@ func _physics_process(delta: float) -> void:
 
 
 func _on_body_entered(body: Node3D) -> void:
-	if _spent or body.get_rid() == _exclude_rid:
+	if _spent:
+		return
+	# The caster is excluded by RID, but only CollisionObject3D bodies have
+	# get_rid(). CSG greybox geometry (use_collision on a CSGBox3D, which is a
+	# VisualInstance3D) registers a collider without being one, so guard the
+	# call -- such bodies aren't the caster anyway and should just be impacted.
+	if body.has_method("get_rid") and body.get_rid() == _exclude_rid:
 		return
 	_impact(body)
 

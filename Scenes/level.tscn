@@ -1,6 +1,7 @@
 [gd_scene format=3 uid="uid://btv2ljni7v2uc"]
 
 [ext_resource type="PackedScene" uid="uid://bs72ogkvdd7d6" path="res://Scenes/brackeys-proto-controller-main/proto_controller/proto_controller.tscn" id="1_6phgx"]
+[ext_resource type="Script" uid="uid://btho6ax4rvb5j" path="res://Scripts/Environment/torch_flicker.gd" id="1_754fn"]
 [ext_resource type="PackedScene" uid="uid://bkhnqd4tdcft5" path="res://Graphics/Pirate/ship-pirate-large.glb" id="2_81xng"]
 [ext_resource type="PackedScene" uid="uid://b3mxd4md0rime" path="res://Objects/barrel.tscn" id="3_wqkje"]
 [ext_resource type="PackedScene" uid="uid://cqbheaovqsylc" path="res://Objects/wall.tscn" id="4_0f350"]
@@ -18,6 +19,7 @@ sky_material = SubResource("ProceduralSkyMaterial_5xgho")
 [sub_resource type="Environment" id="Environment_vonw3"]
 background_mode = 2
 sky = SubResource("Sky_u52ul")
+ambient_light_sky_contribution = 0.5
 glow_enabled = true
 
 [node name="Level" type="Node3D" unique_id=1147942204]
@@ -38,6 +40,7 @@ transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, 14.114029, 2.366107, -13.6706
 light_color = Color(0.7830384, 0.65849566, 0.4674508, 1)
 light_energy = 2.333
 omni_range = 7.0
+script = ExtResource("1_754fn")
 
 [node name="ProtoController" parent="." unique_id=1601463080 instance=ExtResource("1_6phgx")]
 

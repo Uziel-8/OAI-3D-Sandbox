@@ -7,6 +7,8 @@ class_name TorchFlicker
 ## light_color at _ready() as the flame's resting values, so just tune those
 ## on the light itself and drop this script on.
 
+@export var _base_energy: float = 1.0
+@export var _base_range: float = 5.0
 @export var energy_flicker: float = 0.5
 @export var range_flicker: float = 0.3
 @export var flicker_speed: float = 1.8
@@ -18,8 +20,6 @@ class_name TorchFlicker
 @export var cool_color: Color = Color(0.85, 0.5, 0.2)
 @export var hot_color: Color = Color(1.0, 0.78, 0.4)
 
-var _base_energy: float
-var _base_range: float
 var _noise := FastNoiseLite.new()
 var _time: float = 0.0
 var _gust_check_timer: float = 0.0
