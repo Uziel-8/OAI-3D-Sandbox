@@ -4,6 +4,7 @@
 [ext_resource type="Script" uid="uid://btho6ax4rvb5j" path="res://Scripts/Environment/torch_flicker.gd" id="2_smnlx"]
 [ext_resource type="PackedScene" uid="uid://cpvew8y2sqp5e" path="res://Objects/torch.tscn" id="3_12fag"]
 [ext_resource type="PackedScene" uid="uid://c0f3nu440pltv" path="res://Enemies/Spawner/enemy_spawner.tscn" id="4_t7v2y"]
+[ext_resource type="PackedScene" uid="uid://b3mxd4md0rime" path="res://Objects/barrel.tscn" id="5_cggpd"]
 [ext_resource type="Script" uid="uid://w63empltnlfy" path="res://Scripts/Level/level_objectives.gd" id="5_lvlobj"]
 
 [sub_resource type="ProceduralSkyMaterial" id="ProceduralSkyMaterial_v3rpw"]
@@ -310,6 +311,18 @@ _base_energy = 2.0
 _base_range = 15.0
 
 [node name="Barrels" type="Node3D" parent="." unique_id=1922137351]
+
+[node name="Barrel" parent="Barrels" unique_id=1793100144 instance=ExtResource("5_cggpd")]
+transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, 0, 0.6653528, 10.490949)
+
+[node name="Barrel2" parent="Barrels" unique_id=2029488800 instance=ExtResource("5_cggpd")]
+transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, 0, 0.6653528, 8.622796)
+
+[node name="Barrel3" parent="Barrels" unique_id=713332385 instance=ExtResource("5_cggpd")]
+transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, 1.4298477, 0.6653528, 10.492527)
+
+[node name="Barrel4" parent="Barrels" unique_id=1809112400 instance=ExtResource("5_cggpd")]
+transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, 0.7298789, 1.618263, 10.492527)
 
 [node name="EnemySpawner" parent="." unique_id=1640676459 instance=ExtResource("4_t7v2y")]
 transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, 20, 2, 26)

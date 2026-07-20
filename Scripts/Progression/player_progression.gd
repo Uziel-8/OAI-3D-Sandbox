@@ -36,6 +36,10 @@ const BASELINE := 10
 @export var curve_exponent: float = 1.5
 @export var attribute_points_per_level: int = 30
 @export var skill_points_per_level: int = 1
+## Skill points the player starts with. With spells fully gated behind the skill
+## trees, this is what lets a fresh game unlock a root or two immediately; set to
+## 0 for a hardcore start where nothing is castable until you level.
+@export var starting_skill_points: int = 3
 
 @export_group("Stat Scaling (per point above baseline)")
 ## Player health before CON: matches the receiver authored in proto_controller.tscn.
@@ -58,6 +62,7 @@ var _player_receiver: DamageReceiver
 
 
 func _ready() -> void:
+	skill_points = starting_skill_points
 	# The player body (and its DamageReceiver) is recreated on the death-reload,
 	# so push CON-derived health onto it whenever one enters the tree.
 	get_tree().node_added.connect(_on_node_added)
@@ -132,6 +137,25 @@ func spend_attribute_point(attribute: String) -> bool:
 	attribute_changed.emit(attribute, attributes[attribute])
 	points_changed.emit(attribute_points, skill_points)
 	return true
+
+
+## Spends skill points (the currency behind the magic skill trees). SkillSystem
+## calls this when unlocking a node; kept here so skill_points stays single-sourced
+## and the HUD/character-sheet readouts keep working. Returns true on success.
+func spend_skill_point(amount: int = 1) -> bool:
+	if amount <= 0 or skill_points < amount:
+		return false
+	skill_points -= amount
+	points_changed.emit(attribute_points, skill_points)
+	return true
+
+
+## Grants skill points from any source (respec refunds now; quests/rewards later).
+func grant_skill_points(amount: int) -> void:
+	if amount <= 0:
+		return
+	skill_points += amount
+	points_changed.emit(attribute_points, skill_points)
 
 
 ## Per-level side effects beyond granting points. Kept minimal deliberately:

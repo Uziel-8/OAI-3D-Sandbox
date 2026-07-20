@@ -41,6 +41,12 @@ func show_spell(spell: SpellDefinition) -> void:
 	var footer := "Cooldown %.1fs" % spell.cooldown if spell.cooldown > 0.0 else ""
 	show_info(spell.spell_name, spell.icon_color, type_str, spell.description, [], footer)
 
+## `status` is the live unlock state, built by the caller (SkillTreeView) since the
+## tooltip doesn't know the point balance -- e.g. "Unlocked", "Costs 2 points",
+## "Locked — requires Fireball".
+func show_skill(node: SkillNode, status: String) -> void:
+	show_info(node.display_name, node.icon_color, node.effect_label(), node.description, [], status)
+
 ## Shared renderer behind show_item()/show_spell() -- keeps the tooltip decoupled
 ## from any one data shape (duck typing over a shared base class, same convention
 ## the Magic spells use for apply_impulse()).

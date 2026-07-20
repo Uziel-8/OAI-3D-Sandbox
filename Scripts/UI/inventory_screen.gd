@@ -20,6 +20,8 @@ const SpellSlotScene := preload("res://Scenes/UI/spell_slot.tscn")
 ## node nesting before assuming unique_name_in_owner is at fault again.)
 const _CHAR_PATH := "Center/Frame/Layout/Tabs/Inventory/CharacterPanel/CharVBox/PaperDollCenter/PaperDoll/"
 const _SPELL_PATH := "Center/Frame/Layout/Tabs/Spellbook/LoadoutPanel/LoadoutVBox/"
+## SkillTreeView is an instanced scene node -> looked up by $path, not %unique_name.
+const _SKILLTREE_PATH := "Center/Frame/Layout/Tabs/Skills/TreeScroll/SkillTreeView"
 
 @onready var _item_grid: GridContainer = %ItemGrid
 @onready var _weight_bar: ProgressBar = %WeightBar
@@ -27,6 +29,10 @@ const _SPELL_PATH := "Center/Frame/Layout/Tabs/Spellbook/LoadoutPanel/LoadoutVBo
 @onready var _armor_value_label: Label = %ArmorValueLabel
 @onready var _close_button: Button = %CloseButton
 @onready var _spell_grid: GridContainer = %SpellGrid
+
+@onready var _skill_points_label: Label = %SkillPointsLabel
+@onready var _school_switcher: HBoxContainer = %SchoolSwitcher
+@onready var _skill_tree_view: SkillTreeView = get_node(_SKILLTREE_PATH)
 
 @onready var _level_label: Label = %LevelLabel
 @onready var _xp_bar: ProgressBar = %XPBar
@@ -69,6 +75,7 @@ func _ready() -> void:
 	_populate_spellbook()
 	_connect_loadout_slots()
 	_setup_progression()
+	_setup_skills()
 
 func _unhandled_input(event: InputEvent) -> void:
 	if event.is_action_pressed("inventory"):
@@ -238,12 +245,24 @@ func _loadout_slot_for(trigger_action: String) -> SpellSlot:
 			return slot
 	return null
 
-## Builds the read-only "known spells" palette and sets each loadout slot to
-## the same default the live SpellCaster was authored with in proto_controller.tscn.
-## Populated before signals are connected so this doesn't immediately re-equip
-## the SpellCaster with what it already has.
+## Builds the spellbook palette from the spells the player has UNLOCKED in the
+## skill trees -- all spells are gated, so the palette starts empty and grows as
+## nodes are unlocked. The loadout slots start empty too (the SpellCaster is
+## authored empty), since nothing is castable until unlocked and equipped.
 func _populate_spellbook() -> void:
+	_rebuild_spell_palette()
+	var skills := _skill_system()
+	if skills:
+		skills.tree_changed.connect(_rebuild_spell_palette)
+
+func _rebuild_spell_palette() -> void:
+	for child in _spell_grid.get_children():
+		_spell_grid.remove_child(child)
+		child.queue_free()
+	var unlocked := _unlocked_spell_ids()
 	for spell_def in MockSpellbook.known_spells():
+		if not unlocked.has(spell_def.id):
+			continue
 		var slot := SpellSlotScene.instantiate() as SpellSlot
 		slot.is_loadout_slot = false
 		_spell_grid.add_child(slot)
@@ -251,12 +270,17 @@ func _populate_spellbook() -> void:
 		slot.slot_unhovered.connect(_on_slot_unhovered)
 		slot.set_spell(spell_def)
 
-	var defaults := MockSpellbook.default_loadout()
-	for trigger_action in defaults.keys():
-		var loadout_slot := _loadout_slot_for(trigger_action)
-		var spell_def := MockSpellbook.find(defaults[trigger_action])
-		if loadout_slot and spell_def:
-			loadout_slot.set_spell(spell_def)
+func _skill_system() -> SkillTreeSystem:
+	return get_node_or_null("/root/SkillSystem") as SkillTreeSystem
+
+## Unlocked spell ids as a Dictionary "set" for O(1) membership tests.
+func _unlocked_spell_ids() -> Dictionary:
+	var ids_set := {}
+	var skills := _skill_system()
+	if skills:
+		for id in skills.unlocked_spell_ids():
+			ids_set[id] = true
+	return ids_set
 
 func _connect_loadout_slots() -> void:
 	for slot in _loadout_slots():
@@ -356,8 +380,56 @@ func _refresh_progression() -> void:
 	_xp_label.text = "%d / %d XP" % [int(prog.current_xp), int(to_next)]
 	_points_label.text = "Attribute Points: %d      Skill Points: %d" % [prog.attribute_points, prog.skill_points]
 	_points_label.visible = prog.attribute_points > 0 or prog.skill_points > 0
+	if _skill_points_label:
+		_skill_points_label.text = "Skill Points: %d" % prog.skill_points
 	for attr in _attr_value_labels:
 		_attr_value_labels[attr].text = str(prog.attributes[attr])
 	# Allocation buttons only appear when there are points to spend.
 	for attr in _attr_plus_buttons:
 		_attr_plus_buttons[attr].visible = prog.attribute_points > 0
+
+# --- Skills (magic school skill trees) -----------------------------------------
+# The Skills tab: a school switcher row above a SkillTreeView canvas. The tree
+# view owns unlock-on-click and re-renders on SkillSystem.tree_changed; this
+# section just builds the per-school switcher buttons and drives the shared
+# tooltip off the view's hover signals. Schools are iterated from the data, so
+# adding one needs no changes here.
+
+var _school_buttons: Array[Button] = []
+
+func _setup_skills() -> void:
+	var skills := _skill_system()
+	if skills == null:
+		return
+	_skill_tree_view.node_hovered.connect(_on_skill_node_hovered)
+	_skill_tree_view.node_unhovered.connect(_on_slot_unhovered)
+	_build_school_switcher(skills.get_schools())
+
+func _build_school_switcher(schools: Array[SkillSchool]) -> void:
+	for child in _school_switcher.get_children():
+		child.queue_free()
+	_school_buttons.clear()
+	for i in schools.size():
+		var button := Button.new()
+		button.text = schools[i].display_name
+		button.toggle_mode = true
+		button.focus_mode = Control.FOCUS_NONE
+		button.pressed.connect(_select_school.bind(i))
+		_school_switcher.add_child(button)
+		_school_buttons.append(button)
+	if schools.size() > 0:
+		_select_school(0)
+
+func _select_school(index: int) -> void:
+	var skills := _skill_system()
+	if skills == null:
+		return
+	var schools := skills.get_schools()
+	if index < 0 or index >= schools.size():
+		return
+	for i in _school_buttons.size():
+		_school_buttons[i].button_pressed = (i == index)
+	_skill_tree_view.display_school(schools[index])
+
+func _on_skill_node_hovered(node: SkillNode, status: String) -> void:
+	_tooltip.show_skill(node, status)

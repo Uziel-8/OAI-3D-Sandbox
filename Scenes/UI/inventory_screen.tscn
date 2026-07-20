@@ -1,10 +1,11 @@
-[gd_scene load_steps=11 format=3]
+[gd_scene load_steps=12 format=3]
 
 [ext_resource type="Script" path="res://Scripts/UI/inventory_screen.gd" id="1_script"]
 [ext_resource type="Theme" path="res://Scenes/UI/inventory_theme.tres" id="2_theme"]
 [ext_resource type="PackedScene" path="res://Scenes/UI/inventory_slot.tscn" id="3_slot"]
 [ext_resource type="PackedScene" path="res://Scenes/UI/item_tooltip.tscn" id="4_tooltip"]
 [ext_resource type="PackedScene" path="res://Scenes/UI/spell_slot.tscn" id="5_spellslot"]
+[ext_resource type="PackedScene" path="res://Scenes/UI/skill_tree_view.tscn" id="6_skilltree"]
 
 [sub_resource type="StyleBoxFlat" id="StyleBoxFlat_frame"]
 bg_color = Color(0.055, 0.05, 0.06, 0.98)
@@ -585,6 +586,47 @@ size_flags_horizontal = 3
 theme_override_constants/h_separation = 10
 theme_override_constants/v_separation = 10
 columns = 6
+
+[node name="Skills" type="VBoxContainer" parent="Screen/Center/Frame/Layout/Tabs"]
+layout_mode = 2
+theme_override_constants/separation = 12
+
+[node name="SkillsHeader" type="HBoxContainer" parent="Screen/Center/Frame/Layout/Tabs/Skills"]
+layout_mode = 2
+
+[node name="SkillsTitle" type="Label" parent="Screen/Center/Frame/Layout/Tabs/Skills/SkillsHeader"]
+layout_mode = 2
+theme_override_colors/font_color = Color(0.95, 0.86, 0.6, 1)
+theme_override_font_sizes/font_size = 20
+text = "Skills"
+
+[node name="SkillsHeaderSpacer" type="Control" parent="Screen/Center/Frame/Layout/Tabs/Skills/SkillsHeader"]
+layout_mode = 2
+size_flags_horizontal = 3
+
+[node name="SkillPointsLabel" type="Label" parent="Screen/Center/Frame/Layout/Tabs/Skills/SkillsHeader"]
+unique_name_in_owner = true
+layout_mode = 2
+theme_override_colors/font_color = Color(0.65, 0.62, 0.58, 1)
+theme_override_font_sizes/font_size = 15
+text = "Skill Points: 0"
+
+[node name="SchoolSwitcher" type="HBoxContainer" parent="Screen/Center/Frame/Layout/Tabs/Skills"]
+unique_name_in_owner = true
+layout_mode = 2
+theme_override_constants/separation = 8
+
+[node name="SkillsSep" type="HSeparator" parent="Screen/Center/Frame/Layout/Tabs/Skills"]
+layout_mode = 2
+
+[node name="TreeScroll" type="ScrollContainer" parent="Screen/Center/Frame/Layout/Tabs/Skills"]
+layout_mode = 2
+size_flags_vertical = 3
+
+[node name="SkillTreeView" parent="Screen/Center/Frame/Layout/Tabs/Skills/TreeScroll" instance=ExtResource("6_skilltree")]
+layout_mode = 2
+size_flags_horizontal = 3
+size_flags_vertical = 3
 
 [node name="Tooltip" parent="Screen" instance=ExtResource("4_tooltip")]
 layout_mode = 1

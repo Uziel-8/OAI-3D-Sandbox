@@ -1,4 +1,4 @@
-[gd_scene load_steps=7 format=3]
+[gd_scene format=3 uid="uid://cgg7lgr5eeb5r"]
 
 [ext_resource type="Script" uid="uid://bjsqccjmod5hk" path="res://Scripts/Magic/telekinesis_push_spell.gd" id="1_push"]
 
@@ -32,13 +32,13 @@ billboard_mode = 1
 material = SubResource("StandardMaterial3D_push_particle")
 size = Vector2(0.1, 0.1)
 
-[node name="TelekinesisPush" type="Node"]
+[node name="TelekinesisPush" type="Node" unique_id=414339277]
 script = ExtResource("1_push")
-mana_cost = 5.0
 push_range = 15.0
 push_force = 15.0
+mana_cost = 5.0
 
-[node name="PushParticles" type="GPUParticles3D" parent="."]
+[node name="PushParticles" type="GPUParticles3D" parent="." unique_id=83206152]
 emitting = false
 amount = 50
 lifetime = 0.35
