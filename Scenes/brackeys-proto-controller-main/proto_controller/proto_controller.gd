@@ -55,11 +55,13 @@ var freeflying : bool = false
 ## IMPORTANT REFERENCES
 @onready var head: Node3D = $Head
 @onready var collider: CollisionShape3D = $Collider
+@onready var animation_player: AnimationPlayer = $Skeleton_Mage/AnimationPlayer
 
 func _ready() -> void:
 	check_input_mappings()
 	look_rotation.y = rotation.y
 	look_rotation.x = head.rotation.x
+	animation_player.play("Rig_Medium_General/Idle_B")
 
 func _unhandled_input(event: InputEvent) -> void:
 	# Mouse capturing
@@ -97,6 +99,7 @@ func _physics_process(delta: float) -> void:
 	if can_jump:
 		if Input.is_action_just_pressed(input_jump) and is_on_floor():
 			velocity.y = jump_velocity
+			animation_player.play("Rig_Medium_MovementBasic/Jump_Full_Short")
 
 	# Modify speed based on sprinting (sprinting while moving drains stamina;
 	# when it can't be paid, speed falls back to walking)
@@ -112,9 +115,11 @@ func _physics_process(delta: float) -> void:
 		if move_dir:
 			velocity.x = move_dir.x * move_speed
 			velocity.z = move_dir.z * move_speed
+			animation_player.play("Rig_Medium_MovementBasic/Running_B")
 		else:
 			velocity.x = move_toward(velocity.x, 0, move_speed)
 			velocity.z = move_toward(velocity.z, 0, move_speed)
+			animation_player.play("Rig_Medium_General/Idle_B")
 	else:
 		velocity.x = 0
 		velocity.y = 0

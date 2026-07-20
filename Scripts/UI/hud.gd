@@ -17,6 +17,7 @@ extends CanvasLayer
 @onready var _objective_title: Label = %ObjectiveTitle
 @onready var _objective_text: Label = %ObjectiveText
 @onready var _toast: Label = %LevelUpToast
+@onready var _interact_prompt: Label = %InteractPrompt
 
 var _health_receiver: DamageReceiver
 var _toast_tween: Tween
@@ -48,6 +49,14 @@ func _ready() -> void:
 
 	# Neutral default; each level's LevelObjectives node sets its own objective.
 	set_objective("No Objective", "Your current objective will appear here.")
+	set_interact_prompt("")
+
+
+## Shows/hides the centred interaction prompt (e.g. "[F]  Speak"). Driven by the
+## player's PlayerInteractor; empty text hides it.
+func set_interact_prompt(text: String) -> void:
+	_interact_prompt.text = text
+	_interact_prompt.visible = text != ""
 
 
 func _on_node_added(node: Node) -> void:

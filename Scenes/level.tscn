@@ -8,8 +8,22 @@
 [ext_resource type="PackedScene" uid="uid://du6fbq63fqy6x" path="res://Objects/floor.tscn" id="4_81xng"]
 [ext_resource type="PackedScene" uid="uid://cq8ncs5pnq071" path="res://Objects/wall_window.tscn" id="5_8c0lf"]
 [ext_resource type="PackedScene" uid="uid://cx3tkq4j7pgev" path="res://Enemies/SpiderWalker/spider_walker.tscn" id="7_8c0lf"]
-[ext_resource type="Script" path="res://Scripts/Level/level_objectives.gd" id="8_lvlobj"]
-[ext_resource type="Script" path="res://Scripts/UI/journal_entry.gd" id="9_entry"]
+[ext_resource type="Script" uid="uid://w63empltnlfy" path="res://Scripts/Level/level_objectives.gd" id="8_lvlobj"]
+[ext_resource type="Script" uid="uid://cha5kvabt04ak" path="res://Scripts/UI/journal_entry.gd" id="9_entry"]
+[ext_resource type="PackedScene" uid="uid://cekvlbgjcndlw" path="res://NPCs/dock_foreman.tscn" id="11_qxfql"]
+
+[sub_resource type="ProceduralSkyMaterial" id="ProceduralSkyMaterial_5xgho"]
+sky_horizon_color = Color(0.66224277, 0.6717428, 0.6867428, 1)
+ground_horizon_color = Color(0.66224277, 0.6717428, 0.6867428, 1)
+
+[sub_resource type="Sky" id="Sky_u52ul"]
+sky_material = SubResource("ProceduralSkyMaterial_5xgho")
+
+[sub_resource type="Environment" id="Environment_vonw3"]
+background_mode = 2
+sky = SubResource("Sky_u52ul")
+ambient_light_sky_contribution = 0.5
+glow_enabled = true
 
 [sub_resource type="Resource" id="Entry_docks"]
 script = ExtResource("9_entry")
@@ -27,19 +41,6 @@ body = "The Force discipline is blunt but honest: what you can see, you can shov
 The scholars insist there is subtlety to be learned. For now, there is leverage."
 category = "Lore"
 
-[sub_resource type="ProceduralSkyMaterial" id="ProceduralSkyMaterial_5xgho"]
-sky_horizon_color = Color(0.66224277, 0.6717428, 0.6867428, 1)
-ground_horizon_color = Color(0.66224277, 0.6717428, 0.6867428, 1)
-
-[sub_resource type="Sky" id="Sky_u52ul"]
-sky_material = SubResource("ProceduralSkyMaterial_5xgho")
-
-[sub_resource type="Environment" id="Environment_vonw3"]
-background_mode = 2
-sky = SubResource("Sky_u52ul")
-ambient_light_sky_contribution = 0.5
-glow_enabled = true
-
 [node name="Level" type="Node3D" unique_id=1147942204]
 
 [node name="DirectionalLight3D" type="DirectionalLight3D" parent="." unique_id=1657399630]
@@ -49,11 +50,11 @@ shadow_enabled = true
 [node name="WorldEnvironment" type="WorldEnvironment" parent="." unique_id=629858973]
 environment = SubResource("Environment_vonw3")
 
-[node name="LevelObjectives" type="Node" parent="."]
+[node name="LevelObjectives" type="Node" parent="." unique_id=1222501849]
 script = ExtResource("8_lvlobj")
 objective_title = "Remove the Foreman"
 objective_text = "The dockmaster wants Karrick, the yard foreman, gone from the port — quietly or otherwise. Force, bribery, persuasion, or misdirection; the method is yours to choose."
-journal_entries = Array[JournalEntry]([SubResource("Entry_docks"), SubResource("Entry_telekinesis")])
+journal_entries = Array[ExtResource("9_entry")]([SubResource("Entry_docks"), SubResource("Entry_telekinesis")])
 
 [node name="Floor" type="CSGBox3D" parent="." unique_id=372578064]
 use_collision = true
@@ -73,23 +74,18 @@ transform = Transform3D(-2, 0, 3.019916e-07, 0, 2, 0, -3.019916e-07, 0, -2, 27.7
 
 [node name="SpiderWalker" parent="." unique_id=259960257 instance=ExtResource("7_8c0lf")]
 transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, 0, 2.4645534, -7.202213)
-chase_player = true
 
 [node name="SpiderWalker2" parent="." unique_id=1466709724 instance=ExtResource("7_8c0lf")]
 transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, -1.9000006, 2.764554, -15.202213)
-chase_player = true
 
 [node name="SpiderWalker3" parent="." unique_id=435179433 instance=ExtResource("7_8c0lf")]
 transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, -7.9000006, 1.5645533, -18.702213)
-chase_player = true
 
 [node name="SpiderWalker4" parent="." unique_id=1003662317 instance=ExtResource("7_8c0lf")]
 transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, -5.8000007, 2.4645538, -18.102213)
-chase_player = true
 
 [node name="SpiderWalker5" parent="." unique_id=657044591 instance=ExtResource("7_8c0lf")]
 transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, -5.9000006, 3.764553, -14.702213)
-chase_player = true
 
 [node name="Barrels" type="Node3D" parent="." unique_id=1249771163]
 
@@ -588,3 +584,6 @@ transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, 20, 0.5, 20)
 
 [node name="Floor145" parent="Floors" unique_id=1087890088 instance=ExtResource("4_81xng")]
 transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, 20, 0.5, 24)
+
+[node name="DockForeman" parent="." unique_id=1948298614 instance=ExtResource("11_qxfql")]
+transform = Transform3D(-0.99956423, 0, 0.029518759, 0, 1, 0, -0.029518759, 0, -0.99956423, -4.741634, 0.5330912, 11.77622)

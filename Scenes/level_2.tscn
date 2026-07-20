@@ -142,6 +142,11 @@ transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, 30, 15, -22)
 use_collision = true
 size = Vector3(1, 10, 35)
 
+[node name="CSGBox3D21" type="CSGBox3D" parent="MainStructure" unique_id=1802086200]
+transform = Transform3D(-4.371139e-08, 0, 1, 0, 1, 0, -1, 0, -4.371139e-08, 12, 14, -4)
+use_collision = true
+size = Vector3(1, 12, 35)
+
 [node name="CSGBox3D3" type="CSGBox3D" parent="MainStructure" unique_id=230953929]
 transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, -5, 5, -32)
 use_collision = true
@@ -217,6 +222,24 @@ height = 7.698242
 [node name="CSGCylinder3D3" type="CSGCylinder3D" parent="MainStructure" unique_id=1471276362]
 transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, -26, 4.078887, -35)
 height = 7.698242
+
+[node name="CSGCylinder3D5" type="CSGCylinder3D" parent="MainStructure" unique_id=1874373730]
+transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, -18.201864, 14.114309, -20.562057)
+gi_mode = 0
+radius = 12.0
+height = 11.5
+sides = 10
+
+[node name="CSGCylinder3D6" type="CSGCylinder3D" parent="MainStructure" unique_id=768706784]
+transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, -18.201864, 13.239309, -20.562057)
+operation = 2
+radius = 10.0
+height = 9.75
+sides = 10
+
+[node name="CSGBox3D2" type="CSGBox3D" parent="MainStructure/CSGCylinder3D6" unique_id=580021983]
+transform = Transform3D(-4.371139e-08, 0, -1, 0, 1, 0, 1, 0, -4.371139e-08, 0.20186424, -2.2393093, 10.5620575)
+size = Vector3(4, 5, 3)
 
 [node name="MainStructTorches" type="Node3D" parent="." unique_id=1792701396]
 
@@ -310,6 +333,34 @@ transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, 14, 5, -4)
 _base_energy = 2.0
 _base_range = 15.0
 
+[node name="Torch19" parent="MainStructTorches" unique_id=849798539 instance=ExtResource("3_12fag")]
+transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, -25, 17, -26)
+light_color = Color(0.83483076, 0.12940532, 5.7756904e-07, 1)
+_base_energy = 2.0
+_base_range = 20.0
+hot_color = Color(0.8598807, 0.15993628, 0, 1)
+
+[node name="Torch21" parent="MainStructTorches" unique_id=1120588356 instance=ExtResource("3_12fag")]
+transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, -25, 17, -15)
+light_color = Color(0.83483076, 0.12940532, 5.7756904e-07, 1)
+_base_energy = 2.0
+_base_range = 20.0
+hot_color = Color(0.8598807, 0.15993628, 0, 1)
+
+[node name="Torch20" parent="MainStructTorches" unique_id=1482987839 instance=ExtResource("3_12fag")]
+transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, -11, 17, -26)
+light_color = Color(1, 0.23686773, 0.25223556, 1)
+_base_energy = 2.0
+_base_range = 20.0
+hot_color = Color(0.8162161, 0.1391125, 2.8878452e-07, 1)
+
+[node name="Torch22" parent="MainStructTorches" unique_id=1310681376 instance=ExtResource("3_12fag")]
+transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, -11, 17, -15)
+light_color = Color(1, 0.23686773, 0.25223556, 1)
+_base_energy = 2.0
+_base_range = 20.0
+hot_color = Color(0.8162161, 0.1391125, 2.8878452e-07, 1)
+
 [node name="Barrels" type="Node3D" parent="." unique_id=1922137351]
 
 [node name="Barrel" parent="Barrels" unique_id=1793100144 instance=ExtResource("5_cggpd")]
@@ -331,4 +382,4 @@ transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, 20, 2, 26)
 transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, -17, 2, 26)
 
 [node name="EnemySpawner4" parent="." unique_id=2140106802 instance=ExtResource("4_t7v2y")]
-transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, -17, 10, -21)
+transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, -18, 10, -21)

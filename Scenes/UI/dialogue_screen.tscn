@@ -1,0 +1,97 @@
+[gd_scene load_steps=4 format=3]
+
+[ext_resource type="Script" path="res://Scripts/UI/dialogue_screen.gd" id="1_script"]
+[ext_resource type="Theme" path="res://Scenes/UI/inventory_theme.tres" id="2_theme"]
+
+[sub_resource type="StyleBoxFlat" id="StyleBoxFlat_frame"]
+bg_color = Color(0.055, 0.05, 0.06, 0.98)
+corner_radius_top_left = 12
+corner_radius_top_right = 12
+corner_radius_bottom_right = 12
+corner_radius_bottom_left = 12
+border_width_left = 2
+border_width_top = 2
+border_width_right = 2
+border_width_bottom = 2
+border_color = Color(0.55, 0.42, 0.22, 0.6)
+content_margin_left = 24.0
+content_margin_top = 18.0
+content_margin_right = 24.0
+content_margin_bottom = 18.0
+shadow_size = 20
+shadow_color = Color(0, 0, 0, 0.5)
+
+[node name="DialogueUI" type="CanvasLayer"]
+process_mode = 3
+layer = 10
+
+[node name="Screen" type="Control" parent="."]
+process_mode = 3
+theme = ExtResource("2_theme")
+anchors_preset = 15
+anchor_right = 1.0
+anchor_bottom = 1.0
+grow_horizontal = 2
+grow_vertical = 2
+script = ExtResource("1_script")
+
+[node name="Backdrop" type="ColorRect" parent="Screen"]
+layout_mode = 1
+anchors_preset = 15
+anchor_right = 1.0
+anchor_bottom = 1.0
+grow_horizontal = 2
+grow_vertical = 2
+mouse_filter = 0
+color = Color(0, 0, 0, 0.35)
+
+[node name="Panel" type="PanelContainer" parent="Screen"]
+layout_mode = 1
+anchor_left = 0.5
+anchor_top = 1.0
+anchor_right = 0.5
+anchor_bottom = 1.0
+offset_left = -460.0
+offset_top = -300.0
+offset_right = 460.0
+offset_bottom = -60.0
+grow_horizontal = 2
+grow_vertical = 0
+theme_override_styles/panel = SubResource("StyleBoxFlat_frame")
+
+[node name="VBox" type="VBoxContainer" parent="Screen/Panel"]
+layout_mode = 2
+theme_override_constants/separation = 12
+
+[node name="SpeakerLabel" type="Label" parent="Screen/Panel/VBox"]
+unique_name_in_owner = true
+layout_mode = 2
+theme_override_colors/font_color = Color(0.95, 0.86, 0.6, 1)
+theme_override_font_sizes/font_size = 22
+text = "Speaker"
+
+[node name="Sep" type="HSeparator" parent="Screen/Panel/VBox"]
+layout_mode = 2
+
+[node name="BodyLabel" type="RichTextLabel" parent="Screen/Panel/VBox"]
+unique_name_in_owner = true
+layout_mode = 2
+size_flags_vertical = 3
+custom_minimum_size = Vector2(0, 96)
+theme_override_colors/default_color = Color(0.85, 0.83, 0.79, 1)
+theme_override_font_sizes/normal_font_size = 16
+bbcode_enabled = true
+fit_content = true
+scroll_active = false
+autowrap_mode = 3
+text = "Dialogue line."
+
+[node name="ButtonRow" type="HBoxContainer" parent="Screen/Panel/VBox"]
+layout_mode = 2
+alignment = 2
+
+[node name="AdvanceButton" type="Button" parent="Screen/Panel/VBox/ButtonRow"]
+unique_name_in_owner = true
+custom_minimum_size = Vector2(140, 0)
+layout_mode = 2
+text = "Continue"

@@ -3,13 +3,13 @@
 importer="scene"
 importer_version=1
 type="PackedScene"
-uid="uid://bkhnqd4tdcft5"
-path="res://.godot/imported/ship-pirate-large.glb-7cdc268f183061a9feab903be7e14b76.scn"
+uid="uid://dahciifk55oty"
+path="res://.godot/imported/Mannequin_Large.fbx-df664758bfa2db9ad56363d72f872036.scn"
 
 [deps]
 
-source_file="res://Graphics/Pirate/ship-pirate-large.glb"
-dest_files=["res://.godot/imported/ship-pirate-large.glb-7cdc268f183061a9feab903be7e14b76.scn"]
+source_file="res://Graphics/KayKit_Character_Animations_1.1/Mannequin Character/characters/Mannequin_Large.fbx"
+dest_files=["res://.godot/imported/Mannequin_Large.fbx-df664758bfa2db9ad56363d72f872036.scn"]
 
 [params]
 
@@ -32,20 +32,15 @@ meshes/force_disable_compression=false
 skins/use_named_skins=true
 animation/import=true
 animation/fps=30
-animation/trimming=false
+animation/trimming=true
 animation/remove_immutable_tracks=true
 animation/import_rest_as_RESET=false
 import_script/path=""
 materials/extract=0
 materials/extract_format=0
 materials/extract_path=""
-_subresources={
-"nodes": {
-"PATH:ship-pirate-large": {
-"generate/physics": true
-}
-}
-}
-gltf/naming_version=2
-gltf/embedded_image_handling=1
-gltf/texture_map_mode=1
+_subresources={}
+fbx/importer=0
+fbx/allow_geometry_helper_nodes=false
+fbx/embedded_image_handling=1
+fbx/naming_version=2

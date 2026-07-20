@@ -2,18 +2,16 @@
 
 [ext_resource type="Script" uid="uid://vw2mmcf46ucy" path="res://Scenes/brackeys-proto-controller-main/proto_controller/proto_controller.gd" id="1_b6x57"]
 [ext_resource type="Script" uid="uid://c0314rs23apj5" path="res://Scripts/Magic/spell_caster.gd" id="2_caster"]
+[ext_resource type="PackedScene" uid="uid://co8ixohmq8vwc" path="res://Graphics/KayKit Skeletons/characters/gltf/Skeleton_Mage.glb" id="2_cen06"]
+[ext_resource type="AnimationLibrary" uid="uid://f8py4ts8x382" path="res://Graphics/KayKit_Character_Animations_1.1/Animations/gltf/Rig_Medium/Rig_Medium_CombatRanged.glb" id="5_s4psv"]
+[ext_resource type="AnimationLibrary" uid="uid://cuvcg0cr1bc3l" path="res://Graphics/KayKit_Character_Animations_1.1/Animations/gltf/Rig_Medium/Rig_Medium_General.glb" id="6_8a2cf"]
 [ext_resource type="PackedScene" uid="uid://dvito1lehljda" path="res://Components/damage_receiver.tscn" id="7_receiver"]
-
-[sub_resource type="StandardMaterial3D" id="StandardMaterial3D_iof21"]
-albedo_color = Color(0.91806, 0.575202, 0.222449, 1)
-
-[sub_resource type="CapsuleMesh" id="CapsuleMesh_ucva2"]
-radius = 0.4
-height = 1.8
+[ext_resource type="Script" path="res://Scripts/Player/player_interactor.gd" id="9_interact"]
+[ext_resource type="AnimationLibrary" uid="uid://c07gh11my40mj" path="res://Graphics/KayKit_Character_Animations_1.1/Animations/gltf/Rig_Medium/Rig_Medium_MovementBasic.glb" id="8_gnont"]
 
 [sub_resource type="CapsuleShape3D" id="CapsuleShape3D_iof21"]
 radius = 0.4
-height = 1.8
+height = 2.4
 
 [node name="ProtoController" type="CharacterBody3D" unique_id=1601463080 groups=["player"]]
 script = ExtResource("1_b6x57")
@@ -26,14 +24,17 @@ input_back = "move_back"
 input_jump = "jump"
 input_freefly = "fly"
 
-[node name="Mesh" type="MeshInstance3D" parent="." unique_id=727661755]
-transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, 0, 0.9, 0)
-material_override = SubResource("StandardMaterial3D_iof21")
-cast_shadow = 0
-mesh = SubResource("CapsuleMesh_ucva2")
+[node name="Skeleton_Mage" parent="." unique_id=900156872 instance=ExtResource("2_cen06")]
+transform = Transform3D(-1, 0, -8.742278e-08, 0, 1, 0, 8.742278e-08, 0, -1, 0, 0, 0)
+
+[node name="AnimationPlayer" type="AnimationPlayer" parent="Skeleton_Mage" unique_id=1720096464]
+libraries/Rig_Medium_CombatRanged = ExtResource("5_s4psv")
+libraries/Rig_Medium_General = ExtResource("6_8a2cf")
+libraries/Rig_Medium_MovementBasic = ExtResource("8_gnont")
+autoplay = &"Rig_Medium_MovementBasic/Jump_Full_Short"
 
 [node name="Collider" type="CollisionShape3D" parent="." unique_id=547187402]
-transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, 0, 0.9, 0)
+transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, 0, 1.2, 0)
 shape = SubResource("CapsuleShape3D_iof21")
 
 [node name="Head" type="Node3D" parent="." unique_id=332970340]
@@ -48,6 +49,9 @@ transform = Transform3D(1, 0, 0, 0, 0.9396927, 0.34202018, 0, -0.34202018, 0.939
 
 [node name="SpellCaster" type="Node" parent="Head/SpringArm3D/Camera3D" unique_id=-367385854]
 script = ExtResource("2_caster")
+
+[node name="PlayerInteractor" type="Node" parent="Head/SpringArm3D/Camera3D"]
+script = ExtResource("9_interact")
 
 [node name="Crosshair" type="CanvasLayer" parent="Head/SpringArm3D/Camera3D" unique_id=692441020]
 

@@ -32,7 +32,10 @@
       "PowerShell(& \"E:\\\\SteamLibrary\\\\steamapps\\\\common\\\\Godot Engine\\\\godot.windows.opt.tools.64.exe\" --headless --path \"e:\\\\GameDev\\\\Godot\\\\Projects\\\\oai-3d-sandbox\" res://_scratch_spawn_test.tscn --quit-after 150 2>&1)",
       "PowerShell(& \"E:\\\\SteamLibrary\\\\steamapps\\\\common\\\\Godot Engine\\\\godot.windows.opt.tools.64.exe\" --headless --path \"e:\\\\GameDev\\\\Godot\\\\Projects\\\\oai-3d-sandbox\" --script res://_scratch_obj_test.gd 2>&1)",
       "Bash(python -)",
-      "PowerShell(& \"E:\\\\SteamLibrary\\\\steamapps\\\\common\\\\Godot Engine\\\\godot.windows.opt.tools.64.exe\" --headless --path \"e:\\\\GameDev\\\\Godot\\\\Projects\\\\oai-3d-sandbox\" res://_scratch_stats_test.tscn 2>&1)"
+      "PowerShell(& \"E:\\\\SteamLibrary\\\\steamapps\\\\common\\\\Godot Engine\\\\godot.windows.opt.tools.64.exe\" --headless --path \"e:\\\\GameDev\\\\Godot\\\\Projects\\\\oai-3d-sandbox\" res://_scratch_stats_test.tscn 2>&1)",
+      "PowerShell(& \"E:\\\\SteamLibrary\\\\steamapps\\\\common\\\\Godot Engine\\\\godot.windows.opt.tools.64.exe\" --headless --path \"e:\\\\GameDev\\\\Godot\\\\Projects\\\\oai-3d-sandbox\" res://_scratch_interact_test.tscn 2>&1)",
+      "Bash(powershell -NoProfile -Command 'Get-Process | Where-Object { $_.ProcessName -like '\\\\''*godot*'\\\\'' } | Stop-Process -Force -ErrorAction SilentlyContinue; Write-Output '\\\\''killed godot processes'\\\\''')",
+      "PowerShell(& \"E:\\\\SteamLibrary\\\\steamapps\\\\common\\\\Godot Engine\\\\godot.windows.opt.tools.64.exe\" --headless --path \"e:\\\\GameDev\\\\Godot\\\\Projects\\\\oai-3d-sandbox\" res://_scratch_interact_test.tscn --quit-after 300 2>&1)"
     ],
     "additionalDirectories": [
       "e:\\GameDev\\Godot\\Projects\\oai-3d-sandbox\\Scripts"

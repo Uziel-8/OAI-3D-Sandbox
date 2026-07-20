@@ -93,7 +93,7 @@ static func schools() -> Array[SkillSchool]:
 		_node("sh_tendril", "Shadow Tendril",
 			"Unlock an ephemeral tendril of liquid shadow to ensnare your enemies.",
 			shadow_black, 1, [], Vector2i(1, 0),
-			SkillNode.Effect.UNLOCK_SPELL, "shadow tendril"),
+			SkillNode.Effect.UNLOCK_SPELL, "shadow_tendril"),
 	]))
 
 	return result
