@@ -8,6 +8,12 @@
 [ext_resource type="PackedScene" uid="uid://dvito1lehljda" path="res://Components/damage_receiver.tscn" id="7_receiver"]
 [ext_resource type="Script" path="res://Scripts/Player/player_interactor.gd" id="9_interact"]
 [ext_resource type="AnimationLibrary" uid="uid://c07gh11my40mj" path="res://Graphics/KayKit_Character_Animations_1.1/Animations/gltf/Rig_Medium/Rig_Medium_MovementBasic.glb" id="8_gnont"]
+[ext_resource type="Script" path="res://Scripts/Player/player_animator.gd" id="10_anim"]
+[ext_resource type="Script" path="res://Scripts/StateMachine/state_machine.gd" id="11_sm"]
+[ext_resource type="Script" path="res://Scripts/Player/States/grounded_state.gd" id="12_ground"]
+[ext_resource type="Script" path="res://Scripts/Player/States/jump_state.gd" id="13_jump"]
+[ext_resource type="Script" path="res://Scripts/Player/States/fall_state.gd" id="14_fall"]
+[ext_resource type="Script" path="res://Scripts/Player/States/freefly_state.gd" id="15_freefly"]
 
 [sub_resource type="CapsuleShape3D" id="CapsuleShape3D_iof21"]
 radius = 0.4
@@ -31,7 +37,6 @@ transform = Transform3D(-1, 0, -8.742278e-08, 0, 1, 0, 8.742278e-08, 0, -1, 0, 0
 libraries/Rig_Medium_CombatRanged = ExtResource("5_s4psv")
 libraries/Rig_Medium_General = ExtResource("6_8a2cf")
 libraries/Rig_Medium_MovementBasic = ExtResource("8_gnont")
-autoplay = &"Rig_Medium_MovementBasic/Jump_Full_Short"
 
 [node name="Collider" type="CollisionShape3D" parent="." unique_id=547187402]
 transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, 0, 1.2, 0)
@@ -72,3 +77,23 @@ color = Color(1, 1, 1, 0.8)
 
 [node name="DamageReceiver" parent="." unique_id=1010431383 groups=["player_health"] instance=ExtResource("7_receiver")]
 death_behavior = 2
+
+[node name="PlayerAnimator" type="Node" parent="."]
+script = ExtResource("10_anim")
+animation_player = NodePath("../Skeleton_Mage/AnimationPlayer")
+
+[node name="StateMachine" type="Node" parent="."]
+script = ExtResource("11_sm")
+initial_state = NodePath("Grounded")
+
+[node name="Grounded" type="Node" parent="StateMachine"]
+script = ExtResource("12_ground")
+
+[node name="Jump" type="Node" parent="StateMachine"]
+script = ExtResource("13_jump")
+
+[node name="Fall" type="Node" parent="StateMachine"]
+script = ExtResource("14_fall")
+
+[node name="Freefly" type="Node" parent="StateMachine"]
+script = ExtResource("15_freefly")

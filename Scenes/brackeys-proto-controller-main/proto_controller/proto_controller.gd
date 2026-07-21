@@ -1,9 +1,13 @@
-# ProtoController v1.0 by Brackeys
-# CC0 License
-# Intended for rapid prototyping of first-person games.
-# Happy prototyping!
+# Originally ProtoController v1.0 by Brackeys (CC0). Heavily adapted: the
+# per-frame locomotion has been pulled out into a StateMachine (Scripts/Player/
+# States) so states own movement + animation. This script is now the "context":
+# it keeps what's true in EVERY state -- mouse look + capture, exported config,
+# node refs, the sprint-stamina hook -- and exposes movement primitives the
+# states call. Look/config live here so the states stay small; the actual
+# per-state decisions (speed, jump, air control, which animation) live in states.
 
 extends CharacterBody3D
+class_name PlayerController
 
 ## Can we move around?
 @export var can_move : bool = true
@@ -12,9 +16,9 @@ extends CharacterBody3D
 ## Can we press to jump?
 @export var can_jump : bool = true
 ## Can we hold to run?
-@export var can_sprint : bool = false
+@export var can_sprint : bool = true
 ## Can we press to enter freefly mode (noclip)?
-@export var can_freefly : bool = false
+@export var can_freefly : bool = true
 
 @export_group("Speeds")
 ## Look around rotation speed.
@@ -32,106 +36,107 @@ extends CharacterBody3D
 @export var freefly_speed : float = 25.0
 
 @export_group("Input Actions")
-## Name of Input Action to move Left.
-@export var input_left : String = "ui_left"
-## Name of Input Action to move Right.
-@export var input_right : String = "ui_right"
-## Name of Input Action to move Forward.
-@export var input_forward : String = "ui_up"
-## Name of Input Action to move Backward.
-@export var input_back : String = "ui_down"
-## Name of Input Action to Jump.
-@export var input_jump : String = "ui_accept"
-## Name of Input Action to Sprint.
+@export var input_left : String = "move_left"
+@export var input_right : String = "move_right"
+@export var input_forward : String = "move_forward"
+@export var input_back : String = "move_back"
+@export var input_jump : String = "jump"
 @export var input_sprint : String = "sprint"
-## Name of Input Action to toggle freefly mode.
-@export var input_freefly : String = "freefly"
+@export var input_freefly : String = "fly"
 
 var mouse_captured : bool = false
 var look_rotation : Vector2
-var move_speed : float = 0.0
-var freeflying : bool = false
 
-## IMPORTANT REFERENCES
 @onready var head: Node3D = $Head
 @onready var collider: CollisionShape3D = $Collider
-@onready var animation_player: AnimationPlayer = $Skeleton_Mage/AnimationPlayer
+@onready var state_machine: StateMachine = $StateMachine
+@onready var animator: PlayerAnimator = $PlayerAnimator
+
 
 func _ready() -> void:
 	check_input_mappings()
 	look_rotation.y = rotation.y
 	look_rotation.x = head.rotation.x
-	animation_player.play("Rig_Medium_General/Idle_B")
+	# Hurt flinch is an animation overlay (doesn't change gameplay state), so wire
+	# it straight to the animator. (Death is still handled by the DamageReceiver's
+	# RELOAD_SCENE for now -- see note in the header of the FSM states.)
+	var receiver := DamageReceiver.find_in(self)
+	if receiver:
+		receiver.damaged.connect(_on_damaged)
+
 
 func _unhandled_input(event: InputEvent) -> void:
-	# Mouse capturing
+	# Mouse capturing (unchanged from the original; happens in every state).
 	if Input.is_mouse_button_pressed(MOUSE_BUTTON_LEFT):
 		capture_mouse()
 	if Input.is_key_pressed(KEY_ESCAPE):
 		release_mouse()
-	
-	# Look around
 	if mouse_captured and event is InputEventMouseMotion:
 		rotate_look(event.relative)
-	
-	# Toggle freefly mode
-	if can_freefly and Input.is_action_just_pressed(input_freefly):
-		if not freeflying:
-			enable_freefly()
-		else:
-			disable_freefly()
 
-func _physics_process(delta: float) -> void:
-	# If freeflying, handle freefly and nothing else
-	if can_freefly and freeflying:
-		var input_dir := Input.get_vector(input_left, input_right, input_forward, input_back)
-		var motion := (head.global_basis * Vector3(input_dir.x, 0, input_dir.y)).normalized()
-		motion *= freefly_speed * delta
-		move_and_collide(motion)
-		return
-	
-	# Apply gravity to velocity
-	if has_gravity:
-		if not is_on_floor():
-			velocity += get_gravity() * delta
 
-	# Apply jumping
-	if can_jump:
-		if Input.is_action_just_pressed(input_jump) and is_on_floor():
-			velocity.y = jump_velocity
-			animation_player.play("Rig_Medium_MovementBasic/Jump_Full_Short")
+func _on_damaged(_amount: float, _remaining: float, _source: Node) -> void:
+	if animator:
+		animator.play_hurt()
 
-	# Modify speed based on sprinting (sprinting while moving drains stamina;
-	# when it can't be paid, speed falls back to walking)
+
+# --- Movement primitives used by the states ---------------------------------
+
+## Applies gravity to velocity when airborne (no-op on the floor / gravity off).
+func apply_gravity(delta: float) -> void:
+	if has_gravity and not is_on_floor():
+		velocity += get_gravity() * delta
+
+
+## Raw WASD vector.
+func move_input() -> Vector2:
+	if not can_move:
+		return Vector2.ZERO
+	return Input.get_vector(input_left, input_right, input_forward, input_back)
+
+
+## World-space desired move direction from input, oriented by the body's facing.
+func wish_direction() -> Vector3:
+	var input := move_input()
+	return (transform.basis * Vector3(input.x, 0.0, input.y)).normalized()
+
+
+## Drives horizontal velocity toward `speed` in the wish direction, or decelerates
+## to a stop when there's no input. Vertical velocity is left untouched.
+func apply_horizontal_velocity(speed: float) -> void:
+	var dir := wish_direction()
+	if dir != Vector3.ZERO:
+		velocity.x = dir.x * speed
+		velocity.z = dir.z * speed
+	else:
+		velocity.x = move_toward(velocity.x, 0.0, speed)
+		velocity.z = move_toward(velocity.z, 0.0, speed)
+
+
+## The move speed for this frame: sprint (charging stamina) when held + moving +
+## affordable, else walk. Call once per frame from the moving state.
+func resolve_move_speed(delta: float) -> float:
 	if can_sprint and Input.is_action_pressed(input_sprint) and _try_pay_sprint(delta):
-			move_speed = sprint_speed
-	else:
-		move_speed = base_speed
-
-	# Apply desired movement to velocity
-	if can_move:
-		var input_dir := Input.get_vector(input_left, input_right, input_forward, input_back)
-		var move_dir := (transform.basis * Vector3(input_dir.x, 0, input_dir.y)).normalized()
-		if move_dir:
-			velocity.x = move_dir.x * move_speed
-			velocity.z = move_dir.z * move_speed
-			animation_player.play("Rig_Medium_MovementBasic/Running_B")
-		else:
-			velocity.x = move_toward(velocity.x, 0, move_speed)
-			velocity.z = move_toward(velocity.z, 0, move_speed)
-			animation_player.play("Rig_Medium_General/Idle_B")
-	else:
-		velocity.x = 0
-		velocity.y = 0
-	
-	# Use velocity to actually move
-	move_and_slide()
+		return sprint_speed
+	return base_speed
 
 
-## Rotate us to look around.
-## Base of controller rotates around y (left/right). Head rotates around x (up/down).
-## Modifies look_rotation based on rot_input, then resets basis and rotates by look_rotation.
-func rotate_look(rot_input : Vector2):
+## Current horizontal speed magnitude (for driving the locomotion blend).
+func planar_speed() -> float:
+	return Vector2(velocity.x, velocity.z).length()
+
+
+## Freefly (noclip) motion, driven by the FreeflyState.
+func freefly_move(delta: float) -> void:
+	var input := Input.get_vector(input_left, input_right, input_forward, input_back)
+	var motion := (head.global_basis * Vector3(input.x, 0, input.y)).normalized()
+	motion *= freefly_speed * delta
+	move_and_collide(motion)
+
+
+# --- Look / mouse / freefly toggle helpers ----------------------------------
+
+func rotate_look(rot_input : Vector2) -> void:
 	look_rotation.x -= rot_input.y * look_speed
 	look_rotation.x = clamp(look_rotation.x, deg_to_rad(-85), deg_to_rad(85))
 	look_rotation.y -= rot_input.x * look_speed
@@ -141,53 +146,42 @@ func rotate_look(rot_input : Vector2):
 	head.rotate_x(look_rotation.x)
 
 
-func enable_freefly():
+func enable_freefly() -> void:
 	collider.disabled = true
-	freeflying = true
 	velocity = Vector3.ZERO
 
-func disable_freefly():
+
+func disable_freefly() -> void:
 	collider.disabled = false
-	freeflying = false
+
+
+func capture_mouse() -> void:
+	Input.set_mouse_mode(Input.MOUSE_MODE_CAPTURED)
+	mouse_captured = true
+
+
+func release_mouse() -> void:
+	Input.set_mouse_mode(Input.MOUSE_MODE_VISIBLE)
+	mouse_captured = false
 
 
 ## Drains sprint stamina for this frame via the PlayerState autoload. Free when
 ## standing still, when there's no PlayerState (test scenes), or if the pool
 ## covers the cost; returns false (blocking sprint speed) once stamina is dry.
 func _try_pay_sprint(delta: float) -> bool:
-	var input_dir := Input.get_vector(input_left, input_right, input_forward, input_back)
-	if input_dir == Vector2.ZERO:
-		return true
+	if move_input() == Vector2.ZERO:
+		return false
 	var state := get_node_or_null("/root/PlayerState")
 	if state == null:
 		return true
 	return state.spend_stamina(sprint_stamina_drain * delta)
 
 
-func capture_mouse():
-	Input.set_mouse_mode(Input.MOUSE_MODE_CAPTURED)
-	mouse_captured = true
-
-
-func release_mouse():
-	Input.set_mouse_mode(Input.MOUSE_MODE_VISIBLE)
-	mouse_captured = false
-
-
-## Checks if some Input Actions haven't been created.
-## Disables functionality accordingly.
-func check_input_mappings():
-	if can_move and not InputMap.has_action(input_left):
-		push_error("Movement disabled. No InputAction found for input_left: " + input_left)
-		can_move = false
-	if can_move and not InputMap.has_action(input_right):
-		push_error("Movement disabled. No InputAction found for input_right: " + input_right)
-		can_move = false
-	if can_move and not InputMap.has_action(input_forward):
-		push_error("Movement disabled. No InputAction found for input_forward: " + input_forward)
-		can_move = false
-	if can_move and not InputMap.has_action(input_back):
-		push_error("Movement disabled. No InputAction found for input_back: " + input_back)
+## Disables features whose Input Actions are missing, so a stripped project still runs.
+func check_input_mappings() -> void:
+	if can_move and not (InputMap.has_action(input_left) and InputMap.has_action(input_right) \
+			and InputMap.has_action(input_forward) and InputMap.has_action(input_back)):
+		push_error("Movement disabled. Missing a movement InputAction.")
 		can_move = false
 	if can_jump and not InputMap.has_action(input_jump):
 		push_error("Jumping disabled. No InputAction found for input_jump: " + input_jump)

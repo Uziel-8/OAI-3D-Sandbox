@@ -1,0 +1,14 @@
+[gd_scene format=3 uid="uid://njxo0gbdemgd"]
+
+[ext_resource type="PackedScene" uid="uid://b8rm8yy3l0ci0" path="res://Graphics/Pirate/barrel.glb" id="1_bmvu8"]
+
+[sub_resource type="CylinderShape3D" id="CylinderShape3D_3xd07"]
+height = 1.2
+
+[node name="ExplosiveBarrel" type="RigidBody3D" unique_id=1688538876]
+
+[node name="barrel2" parent="." unique_id=172596245 instance=ExtResource("1_bmvu8")]
+
+[node name="CollisionShape3D" type="CollisionShape3D" parent="." unique_id=2117978920]
+transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, 0, 0.59999996, 0)
+shape = SubResource("CylinderShape3D_3xd07")
