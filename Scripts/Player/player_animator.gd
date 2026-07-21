@@ -8,15 +8,26 @@ class_name PlayerAnimator
 ## SpellCaster's spell_cast signal / is_casting() (casting doesn't change gameplay
 ## state -- you can cast while moving).
 ##
-## ANIMATIONTREE CONTRACT -- author these exact node/param names in the editor and
-## assign the tree to `animation_tree`:
-##   parameters/playback                 AnimationNodeStateMachinePlayback
-##                                        travel targets: "Grounded", "Jump", "Fall"
-##   parameters/Grounded/blend_position  float 0..1  (Idle_B -> Walking_B -> Running_B)
-##   parameters/CastBlend/blend_amount   float 0..1  (upper-body cast layer; filtered
-##                                        Blend2 of the movement SM vs a looping
-##                                        Ranged_Magic_Spellcasting, filter = spine/arms)
-##   parameters/HurtShot/request         AnimationNodeOneShot fire (upper-body Hit_A)
+## ANIMATIONTREE CONTRACT -- author this graph in the editor, then assign the tree to
+## `animation_tree`. The ROOT is a BlendTree so the cast/hurt overlays can layer on top
+## of the movement state machine, which is NESTED inside it as a node named "Movement":
+##
+##   Root  AnimationNodeBlendTree
+##     Movement   AnimationNodeStateMachine  -- states "Grounded"/"Jump"/"Fall" (code travels these)
+##                  Grounded = BlendSpace1D  (Idle_B -> Walking_B -> Running_B)
+##     CastBlend  Blend2   -- blends Movement vs a looping Ranged_Magic_Spellcasting, filtered to spine/arms
+##     HurtShot   OneShot  -- layers Hit_A on top, upper-body filtered
+##     wiring:  Movement -> CastBlend(A) ; cast clip -> CastBlend(B) ; CastBlend -> HurtShot -> Output
+##
+## Nested nodes take their parent's name as a path prefix -- that's why the movement paths
+## are under "Movement/". These MUST match the authored graph: AnimationTree.set() on a
+## wrong path fails SILENTLY, so the paths live in the PARAM_* constants below.
+
+## AnimationTree parameter paths driven by this script -- keep in sync with the graph above.
+const PARAM_PLAYBACK := "parameters/Movement/playback"
+const PARAM_LOCOMOTION := "parameters/Movement/Grounded/blend_position"
+const PARAM_CAST_BLEND := "parameters/CastBlend/blend_amount"
+const PARAM_HURT_REQUEST := "parameters/HurtShot/request"
 
 @export var animation_tree: AnimationTree
 @export var animation_player: AnimationPlayer
@@ -47,7 +58,7 @@ func _ready() -> void:
 	add_to_group("player_animator")
 	if animation_tree:
 		animation_tree.active = true
-		_playback = animation_tree.get("parameters/playback")
+		_playback = animation_tree.get(PARAM_PLAYBACK)
 
 
 func _process(delta: float) -> void:
@@ -64,7 +75,7 @@ func _process(delta: float) -> void:
 	var casting := _cast_timer > 0.0 or (_caster != null and _caster.is_casting())
 	_cast_amount = move_toward(_cast_amount, 1.0 if casting else 0.0, cast_blend_speed * delta)
 	if animation_tree:
-		animation_tree.set("parameters/CastBlend/blend_amount", _cast_amount)
+		animation_tree.set(PARAM_CAST_BLEND, _cast_amount)
 
 
 ## Move the full-body playback to a gameplay state ("Grounded"/"Jump"/"Fall").
@@ -79,7 +90,7 @@ func travel(state_name: StringName) -> void:
 func set_locomotion(speed01: float) -> void:
 	speed01 = clampf(speed01, 0.0, 1.0)
 	if animation_tree:
-		animation_tree.set("parameters/Grounded/blend_position", speed01)
+		animation_tree.set(PARAM_LOCOMOTION, speed01)
 	else:
 		_fallback_locomotion(speed01)
 
@@ -87,7 +98,7 @@ func set_locomotion(speed01: float) -> void:
 ## Fire a one-shot hurt flinch (upper body). Called on DamageReceiver.damaged.
 func play_hurt() -> void:
 	if animation_tree:
-		animation_tree.set("parameters/HurtShot/request", AnimationNodeOneShot.ONE_SHOT_REQUEST_FIRE)
+		animation_tree.set(PARAM_HURT_REQUEST, AnimationNodeOneShot.ONE_SHOT_REQUEST_FIRE)
 	elif animation_player:
 		animation_player.play(hurt_anim, 0.1)
 

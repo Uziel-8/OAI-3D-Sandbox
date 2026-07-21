@@ -6,14 +6,103 @@
 [ext_resource type="AnimationLibrary" uid="uid://f8py4ts8x382" path="res://Graphics/KayKit_Character_Animations_1.1/Animations/gltf/Rig_Medium/Rig_Medium_CombatRanged.glb" id="5_s4psv"]
 [ext_resource type="AnimationLibrary" uid="uid://cuvcg0cr1bc3l" path="res://Graphics/KayKit_Character_Animations_1.1/Animations/gltf/Rig_Medium/Rig_Medium_General.glb" id="6_8a2cf"]
 [ext_resource type="PackedScene" uid="uid://dvito1lehljda" path="res://Components/damage_receiver.tscn" id="7_receiver"]
-[ext_resource type="Script" path="res://Scripts/Player/player_interactor.gd" id="9_interact"]
 [ext_resource type="AnimationLibrary" uid="uid://c07gh11my40mj" path="res://Graphics/KayKit_Character_Animations_1.1/Animations/gltf/Rig_Medium/Rig_Medium_MovementBasic.glb" id="8_gnont"]
-[ext_resource type="Script" path="res://Scripts/Player/player_animator.gd" id="10_anim"]
-[ext_resource type="Script" path="res://Scripts/StateMachine/state_machine.gd" id="11_sm"]
-[ext_resource type="Script" path="res://Scripts/Player/States/grounded_state.gd" id="12_ground"]
-[ext_resource type="Script" path="res://Scripts/Player/States/jump_state.gd" id="13_jump"]
-[ext_resource type="Script" path="res://Scripts/Player/States/fall_state.gd" id="14_fall"]
-[ext_resource type="Script" path="res://Scripts/Player/States/freefly_state.gd" id="15_freefly"]
+[ext_resource type="Script" uid="uid://55hxx5vxj6je" path="res://Scripts/Player/player_interactor.gd" id="9_interact"]
+[ext_resource type="Script" uid="uid://cj7nk6aivycnh" path="res://Scripts/Player/player_animator.gd" id="10_anim"]
+[ext_resource type="Script" uid="uid://b2n2k2csm3prv" path="res://Scripts/StateMachine/state_machine.gd" id="11_sm"]
+[ext_resource type="Script" uid="uid://ndc7yoi6loud" path="res://Scripts/Player/States/grounded_state.gd" id="12_ground"]
+[ext_resource type="Script" uid="uid://by2578000mfi3" path="res://Scripts/Player/States/jump_state.gd" id="13_jump"]
+[ext_resource type="Script" uid="uid://c3bid1kpj5j8b" path="res://Scripts/Player/States/fall_state.gd" id="14_fall"]
+[ext_resource type="Script" uid="uid://4yt3kg4apko6" path="res://Scripts/Player/States/freefly_state.gd" id="15_freefly"]
+
+[sub_resource type="AnimationNodeBlend2" id="AnimationNodeBlend2_46bf6"]
+filter_enabled = true
+filters = ["Rig_Medium/Skeleton3D:chest", "Rig_Medium/Skeleton3D:hand.l", "Rig_Medium/Skeleton3D:hand.r", "Rig_Medium/Skeleton3D:handslot.l", "Rig_Medium/Skeleton3D:handslot.r", "Rig_Medium/Skeleton3D:head", "Rig_Medium/Skeleton3D:lowerarm.l", "Rig_Medium/Skeleton3D:lowerarm.r", "Rig_Medium/Skeleton3D:spine", "Rig_Medium/Skeleton3D:upperarm.l", "Rig_Medium/Skeleton3D:upperarm.r", "Rig_Medium/Skeleton3D:wrist.l", "Rig_Medium/Skeleton3D:wrist.r"]
+
+[sub_resource type="AnimationNodeAnimation" id="AnimationNodeAnimation_785b0"]
+animation = &"Rig_Medium_CombatRanged/Ranged_Magic_Spellcasting"
+
+[sub_resource type="AnimationNodeAnimation" id="AnimationNodeAnimation_oxacw"]
+animation = &"Rig_Medium_General/Hit_A"
+
+[sub_resource type="AnimationNodeOneShot" id="AnimationNodeOneShot_elcod"]
+filter_enabled = true
+filters = ["Rig_Medium/Skeleton3D:chest", "Rig_Medium/Skeleton3D:hand.l", "Rig_Medium/Skeleton3D:hand.r", "Rig_Medium/Skeleton3D:handslot.l", "Rig_Medium/Skeleton3D:handslot.r", "Rig_Medium/Skeleton3D:head", "Rig_Medium/Skeleton3D:lowerarm.l", "Rig_Medium/Skeleton3D:lowerarm.r", "Rig_Medium/Skeleton3D:spine", "Rig_Medium/Skeleton3D:upperarm.l", "Rig_Medium/Skeleton3D:upperarm.r", "Rig_Medium/Skeleton3D:wrist.l", "Rig_Medium/Skeleton3D:wrist.r"]
+fadein_time = 0.1
+
+[sub_resource type="AnimationNodeAnimation" id="AnimationNodeAnimation_58hqv"]
+animation = &"Rig_Medium_MovementBasic/Jump_Idle"
+
+[sub_resource type="AnimationNodeAnimation" id="AnimationNodeAnimation_6o3jx"]
+animation = &"Rig_Medium_General/Idle_B"
+
+[sub_resource type="AnimationNodeAnimation" id="AnimationNodeAnimation_yjlg3"]
+animation = &"Rig_Medium_MovementBasic/Walking_B"
+
+[sub_resource type="AnimationNodeAnimation" id="AnimationNodeAnimation_ky3xm"]
+animation = &"Rig_Medium_MovementBasic/Running_B"
+
+[sub_resource type="AnimationNodeBlendSpace1D" id="AnimationNodeBlendSpace1D_78yx7"]
+min_space = 0.0
+sync_mode = 2
+blend_point_0/node = SubResource("AnimationNodeAnimation_6o3jx")
+blend_point_0/pos = 0.0
+blend_point_0/name = &"Rig_Medium_General_Idle_B"
+blend_point_1/node = SubResource("AnimationNodeAnimation_yjlg3")
+blend_point_1/pos = 0.5
+blend_point_1/name = &"Rig_Medium_MovementBasic_Walking_B"
+blend_point_2/node = SubResource("AnimationNodeAnimation_ky3xm")
+blend_point_2/pos = 1.0
+blend_point_2/name = &"Rig_Medium_MovementBasic_Running_B"
+
+[sub_resource type="AnimationNodeAnimation" id="AnimationNodeAnimation_1homv"]
+animation = &"Rig_Medium_MovementBasic/Jump_Start"
+
+[sub_resource type="AnimationNodeStateMachineTransition" id="AnimationNodeStateMachineTransition_pgkkc"]
+xfade_time = 0.1
+
+[sub_resource type="AnimationNodeStateMachineTransition" id="AnimationNodeStateMachineTransition_imvri"]
+xfade_time = 0.1
+
+[sub_resource type="AnimationNodeStateMachineTransition" id="AnimationNodeStateMachineTransition_msybg"]
+xfade_time = 0.1
+
+[sub_resource type="AnimationNodeStateMachineTransition" id="AnimationNodeStateMachineTransition_r4jje"]
+xfade_time = 0.1
+
+[sub_resource type="AnimationNodeStateMachineTransition" id="AnimationNodeStateMachineTransition_50ywf"]
+xfade_time = 0.1
+
+[sub_resource type="AnimationNodeStateMachineTransition" id="AnimationNodeStateMachineTransition_1cup8"]
+xfade_time = 0.1
+
+[sub_resource type="AnimationNodeStateMachineTransition" id="AnimationNodeStateMachineTransition_26xa8"]
+xfade_time = 0.1
+
+[sub_resource type="AnimationNodeStateMachine" id="AnimationNodeStateMachine_1qm4a"]
+states/End/position = Vector2(1095, 277)
+states/Fall/node = SubResource("AnimationNodeAnimation_58hqv")
+states/Fall/position = Vector2(719, 213)
+states/Grounded/node = SubResource("AnimationNodeBlendSpace1D_78yx7")
+states/Grounded/position = Vector2(346, 213)
+states/Jump/node = SubResource("AnimationNodeAnimation_1homv")
+states/Jump/position = Vector2(517, 66)
+transitions = ["Start", "Grounded", SubResource("AnimationNodeStateMachineTransition_pgkkc"), "Grounded", "Jump", SubResource("AnimationNodeStateMachineTransition_imvri"), "Jump", "Fall", SubResource("AnimationNodeStateMachineTransition_msybg"), "Grounded", "Fall", SubResource("AnimationNodeStateMachineTransition_r4jje"), "Fall", "Grounded", SubResource("AnimationNodeStateMachineTransition_50ywf"), "Jump", "Grounded", SubResource("AnimationNodeStateMachineTransition_1cup8"), "Fall", "Jump", SubResource("AnimationNodeStateMachineTransition_26xa8")]
+
+[sub_resource type="AnimationNodeBlendTree" id="AnimationNodeBlendTree_46bf6"]
+graph_offset = Vector2(-179.7273, -239)
+nodes/output/position = Vector2(1500, 60)
+nodes/Movement/node = SubResource("AnimationNodeStateMachine_1qm4a")
+nodes/Movement/position = Vector2(240, 100)
+nodes/CastClip/node = SubResource("AnimationNodeAnimation_785b0")
+nodes/CastClip/position = Vector2(60, 320)
+nodes/CastBlend/node = SubResource("AnimationNodeBlend2_46bf6")
+nodes/CastBlend/position = Vector2(620, 100)
+nodes/HurtClip/node = SubResource("AnimationNodeAnimation_oxacw")
+nodes/HurtClip/position = Vector2(840, 260)
+nodes/HurtShot/node = SubResource("AnimationNodeOneShot_elcod")
+nodes/HurtShot/position = Vector2(1220, 20)
+node_connections = [&"output", 0, &"HurtShot", &"CastBlend", 0, &"Movement", &"CastBlend", 1, &"CastClip", &"HurtShot", 0, &"CastBlend", &"HurtShot", 1, &"HurtClip"]
 
 [sub_resource type="CapsuleShape3D" id="CapsuleShape3D_iof21"]
 radius = 0.4
@@ -21,14 +110,6 @@ height = 2.4
 
 [node name="ProtoController" type="CharacterBody3D" unique_id=1601463080 groups=["player"]]
 script = ExtResource("1_b6x57")
-can_sprint = true
-can_freefly = true
-input_left = "move_left"
-input_right = "move_right"
-input_forward = "move_forward"
-input_back = "move_back"
-input_jump = "jump"
-input_freefly = "fly"
 
 [node name="Skeleton_Mage" parent="." unique_id=900156872 instance=ExtResource("2_cen06")]
 transform = Transform3D(-1, 0, -8.742278e-08, 0, 1, 0, 8.742278e-08, 0, -1, 0, 0, 0)
@@ -37,6 +118,15 @@ transform = Transform3D(-1, 0, -8.742278e-08, 0, 1, 0, 8.742278e-08, 0, -1, 0, 0
 libraries/Rig_Medium_CombatRanged = ExtResource("5_s4psv")
 libraries/Rig_Medium_General = ExtResource("6_8a2cf")
 libraries/Rig_Medium_MovementBasic = ExtResource("8_gnont")
+
+[node name="AnimationTree" type="AnimationTree" parent="Skeleton_Mage" unique_id=1753257679]
+tree_root = SubResource("AnimationNodeBlendTree_46bf6")
+anim_player = NodePath("../AnimationPlayer")
+parameters/Movement/Grounded/blend_position = 0.001017294
+parameters/CastBlend/blend_amount = 0.0
+parameters/HurtShot/active = false
+parameters/HurtShot/internal_active = false
+parameters/HurtShot/request = 0
 
 [node name="Collider" type="CollisionShape3D" parent="." unique_id=547187402]
 transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, 0, 1.2, 0)
@@ -55,7 +145,7 @@ transform = Transform3D(1, 0, 0, 0, 0.9396927, 0.34202018, 0, -0.34202018, 0.939
 [node name="SpellCaster" type="Node" parent="Head/SpringArm3D/Camera3D" unique_id=-367385854]
 script = ExtResource("2_caster")
 
-[node name="PlayerInteractor" type="Node" parent="Head/SpringArm3D/Camera3D"]
+[node name="PlayerInteractor" type="Node" parent="Head/SpringArm3D/Camera3D" unique_id=506822471]
 script = ExtResource("9_interact")
 
 [node name="Crosshair" type="CanvasLayer" parent="Head/SpringArm3D/Camera3D" unique_id=692441020]
@@ -78,22 +168,23 @@ color = Color(1, 1, 1, 0.8)
 [node name="DamageReceiver" parent="." unique_id=1010431383 groups=["player_health"] instance=ExtResource("7_receiver")]
 death_behavior = 2
 
-[node name="PlayerAnimator" type="Node" parent="."]
+[node name="PlayerAnimator" type="Node" parent="." unique_id=1002107749 node_paths=PackedStringArray("animation_tree", "animation_player")]
 script = ExtResource("10_anim")
+animation_tree = NodePath("../Skeleton_Mage/AnimationTree")
 animation_player = NodePath("../Skeleton_Mage/AnimationPlayer")
 
-[node name="StateMachine" type="Node" parent="."]
+[node name="StateMachine" type="Node" parent="." unique_id=1134830559]
 script = ExtResource("11_sm")
 initial_state = NodePath("Grounded")
 
-[node name="Grounded" type="Node" parent="StateMachine"]
+[node name="Grounded" type="Node" parent="StateMachine" unique_id=285888503]
 script = ExtResource("12_ground")
 
-[node name="Jump" type="Node" parent="StateMachine"]
+[node name="Jump" type="Node" parent="StateMachine" unique_id=718960955]
 script = ExtResource("13_jump")
 
-[node name="Fall" type="Node" parent="StateMachine"]
+[node name="Fall" type="Node" parent="StateMachine" unique_id=189752860]
 script = ExtResource("14_fall")
 
-[node name="Freefly" type="Node" parent="StateMachine"]
+[node name="Freefly" type="Node" parent="StateMachine" unique_id=962172527]
 script = ExtResource("15_freefly")
