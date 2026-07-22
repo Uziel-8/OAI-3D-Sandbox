@@ -6,6 +6,11 @@
 [ext_resource type="PackedScene" uid="uid://c0f3nu440pltv" path="res://Enemies/Spawner/enemy_spawner.tscn" id="4_t7v2y"]
 [ext_resource type="PackedScene" uid="uid://b3mxd4md0rime" path="res://Objects/barrel.tscn" id="5_cggpd"]
 [ext_resource type="Script" uid="uid://w63empltnlfy" path="res://Scripts/Level/level_objectives.gd" id="5_lvlobj"]
+[ext_resource type="Script" path="res://Scripts/Level/Objectives/destroy_group_objective.gd" id="6_nestobj"]
+[ext_resource type="Script" path="res://Scripts/Level/Objectives/reach_area_objective.gd" id="7_hallobj"]
+
+[sub_resource type="BoxShape3D" id="BoxShape3D_innerhall"]
+size = Vector3(8, 4, 8)
 
 [sub_resource type="ProceduralSkyMaterial" id="ProceduralSkyMaterial_v3rpw"]
 sky_top_color = Color(0.68738997, 0.654418, 0.84101385, 1)
@@ -30,6 +35,13 @@ environment = SubResource("Environment_12fag")
 script = ExtResource("5_lvlobj")
 objective_title = "Breach the Keep"
 objective_text = "The foreman's paymaster holes up in this keep, and the nests inside spill spiders without end. Find and destroy what's feeding them, then reach the inner hall."
+completion_xp = 150.0
+
+[node name="DestroyNests" type="Node" parent="LevelObjectives"]
+script = ExtResource("6_nestobj")
+description = "Destroy the spider nests"
+xp_reward = 60.0
+group = &"enemy_spawner"
 
 [node name="DirectionalLight3D" type="DirectionalLight3D" parent="." unique_id=275904808]
 transform = Transform3D(-0.8660254, -0.43301278, 0.25, 0, 0.49999997, 0.86602545, -0.50000006, 0.75, -0.43301266, 0, 0, 0)
@@ -383,3 +395,14 @@ transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, -17, 2, 26)
 
 [node name="EnemySpawner4" parent="." unique_id=2140106802 instance=ExtResource("4_t7v2y")]
 transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, -18, 10, -21)
+
+[node name="InnerHall" type="Area3D" parent="."]
+transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, 0, 2, 30)
+
+[node name="CollisionShape3D" type="CollisionShape3D" parent="InnerHall"]
+shape = SubResource("BoxShape3D_innerhall")
+
+[node name="ReachInnerHall" type="Node" parent="InnerHall"]
+script = ExtResource("7_hallobj")
+description = "Reach the inner hall"
+xp_reward = 40.0

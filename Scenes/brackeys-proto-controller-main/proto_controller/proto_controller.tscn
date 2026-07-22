@@ -90,7 +90,6 @@ states/Jump/position = Vector2(517, 66)
 transitions = ["Start", "Grounded", SubResource("AnimationNodeStateMachineTransition_pgkkc"), "Grounded", "Jump", SubResource("AnimationNodeStateMachineTransition_imvri"), "Jump", "Fall", SubResource("AnimationNodeStateMachineTransition_msybg"), "Grounded", "Fall", SubResource("AnimationNodeStateMachineTransition_r4jje"), "Fall", "Grounded", SubResource("AnimationNodeStateMachineTransition_50ywf"), "Jump", "Grounded", SubResource("AnimationNodeStateMachineTransition_1cup8"), "Fall", "Jump", SubResource("AnimationNodeStateMachineTransition_26xa8")]
 
 [sub_resource type="AnimationNodeBlendTree" id="AnimationNodeBlendTree_46bf6"]
-graph_offset = Vector2(-179.7273, -239)
 nodes/output/position = Vector2(1500, 60)
 nodes/Movement/node = SubResource("AnimationNodeStateMachine_1qm4a")
 nodes/Movement/position = Vector2(240, 100)
@@ -136,7 +135,7 @@ shape = SubResource("CapsuleShape3D_iof21")
 transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, 0.6, 1.7, 0)
 
 [node name="SpringArm3D" type="SpringArm3D" parent="Head" unique_id=225731303]
-transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, 0, 1.8, 0)
+transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, 0.62445784, 1.8, 0)
 spring_length = 5.0
 
 [node name="Camera3D" type="Camera3D" parent="Head/SpringArm3D" unique_id=1090466603]

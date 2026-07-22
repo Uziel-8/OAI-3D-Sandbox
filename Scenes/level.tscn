@@ -11,6 +11,9 @@
 [ext_resource type="Script" uid="uid://w63empltnlfy" path="res://Scripts/Level/level_objectives.gd" id="8_lvlobj"]
 [ext_resource type="Script" uid="uid://cha5kvabt04ak" path="res://Scripts/UI/journal_entry.gd" id="9_entry"]
 [ext_resource type="PackedScene" uid="uid://cekvlbgjcndlw" path="res://NPCs/dock_foreman.tscn" id="11_qxfql"]
+[ext_resource type="Script" path="res://Scripts/Level/Objectives/kill_target_objective.gd" id="12_killobj"]
+[ext_resource type="Script" path="res://Scripts/Level/Objectives/interact_objective.gd" id="13_talkobj"]
+[ext_resource type="PackedScene" path="res://Scenes/level_2.tscn" id="14_nextlvl"]
 
 [sub_resource type="ProceduralSkyMaterial" id="ProceduralSkyMaterial_5xgho"]
 sky_horizon_color = Color(0.66224277, 0.6717428, 0.6867428, 1)
@@ -55,6 +58,21 @@ script = ExtResource("8_lvlobj")
 objective_title = "Remove the Foreman"
 objective_text = "The dockmaster wants Karrick, the yard foreman, gone from the port — quietly or otherwise. Force, bribery, persuasion, or misdirection; the method is yours to choose."
 journal_entries = Array[ExtResource("9_entry")]([SubResource("Entry_docks"), SubResource("Entry_telekinesis")])
+next_level = ExtResource("14_nextlvl")
+completion_xp = 100.0
+
+[node name="RemoveForeman" type="Node" parent="LevelObjectives" node_paths=PackedStringArray("target")]
+script = ExtResource("12_killobj")
+description = "Remove Karrick from the docks"
+xp_reward = 50.0
+target = NodePath("../../DockForeman")
+
+[node name="SpeakToForeman" type="Node" parent="LevelObjectives" node_paths=PackedStringArray("target")]
+script = ExtResource("13_talkobj")
+description = "Hear Karrick out first"
+optional = true
+xp_reward = 15.0
+target = NodePath("../../DockForeman")
 
 [node name="Floor" type="CSGBox3D" parent="." unique_id=372578064]
 use_collision = true

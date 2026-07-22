@@ -16,6 +16,7 @@ extends CanvasLayer
 @onready var _gold_label: Label = %GoldLabel
 @onready var _objective_title: Label = %ObjectiveTitle
 @onready var _objective_text: Label = %ObjectiveText
+@onready var _objective_list: VBoxContainer = %ObjectiveList
 @onready var _toast: Label = %LevelUpToast
 @onready var _interact_prompt: Label = %InteractPrompt
 
@@ -120,11 +121,44 @@ func _show_toast(title: String, subtitle: String) -> void:
 	_toast_tween.tween_property(_toast, "modulate:a", 0.0, 0.6)
 
 
-## Sets the on-screen mission objective. Call this from a future quest/objective
-## system to retask the player.
+## Sets the on-screen mission objective as plain prose. Used for levels with no
+## objective components, and for the neutral default.
 func set_objective(title: String, text: String) -> void:
 	_objective_title.text = title
 	_objective_text.text = text
+	_objective_text.visible = true
+	_clear_objective_list()
+	_objective_list.visible = false
+
+
+## Sets the objective panel to a live checklist. `items` is one dictionary per
+## objective: {"text": String, "complete": bool, "optional": bool} -- pushed by a
+## level's LevelObjectives node as its LevelObjective components report in.
+func set_objective_items(title: String, items: Array) -> void:
+	_objective_title.text = title
+	_objective_text.visible = false
+	_clear_objective_list()
+	for item in items:
+		var done: bool = item.get("complete", false)
+		var line := Label.new()
+		var text: String = str(item.get("text", ""))
+		if item.get("optional", false):
+			text += "  (optional)"
+		# Plain ASCII ticks so this renders in the default font regardless of glyph coverage.
+		line.text = ("[x]  " if done else "[  ]  ") + text
+		line.add_theme_font_size_override("font_size", 13)
+		line.add_theme_color_override("font_color",
+			Color(0.55, 0.78, 0.55) if done else Color(0.82, 0.8, 0.76))
+		line.autowrap_mode = TextServer.AUTOWRAP_WORD_SMART
+		line.mouse_filter = Control.MOUSE_FILTER_IGNORE
+		_objective_list.add_child(line)
+	_objective_list.visible = true
+
+
+func _clear_objective_list() -> void:
+	for child in _objective_list.get_children():
+		_objective_list.remove_child(child)
+		child.queue_free()
 
 
 ## Toggled by the inventory/character screen so the HUD doesn't show behind its

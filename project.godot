@@ -23,6 +23,7 @@ PlayerState="*res://Scripts/Player/player_state.gd"
 HUD="*res://Scenes/UI/hud.tscn"
 InventoryUI="*res://Scenes/UI/inventory_screen.tscn"
 JournalUI="*res://Scenes/UI/journal_screen.tscn"
+LevelCompleteUI="*res://Scenes/UI/level_complete_screen.tscn"
 DialogueUI="*res://Scenes/UI/dialogue_screen.tscn"
 
 [display]

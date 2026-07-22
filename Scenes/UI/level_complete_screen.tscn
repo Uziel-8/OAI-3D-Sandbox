@@ -1,0 +1,108 @@
+[gd_scene load_steps=4 format=3]
+
+[ext_resource type="Script" path="res://Scripts/UI/level_complete_screen.gd" id="1_script"]
+[ext_resource type="Theme" path="res://Scenes/UI/inventory_theme.tres" id="2_theme"]
+
+[sub_resource type="StyleBoxFlat" id="StyleBoxFlat_frame"]
+bg_color = Color(0.055, 0.05, 0.06, 0.98)
+corner_radius_top_left = 12
+corner_radius_top_right = 12
+corner_radius_bottom_right = 12
+corner_radius_bottom_left = 12
+border_width_left = 2
+border_width_top = 2
+border_width_right = 2
+border_width_bottom = 2
+border_color = Color(0.55, 0.42, 0.22, 0.6)
+content_margin_left = 40.0
+content_margin_top = 32.0
+content_margin_right = 40.0
+content_margin_bottom = 32.0
+shadow_size = 24
+shadow_color = Color(0, 0, 0, 0.5)
+
+[node name="LevelCompleteUI" type="CanvasLayer"]
+process_mode = 3
+layer = 20
+
+[node name="Screen" type="Control" parent="."]
+process_mode = 3
+theme = ExtResource("2_theme")
+anchors_preset = 15
+anchor_right = 1.0
+anchor_bottom = 1.0
+grow_horizontal = 2
+grow_vertical = 2
+script = ExtResource("1_script")
+
+[node name="Backdrop" type="ColorRect" parent="Screen"]
+layout_mode = 1
+anchors_preset = 15
+anchor_right = 1.0
+anchor_bottom = 1.0
+grow_horizontal = 2
+grow_vertical = 2
+mouse_filter = 0
+color = Color(0, 0, 0, 0.72)
+
+[node name="Center" type="CenterContainer" parent="Screen"]
+layout_mode = 1
+anchors_preset = 15
+anchor_right = 1.0
+anchor_bottom = 1.0
+grow_horizontal = 2
+grow_vertical = 2
+
+[node name="Frame" type="PanelContainer" parent="Screen/Center"]
+layout_mode = 2
+custom_minimum_size = Vector2(620, 0)
+theme_override_styles/panel = SubResource("StyleBoxFlat_frame")
+
+[node name="VBox" type="VBoxContainer" parent="Screen/Center/Frame"]
+layout_mode = 2
+theme_override_constants/separation = 14
+
+[node name="Heading" type="Label" parent="Screen/Center/Frame/VBox"]
+unique_name_in_owner = true
+layout_mode = 2
+theme_override_colors/font_color = Color(0.95, 0.86, 0.6, 1)
+theme_override_font_sizes/font_size = 34
+horizontal_alignment = 1
+text = "Mission Complete"
+
+[node name="Subheading" type="Label" parent="Screen/Center/Frame/VBox"]
+unique_name_in_owner = true
+layout_mode = 2
+theme_override_colors/font_color = Color(0.65, 0.62, 0.58, 1)
+theme_override_font_sizes/font_size = 16
+horizontal_alignment = 1
+autowrap_mode = 3
+text = "Objective"
+
+[node name="Sep1" type="HSeparator" parent="Screen/Center/Frame/VBox"]
+layout_mode = 2
+
+[node name="ObjectiveList" type="VBoxContainer" parent="Screen/Center/Frame/VBox"]
+unique_name_in_owner = true
+layout_mode = 2
+theme_override_constants/separation = 6
+
+[node name="XPLabel" type="Label" parent="Screen/Center/Frame/VBox"]
+unique_name_in_owner = true
+layout_mode = 2
+theme_override_colors/font_color = Color(0.95, 0.86, 0.6, 1)
+theme_override_font_sizes/font_size = 16
+text = "Experience earned:  0"
+
+[node name="Sep2" type="HSeparator" parent="Screen/Center/Frame/VBox"]
+layout_mode = 2
+
+[node name="ButtonRow" type="HBoxContainer" parent="Screen/Center/Frame/VBox"]
+layout_mode = 2
+alignment = 1
+
+[node name="ContinueButton" type="Button" parent="Screen/Center/Frame/VBox/ButtonRow"]
+unique_name_in_owner = true
+layout_mode = 2
+custom_minimum_size = Vector2(200, 44)
+text = "Continue"
