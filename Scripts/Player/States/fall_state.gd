@@ -14,4 +14,5 @@ func physics_update(delta: float) -> void:
 	player.move_and_slide()
 
 	if player.is_on_floor():
+		animator.play_land()
 		transition_to("Grounded")

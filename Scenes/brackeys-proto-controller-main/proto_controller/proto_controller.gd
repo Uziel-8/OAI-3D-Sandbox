@@ -57,12 +57,13 @@ func _ready() -> void:
 	check_input_mappings()
 	look_rotation.y = rotation.y
 	look_rotation.x = head.rotation.x
-	# Hurt flinch is an animation overlay (doesn't change gameplay state), so wire
-	# it straight to the animator. (Death is still handled by the DamageReceiver's
-	# RELOAD_SCENE for now -- see note in the header of the FSM states.)
+	# Hurt flinch is an animation overlay (doesn't change gameplay state). Death is
+	# a real state that owns the death anim + delayed reload, so the receiver's
+	# death_behavior is NONE and we route its `died` signal to the Dead state.
 	var receiver := DamageReceiver.find_in(self)
 	if receiver:
 		receiver.damaged.connect(_on_damaged)
+		receiver.died.connect(_on_died)
 
 
 func _unhandled_input(event: InputEvent) -> void:
@@ -78,6 +79,11 @@ func _unhandled_input(event: InputEvent) -> void:
 func _on_damaged(_amount: float, _remaining: float, _source: Node) -> void:
 	if animator:
 		animator.play_hurt()
+
+
+func _on_died(_source: Node) -> void:
+	if state_machine:
+		state_machine.transition_to("Dead")
 
 
 # --- Movement primitives used by the states ---------------------------------

@@ -14,6 +14,7 @@
 [ext_resource type="Script" uid="uid://by2578000mfi3" path="res://Scripts/Player/States/jump_state.gd" id="13_jump"]
 [ext_resource type="Script" uid="uid://c3bid1kpj5j8b" path="res://Scripts/Player/States/fall_state.gd" id="14_fall"]
 [ext_resource type="Script" uid="uid://4yt3kg4apko6" path="res://Scripts/Player/States/freefly_state.gd" id="15_freefly"]
+[ext_resource type="Script" path="res://Scripts/Player/States/dead_state.gd" id="16_dead"]
 
 [sub_resource type="AnimationNodeBlend2" id="AnimationNodeBlend2_46bf6"]
 filter_enabled = true
@@ -165,7 +166,7 @@ mouse_filter = 2
 color = Color(1, 1, 1, 0.8)
 
 [node name="DamageReceiver" parent="." unique_id=1010431383 groups=["player_health"] instance=ExtResource("7_receiver")]
-death_behavior = 2
+death_behavior = 0
 
 [node name="PlayerAnimator" type="Node" parent="." unique_id=1002107749 node_paths=PackedStringArray("animation_tree", "animation_player")]
 script = ExtResource("10_anim")
@@ -187,3 +188,6 @@ script = ExtResource("14_fall")
 
 [node name="Freefly" type="Node" parent="StateMachine" unique_id=962172527]
 script = ExtResource("15_freefly")
+
+[node name="Dead" type="Node" parent="StateMachine"]
+script = ExtResource("16_dead")

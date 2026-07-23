@@ -9,25 +9,33 @@ class_name PlayerAnimator
 ## state -- you can cast while moving).
 ##
 ## ANIMATIONTREE CONTRACT -- author this graph in the editor, then assign the tree to
-## `animation_tree`. The ROOT is a BlendTree so the cast/hurt overlays can layer on top
-## of the movement state machine, which is NESTED inside it as a node named "Movement":
+## `animation_tree`. The ROOT is a BlendTree so the cast/hurt/land overlays can layer on
+## top of the movement state machine, which is NESTED inside it as a node named "Movement":
 ##
 ##   Root  AnimationNodeBlendTree
 ##     Movement   AnimationNodeStateMachine  -- states "Grounded"/"Jump"/"Fall" (code travels these)
 ##                  Grounded = BlendSpace1D  (Idle_B -> Walking_B -> Running_B)
-##     CastBlend  Blend2   -- blends Movement vs a looping Ranged_Magic_Spellcasting, filtered to spine/arms
+##     CastBlend  Blend2   -- blends Movement vs a looping Ranged_Magic_Spellcasting (HELD casts),
+##                            filtered to spine/arms
+##     CastShot   OneShot  -- fires Ranged_Magic_Shoot for INSTANT casts, upper-body filtered   [add for per-spell casts]
 ##     HurtShot   OneShot  -- layers Hit_A on top, upper-body filtered
-##     wiring:  Movement -> CastBlend(A) ; cast clip -> CastBlend(B) ; CastBlend -> HurtShot -> Output
+##     LandShot   OneShot  -- fires Jump_Land on landing, full body (no filter)                  [add for land polish]
+##     wiring:  Movement -> CastBlend(A) ; spellcasting clip -> CastBlend(B) ;
+##              CastBlend -> CastShot -> HurtShot -> LandShot -> Output  (overlays chained)
 ##
-## Nested nodes take their parent's name as a path prefix -- that's why the movement paths
-## are under "Movement/". These MUST match the authored graph: AnimationTree.set() on a
-## wrong path fails SILENTLY, so the paths live in the PARAM_* constants below.
+## CastShot/LandShot are optional polish -- until you add them, play_cast_shot()/play_land()
+## set() a path that doesn't exist yet and no-op SILENTLY (held casts + everything else still
+## work). Nested nodes take their parent's name as a path prefix (hence "Movement/"). These
+## MUST match the authored graph: AnimationTree.set() on a wrong path fails SILENTLY, so the
+## paths live in the PARAM_* constants below. Death bypasses the tree entirely (see play_death).
 
 ## AnimationTree parameter paths driven by this script -- keep in sync with the graph above.
 const PARAM_PLAYBACK := "parameters/Movement/playback"
 const PARAM_LOCOMOTION := "parameters/Movement/Grounded/blend_position"
 const PARAM_CAST_BLEND := "parameters/CastBlend/blend_amount"
+const PARAM_CAST_SHOT_REQUEST := "parameters/CastShot/request"
 const PARAM_HURT_REQUEST := "parameters/HurtShot/request"
+const PARAM_LAND_REQUEST := "parameters/LandShot/request"
 
 @export var animation_tree: AnimationTree
 @export var animation_player: AnimationPlayer
@@ -38,19 +46,20 @@ const PARAM_HURT_REQUEST := "parameters/HurtShot/request"
 @export var run_anim: String = "Rig_Medium_MovementBasic/Running_B"
 @export var jump_anim: String = "Rig_Medium_MovementBasic/Jump_Start"
 @export var fall_anim: String = "Rig_Medium_MovementBasic/Jump_Idle"
+## Instant-cast clip (Fireball/Ice Bolt/Push). Held casts use the looping
+## Ranged_Magic_Spellcasting inside the tree's CastBlend instead.
 @export var cast_anim: String = "Rig_Medium_CombatRanged/Ranged_Magic_Shoot"
 @export var hurt_anim: String = "Rig_Medium_General/Hit_A"
+@export var land_anim: String = "Rig_Medium_MovementBasic/Jump_Land"
+@export var death_anim: String = "Rig_Medium_General/Death_A"
 
 @export_group("Cast overlay")
-## How fast the cast overlay fades in/out (per second).
+## How fast the held-cast overlay fades in/out (per second).
 @export var cast_blend_speed: float = 9.0
-## How long an instant cast keeps the overlay up after firing.
-@export var cast_flourish_time: float = 0.45
 
 var _playback: AnimationNodeStateMachinePlayback
 var _caster: SpellCaster
 var _cast_amount: float = 0.0
-var _cast_timer: float = 0.0
 var _fallback_clip: String = ""
 
 
@@ -69,10 +78,9 @@ func _process(delta: float) -> void:
 		if _caster and not _caster.spell_cast.is_connected(_on_spell_cast):
 			_caster.spell_cast.connect(_on_spell_cast)
 
-	# Upper-body cast overlay: raised while an instant flourish is timing out or a
-	# held spell is active, eased back down otherwise. Independent of movement.
-	_cast_timer = maxf(_cast_timer - delta, 0.0)
-	var casting := _cast_timer > 0.0 or (_caster != null and _caster.is_casting())
+	# Held-cast overlay: raised (upper body) while a HELD spell is active, eased back
+	# down otherwise. Instant casts use the CastShot one-shot instead (see _on_spell_cast).
+	var casting := _caster != null and _caster.is_casting()
 	_cast_amount = move_toward(_cast_amount, 1.0 if casting else 0.0, cast_blend_speed * delta)
 	if animation_tree:
 		animation_tree.set(PARAM_CAST_BLEND, _cast_amount)
@@ -103,11 +111,38 @@ func play_hurt() -> void:
 		animation_player.play(hurt_anim, 0.1)
 
 
-func _on_spell_cast(_spell: Spell) -> void:
-	_cast_timer = cast_flourish_time
-	# In fallback mode there's no upper-body layer, so show the cast full-body.
-	if animation_tree == null and animation_player:
+## Fire the instant-cast one-shot (Ranged_Magic_Shoot). Held casts use CastBlend.
+func play_cast_shot() -> void:
+	if animation_tree:
+		animation_tree.set(PARAM_CAST_SHOT_REQUEST, AnimationNodeOneShot.ONE_SHOT_REQUEST_FIRE)
+	elif animation_player:
 		animation_player.play(cast_anim, 0.1)
+
+
+## Fire the landing one-shot (Jump_Land). Called by FallState on touchdown.
+func play_land() -> void:
+	if animation_tree:
+		animation_tree.set(PARAM_LAND_REQUEST, AnimationNodeOneShot.ONE_SHOT_REQUEST_FIRE)
+	elif animation_player:
+		animation_player.play(land_anim, 0.05)
+
+
+## Play the full-body death clip. Deactivates the AnimationTree so the plain
+## AnimationPlayer drives the skeleton (Death isn't a movement-SM state), so this
+## needs no tree authoring. The scene reloads shortly after (DeadState), spawning
+## a fresh player with the tree active again.
+func play_death() -> void:
+	if animation_tree:
+		animation_tree.active = false
+	if animation_player:
+		animation_player.play(death_anim, 0.2)
+
+
+func _on_spell_cast(spell: Spell) -> void:
+	# Instant spells get a quick shot flourish; held spells are handled by the
+	# sustained CastBlend overlay in _process (via SpellCaster.is_casting()).
+	if spell != null and spell.instant:
+		play_cast_shot()
 
 
 # --- Fallback (no AnimationTree) ---------------------------------------------
