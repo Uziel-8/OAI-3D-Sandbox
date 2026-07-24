@@ -1,0 +1,15 @@
+[gd_scene load_steps=5 format=3]
+
+[ext_resource type="PackedScene" path="res://NPCs/npc.tscn" id="1_base"]
+[ext_resource type="PackedScene" path="res://Graphics/KayKit Skeletons/characters/gltf/Skeleton_Rogue.glb" id="2_model"]
+[ext_resource type="AnimationLibrary" uid="uid://betdiu5ni0rlt" path="res://Graphics/KayKit Skeletons/Animations/gltf/Rig_Medium/Rig_Medium_General.glb" id="3_anims"]
+[ext_resource type="Resource" path="res://Resources/NPCs/patroller_profile.tres" id="4_profile"]
+
+[node name="Patroller" instance=ExtResource("1_base")]
+profile = ExtResource("4_profile")
+
+[node name="Skeleton_Rogue" parent="." instance=ExtResource("2_model")]
+
+[node name="AnimationPlayer" type="AnimationPlayer" parent="Skeleton_Rogue"]
+libraries/Rig_Medium_General = ExtResource("3_anims")
+autoplay = &"Rig_Medium_General/Idle_A"

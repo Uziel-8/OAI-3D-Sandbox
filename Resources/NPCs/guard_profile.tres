@@ -1,0 +1,17 @@
+[gd_resource type="Resource" script_class="NpcProfile" format=3 uid="uid://juym7nyu4f1s"]
+
+[ext_resource type="Script" uid="uid://v4epnlt7qolu" path="res://Scripts/NPCs/npc_profile.gd" id="1_script"]
+
+[resource]
+script = ExtResource("1_script")
+display_name = "Dock Tough"
+faction = &"hostile"
+char_class = &"fighter"
+starting_disposition = -60
+max_health = 35.0
+xp_reward = 30.0
+move_speed = 4.2
+turn_speed = 9.0
+chase_range = 10.0
+give_up_range = 16.0
+stop_distance = 1.8

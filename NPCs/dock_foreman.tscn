@@ -1,33 +1,15 @@
-[gd_scene format=3 uid="uid://cekvlbgjcndlw"]
+[gd_scene load_steps=5 format=3 uid="uid://cekvlbgjcndlw"]
 
-[ext_resource type="PackedScene" uid="uid://bixnuuwn433b4" path="res://Graphics/KayKit Skeletons/characters/gltf/Ranger.glb" id="1_1owj6"]
-[ext_resource type="AnimationLibrary" uid="uid://betdiu5ni0rlt" path="res://Graphics/KayKit Skeletons/Animations/gltf/Rig_Medium/Rig_Medium_General.glb" id="2_pbmqe"]
-[ext_resource type="PackedScene" uid="uid://dvito1lehljda" path="res://Components/damage_receiver.tscn" id="3_pbmqe"]
-[ext_resource type="PackedScene" path="res://Components/health_bar_3d.tscn" id="4_nwekp"]
-[ext_resource type="Script" path="res://Components/interactable.gd" id="5_interact"]
+[ext_resource type="PackedScene" path="res://NPCs/npc.tscn" id="1_base"]
+[ext_resource type="PackedScene" uid="uid://bixnuuwn433b4" path="res://Graphics/KayKit Skeletons/characters/gltf/Ranger.glb" id="2_model"]
+[ext_resource type="AnimationLibrary" uid="uid://betdiu5ni0rlt" path="res://Graphics/KayKit Skeletons/Animations/gltf/Rig_Medium/Rig_Medium_General.glb" id="3_anims"]
+[ext_resource type="Resource" path="res://Resources/NPCs/foreman_profile.tres" id="4_profile"]
 
-[sub_resource type="CapsuleShape3D" id="CapsuleShape3D_3xd07"]
-height = 2.319336
+[node name="DockForeman" instance=ExtResource("1_base")]
+profile = ExtResource("4_profile")
 
-[node name="DockForeman" type="CharacterBody3D" unique_id=1948298614 groups=["interactable"]]
+[node name="Ranger" parent="." instance=ExtResource("2_model")]
 
-[node name="Ranger" parent="." unique_id=1745624167 instance=ExtResource("1_1owj6")]
-
-[node name="AnimationPlayer" type="AnimationPlayer" parent="Ranger" unique_id=98128694]
-libraries/Rig_Medium_General = ExtResource("2_pbmqe")
+[node name="AnimationPlayer" type="AnimationPlayer" parent="Ranger"]
+libraries/Rig_Medium_General = ExtResource("3_anims")
 autoplay = &"Rig_Medium_General/Idle_A"
-
-[node name="CollisionShape3D" type="CollisionShape3D" parent="." unique_id=751412436]
-transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, 0, 1.1211576, 0)
-shape = SubResource("CapsuleShape3D_3xd07")
-
-[node name="DamageReceiver" parent="." unique_id=105721519 instance=ExtResource("3_pbmqe")]
-
-[node name="HealthBar3D" parent="." unique_id=1047092059 instance=ExtResource("4_nwekp")]
-transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, 0, 2.5452235, 0)
-
-[node name="Interactable" type="Node" parent="."]
-script = ExtResource("5_interact")
-prompt = "Speak"
-speaker_name = "Karrick, Yard Foreman"
-dialogue_lines = Array[String](["You've no business on my docks. State it or clear off.", "Whatever the dockmaster's paying you, it's not worth crossing me. I've a hundred men on this waterfront and every one of them owes me.", "...Go on, then. But you'll not find me an easy man to be rid of."])

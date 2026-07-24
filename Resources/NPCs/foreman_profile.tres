@@ -1,0 +1,23 @@
+[gd_resource type="Resource" script_class="NpcProfile" load_steps=2 format=3]
+
+[ext_resource type="Script" path="res://Scripts/NPCs/npc_profile.gd" id="1_script"]
+
+[resource]
+script = ExtResource("1_script")
+display_name = "Karrick, Yard Foreman"
+faction = &"docks"
+char_class = &"commoner"
+starting_disposition = 0
+max_health = 45.0
+health_regen = 0.0
+xp_reward = 0.0
+movement = 0
+move_speed = 2.5
+turn_speed = 8.0
+chase_range = 8.0
+give_up_range = 14.0
+stop_distance = 1.6
+patrol_wait = 1.5
+interact_prompt = "Speak"
+speaker_name = "Karrick, Yard Foreman"
+dialogue_lines = Array[String](["You've no business on my docks. State it or clear off.", "Whatever the dockmaster's paying you, it's not worth crossing me. I've a hundred men on this waterfront and every one of them owes me.", "...Go on, then. But you'll not find me an easy man to be rid of."])

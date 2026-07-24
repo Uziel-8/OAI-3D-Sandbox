@@ -1,0 +1,23 @@
+[gd_resource type="Resource" script_class="NpcProfile" load_steps=2 format=3]
+
+[ext_resource type="Script" path="res://Scripts/NPCs/npc_profile.gd" id="1_script"]
+
+[resource]
+script = ExtResource("1_script")
+display_name = "Watchman"
+faction = &"docks"
+char_class = &"fighter"
+starting_disposition = 0
+max_health = 40.0
+health_regen = 0.0
+xp_reward = 20.0
+movement = 1
+move_speed = 3.0
+turn_speed = 8.0
+chase_range = 9.0
+give_up_range = 15.0
+stop_distance = 1.6
+patrol_wait = 2.0
+interact_prompt = "Speak"
+speaker_name = "Watchman"
+dialogue_lines = Array[String](["Move along. Nothing here needs your attention."])

@@ -1,0 +1,42 @@
+[gd_scene load_steps=8 format=3]
+
+[ext_resource type="Script" path="res://Scripts/NPCs/npc.gd" id="1_npc"]
+[ext_resource type="PackedScene" uid="uid://dvito1lehljda" path="res://Components/damage_receiver.tscn" id="2_receiver"]
+[ext_resource type="PackedScene" path="res://Components/health_bar_3d.tscn" id="3_healthbar"]
+[ext_resource type="Script" path="res://Components/interactable.gd" id="4_interact"]
+[ext_resource type="Script" path="res://Scripts/StateMachine/state_machine.gd" id="5_sm"]
+[ext_resource type="Script" path="res://Scripts/NPCs/States/npc_static_state.gd" id="6_static"]
+[ext_resource type="Script" path="res://Scripts/NPCs/States/npc_patrol_state.gd" id="7_patrol"]
+[ext_resource type="Script" path="res://Scripts/NPCs/States/npc_chase_state.gd" id="8_chase"]
+
+[sub_resource type="CapsuleShape3D" id="CapsuleShape3D_npc"]
+radius = 0.4
+height = 2.0
+
+[node name="Npc" type="CharacterBody3D" groups=["interactable", "npc"]]
+script = ExtResource("1_npc")
+
+[node name="CollisionShape3D" type="CollisionShape3D" parent="."]
+transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, 0, 1.0, 0)
+shape = SubResource("CapsuleShape3D_npc")
+
+[node name="DamageReceiver" parent="." instance=ExtResource("2_receiver")]
+
+[node name="HealthBar3D" parent="." instance=ExtResource("3_healthbar")]
+transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, 0, 2.3, 0)
+
+[node name="Interactable" type="Node" parent="."]
+script = ExtResource("4_interact")
+prompt = "Speak"
+
+[node name="StateMachine" type="Node" parent="."]
+script = ExtResource("5_sm")
+
+[node name="Static" type="Node" parent="StateMachine"]
+script = ExtResource("6_static")
+
+[node name="Patrol" type="Node" parent="StateMachine"]
+script = ExtResource("7_patrol")
+
+[node name="Chase" type="Node" parent="StateMachine"]
+script = ExtResource("8_chase")
