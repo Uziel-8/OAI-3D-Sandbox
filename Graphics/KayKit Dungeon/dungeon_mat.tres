@@ -1,0 +1,9 @@
+[gd_resource type="StandardMaterial3D" format=3 uid="uid://m4qwox730oy8"]
+
+[ext_resource type="Texture2D" uid="uid://cc6ur86c6wru7" path="res://Graphics/KayKit Dungeon/gltf/dungeon_texture.png" id="1_qywuq"]
+
+[resource]
+diffuse_mode = 3
+specular_mode = 1
+albedo_texture = ExtResource("1_qywuq")
+roughness = 0.0
