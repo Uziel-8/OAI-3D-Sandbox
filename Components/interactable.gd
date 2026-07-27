@@ -21,6 +21,9 @@ signal interacted(interactor: Node)
 ## Lines shown one after another when interacted. Empty = no dialogue (the
 ## `interacted` signal still fires for other systems to respond to).
 @export var dialogue_lines: Array[String] = []
+## Options offered after the lines. Each can cost gold and shift the target NPC's
+## disposition (see DialogueChoice). Empty = no choices, dialogue just closes.
+@export var dialogue_choices: Array[DialogueChoice] = []
 
 
 ## Triggered by PlayerInteractor on the interact action.
@@ -28,12 +31,15 @@ func interact(interactor: Node) -> void:
 	if not enabled:
 		return
 	interacted.emit(interactor)
-	if not dialogue_lines.is_empty():
-		# The DialogueScreen script sits on the autoload's Screen child, not the
-		# CanvasLayer root, so find it by group (as the journal/inventory do).
-		var dialogue := get_tree().get_first_node_in_group("dialogue_screen")
-		if dialogue and dialogue.has_method("start"):
-			dialogue.start(speaker_name, dialogue_lines)
+	if dialogue_lines.is_empty() and dialogue_choices.is_empty():
+		return
+	# The DialogueScreen script sits on the autoload's Screen child, not the
+	# CanvasLayer root, so find it by group (as the journal/inventory do). The
+	# target -- this component's owning body (the NPC) -- receives choice effects
+	# like disposition changes.
+	var dialogue := get_tree().get_first_node_in_group("dialogue_screen")
+	if dialogue and dialogue.has_method("start"):
+		dialogue.start(speaker_name, dialogue_lines, dialogue_choices, get_parent())
 
 
 ## HUD prompt text including the key currently bound to the interact action.

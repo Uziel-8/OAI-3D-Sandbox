@@ -14,7 +14,14 @@ class_name Npc
 ## Spells can push NPCs: apply_impulse() folds knockback into velocity (duck-typed
 ## like SpiderWalker/RigidBody3D), and staggers the AI briefly so the shove shows.
 
+## Emitted when the live disposition changes (dialogue choices, future events).
+## DispositionReaction components listen to this to change the world.
+signal disposition_changed(new_value: int, old_value: int)
+
 const ARRIVE_DISTANCE := 0.6
+## Disposition is clamped to this range; < 0 is hostile (see is_hostile()).
+const DISPOSITION_MIN := -100
+const DISPOSITION_MAX := 100
 
 @export var profile: NpcProfile
 ## World-space waypoints (Marker3D/Node3D placed in the LEVEL, not the NPC scene --
@@ -91,6 +98,18 @@ func _apply_profile() -> void:
 
 func is_hostile() -> bool:
 	return disposition < 0
+
+## Shifts live disposition (dialogue choices call this via the DialogueScreen).
+## Clamped, and emits disposition_changed so reactions/the FSM can respond -- e.g.
+## bribing a hostile guard past 0 both pacifies him (is_hostile flips) and can trip
+## a DispositionReaction to open a gate.
+func change_disposition(delta: int) -> void:
+	if delta == 0:
+		return
+	var old := disposition
+	disposition = clampi(disposition + delta, DISPOSITION_MIN, DISPOSITION_MAX)
+	if disposition != old:
+		disposition_changed.emit(disposition, old)
 
 func get_player() -> Node3D:
 	if _player == null or not is_instance_valid(_player):

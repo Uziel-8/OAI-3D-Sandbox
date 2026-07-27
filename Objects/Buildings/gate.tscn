@@ -1,0 +1,26 @@
+[gd_scene load_steps=5 format=3]
+
+[ext_resource type="Script" path="res://Scripts/Environment/gate.gd" id="1_gate"]
+
+[sub_resource type="StandardMaterial3D" id="StandardMaterial3D_gate"]
+albedo_color = Color(0.32, 0.24, 0.16, 1)
+metallic = 0.2
+roughness = 0.7
+
+[sub_resource type="BoxMesh" id="BoxMesh_gate"]
+size = Vector3(2, 3, 0.3)
+
+[sub_resource type="BoxShape3D" id="BoxShape3D_gate"]
+size = Vector3(2, 3, 0.3)
+
+[node name="Gate" type="AnimatableBody3D"]
+script = ExtResource("1_gate")
+
+[node name="MeshInstance3D" type="MeshInstance3D" parent="."]
+transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, 0, 1.5, 0)
+mesh = SubResource("BoxMesh_gate")
+surface_material_override/0 = SubResource("StandardMaterial3D_gate")
+
+[node name="CollisionShape3D" type="CollisionShape3D" parent="."]
+transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, 0, 1.5, 0)
+shape = SubResource("BoxShape3D_gate")

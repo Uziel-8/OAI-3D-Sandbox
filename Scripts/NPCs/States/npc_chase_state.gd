@@ -16,6 +16,11 @@ func physics_update(delta: float) -> void:
 		transition_to(npc.default_movement_state_name())
 		return
 
+	# Pacified mid-chase (e.g. bribed past hostile) -> break off to the default posture.
+	if not npc.is_hostile() and npc.default_movement != NpcProfile.Movement.CHASE:
+		transition_to(npc.default_movement_state_name())
+		return
+
 	var dist := npc.distance_to_player()
 	if npc.default_movement != NpcProfile.Movement.CHASE and dist > npc.give_up_range:
 		transition_to(npc.default_movement_state_name())

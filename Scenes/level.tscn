@@ -15,8 +15,14 @@
 [ext_resource type="Material" uid="uid://b0dlu3ubfyv0y" path="res://Graphics/mat_dock.tres" id="13_nngtn"]
 [ext_resource type="Script" uid="uid://dkflqnks0maoo" path="res://Scripts/Level/Objectives/interact_objective.gd" id="13_talkobj"]
 [ext_resource type="PackedScene" uid="uid://7ortryb3uht1" path="res://Scenes/level_2.tscn" id="14_nextlvl"]
-[ext_resource type="PackedScene" path="res://NPCs/guard.tscn" id="15_c7le1"]
+[ext_resource type="PackedScene" uid="uid://cpetqg4mpvl4i" path="res://NPCs/guard.tscn" id="15_c7le1"]
 [ext_resource type="PackedScene" path="res://NPCs/patroller.tscn" id="16_2klc5"]
+[ext_resource type="Script" uid="uid://v4epnlt7qolu" path="res://Scripts/NPCs/npc_profile.gd" id="18_00k4y"]
+[ext_resource type="PackedScene" uid="uid://d381t0vkqitng" path="res://Objects/gold_stack.tscn" id="18_vofx3"]
+[ext_resource type="Script" uid="uid://hlppmi8dhefm" path="res://Scripts/UI/dialogue_choice.gd" id="19_0cmrb"]
+[ext_resource type="Script" uid="uid://c2umnqsop4kc2" path="res://Scripts/Environment/disposition_reaction.gd" id="19_pnhnk"]
+[ext_resource type="PackedScene" path="res://Objects/Buildings/gate.tscn" id="21_pnhnk"]
+[ext_resource type="PackedScene" uid="uid://cpvew8y2sqp5e" path="res://Objects/torch.tscn" id="22_24uko"]
 
 [sub_resource type="ProceduralSkyMaterial" id="ProceduralSkyMaterial_5xgho"]
 sky_horizon_color = Color(0.66224277, 0.6717428, 0.6867428, 1)
@@ -49,6 +55,27 @@ category = "Lore"
 
 [sub_resource type="StandardMaterial3D" id="StandardMaterial3D_yf5fn"]
 albedo_color = Color(0.50140655, 0.5014065, 0.5014065, 1)
+
+[sub_resource type="Resource" id="Resource_q7uf1"]
+script = ExtResource("19_0cmrb")
+text = "I'll give you a little something to open this gate up for me"
+gold_cost = 75
+disposition_delta = 50
+response = "There you go champion!"
+metadata/_custom_type_script = "uid://hlppmi8dhefm"
+
+[sub_resource type="Resource" id="Resource_24uko"]
+script = ExtResource("18_00k4y")
+display_name = "Dock Tough"
+faction = &"hostile"
+char_class = &"fighter"
+max_health = 35.0
+xp_reward = 30.0
+move_speed = 4.2
+turn_speed = 9.0
+chase_range = 10.0
+give_up_range = 16.0
+stop_distance = 1.8
 
 [node name="Level" type="Node3D" unique_id=1147942204]
 
@@ -131,11 +158,13 @@ transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, -15.232209, 1.3379184, 12.207
 transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, 0.612113, 2.5818486, 3.6828933)
 
 [node name="BoundaryFloorBox" type="CSGBox3D" parent="." unique_id=579638448]
+transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, 0.11893463, -7.6293945e-06, 0.0700531)
 use_collision = true
 size = Vector3(400, 1, 400)
 
 [node name="OuterWall" type="CSGCylinder3D" parent="." unique_id=1761529379]
 transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, 0, 2.5, 0)
+use_collision = true
 radius = 150.0
 height = 5.0
 material = ExtResource("13_nngtn")
@@ -145,6 +174,11 @@ operation = 2
 radius = 145.0
 height = 5.0
 material = ExtResource("13_nngtn")
+
+[node name="CSGBox3D2" type="CSGBox3D" parent="OuterWall" unique_id=1000419961]
+transform = Transform3D(0.4218538, 0, -0.9066517, 0, 1, 0, 0.9066517, 0, 0.4218538, -127.7956, -0.21377778, 47.408527)
+operation = 2
+size = Vector3(2.928711, 3.7241669, 6.7107544)
 
 [node name="MainStructure" type="CSGCombiner3D" parent="." unique_id=1198104336]
 transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, 0, 0, -40.430534)
@@ -768,24 +802,63 @@ transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, 20, 0.5, 20)
 transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, 20, 0.5, 24)
 
 [node name="Road1" type="CSGBox3D" parent="." unique_id=1985919731]
-transform = Transform3D(0.91964597, 0, 0.39274833, 0, 1, 0, -0.39274833, 0, 0.91964597, -167.35756, 0.16301346, 64.308205)
+transform = Transform3D(0.91964597, 0, 0.39274833, 0, 1, 0, -0.39274833, 0, 0.91964597, -167.35756, 0.12718439, 64.308205)
 size = Vector3(81.853, 1, 10)
 material = SubResource("StandardMaterial3D_yf5fn")
 
 [node name="Guard2" parent="." unique_id=676007783 instance=ExtResource("15_c7le1")]
 transform = Transform3D(0.18077566, 0, -0.9835244, 0, 1, 0, 0.9835244, 0, 0.18077566, -135.94888, 0, 41.679462)
+profile = null
+
+[node name="Interactable" parent="Guard2" index="3"]
+dialogue_lines = Array[String](["What are you lookin' at?"])
+dialogue_choices = Array[ExtResource("19_0cmrb")]([SubResource("Resource_q7uf1")])
+
+[node name="DispositionReaction" type="Node" parent="Guard2" unique_id=186156113 node_paths=PackedStringArray("npc", "target")]
+script = ExtResource("19_pnhnk")
+npc = NodePath("..")
+threshold = 10
+target = NodePath("../../Gate")
 
 [node name="Guard3" parent="." unique_id=1777859633 instance=ExtResource("15_c7le1")]
 transform = Transform3D(0.18077566, 0, -0.9835244, 0, 1, 0, 0.9835244, 0, 0.18077566, -128.46693, 0, 54.188255)
+profile = SubResource("Resource_24uko")
 
 [node name="CSGBox3D" type="CSGBox3D" parent="." unique_id=404342014]
 transform = Transform3D(0.9135513, 0, 0.40672365, 0, 1, 0, -0.40672365, 0, 0.9135513, -177.26, 4.5, 55.228493)
+use_collision = true
 size = Vector3(10, 9, 11.708984)
+
+[node name="CSGBox3D" type="CSGBox3D" parent="CSGBox3D" unique_id=832993460]
+transform = Transform3D(0.9999937, 0, 2.682209e-07, 0, 1, 0, -2.682209e-07, 0, 0.9999937, -2.1700897, -2.6962495, 5.414505)
+operation = 2
+size = Vector3(1.6835938, 2.4910889, 1.4550781)
+
+[node name="CSGBox3D4" type="CSGBox3D" parent="CSGBox3D" unique_id=1208839298]
+transform = Transform3D(0.99999994, 0, 2.9802322e-08, 0, 1, 0, -2.9802322e-08, 0, 0.99999994, 0, -0.3605957, 0)
+operation = 2
+size = Vector3(8.737305, 8.278809, 10.501953)
+
+[node name="GoldStack" parent="CSGBox3D" unique_id=386534980 instance=ExtResource("18_vofx3")]
+transform = Transform3D(0.9999999, 0, 2.9802322e-08, 0, 1, 0, -2.9802322e-08, 0, 0.9999999, 1.3158264, -3.4014263, 0.5858154)
+
+[node name="Torch" parent="CSGBox3D" unique_id=849798539 instance=ExtResource("22_24uko")]
+transform = Transform3D(0.99999994, 0, 5.9604645e-08, 0, 1, 0, -5.9604645e-08, 0, 0.99999994, 1.8534241, -1.368475, -5.0565224)
 
 [node name="CSGBox3D2" type="CSGBox3D" parent="." unique_id=1763825347]
 transform = Transform3D(0.9135513, 0, 0.40672365, 0, 1, 0, -0.40672365, 0, 0.9135513, -166.52663, 2.9179688, 45.19325)
+use_collision = true
 size = Vector3(7.914551, 5.8359375, 20.21045)
 
 [node name="CSGBox3D3" type="CSGBox3D" parent="." unique_id=180302424]
 transform = Transform3D(0.9135513, 0, 0.40672365, 0, 1, 0, -0.40672365, 0, 0.9135513, -151.88568, 5.441437, 44.453438)
+use_collision = true
 size = Vector3(7.914551, 10.882874, 10.184814)
+
+[node name="GoldStack" parent="." unique_id=1227313674 instance=ExtResource("18_vofx3")]
+transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, 5, 1, 7)
+
+[node name="Gate" parent="." unique_id=287371162 instance=ExtResource("21_pnhnk")]
+transform = Transform3D(0.6574246, 0, -1.3482554, 0, 1.5, 0, 1.3482554, 0, 0.6574246, -130.3457, 0.6289253, 48.600353)
+
+[editable path="Guard2"]

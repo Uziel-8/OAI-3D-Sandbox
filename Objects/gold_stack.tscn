@@ -1,0 +1,22 @@
+[gd_scene format=3 uid="uid://d381t0vkqitng"]
+
+[ext_resource type="Script" uid="uid://cfk07fp8qu07y" path="res://Objects/gold_stack.gd" id="1_4ndjc"]
+[ext_resource type="PackedScene" uid="uid://ompnrri1g1qs" path="res://Graphics/KayKit Dungeon/gltf/coin_stack_large.gltf" id="1_ne0ja"]
+[ext_resource type="Script" uid="uid://cr60chex38utm" path="res://Components/interactable.gd" id="2_4ndjc"]
+
+[sub_resource type="BoxShape3D" id="BoxShape3D_g4v7s"]
+
+[node name="GoldStack" type="RigidBody3D" unique_id=386534980]
+script = ExtResource("1_4ndjc")
+
+[node name="coin_stack_large2" parent="." unique_id=362813581 instance=ExtResource("1_ne0ja")]
+
+[node name="CollisionShape3D" type="CollisionShape3D" parent="." unique_id=547123649]
+transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, 0, 0.5033375, 0)
+shape = SubResource("BoxShape3D_g4v7s")
+
+[node name="Node" type="Node" parent="." unique_id=932831207]
+script = ExtResource("2_4ndjc")
+prompt = "Pick Up"
+
+[connection signal="interacted" from="Node" to="." method="_on_node_interacted"]

@@ -86,6 +86,11 @@ scroll_active = false
 autowrap_mode = 3
 text = "Dialogue line."
 
+[node name="ChoicesBox" type="VBoxContainer" parent="Screen/Panel/VBox"]
+unique_name_in_owner = true
+layout_mode = 2
+theme_override_constants/separation = 6
+
 [node name="ButtonRow" type="HBoxContainer" parent="Screen/Panel/VBox"]
 layout_mode = 2
 alignment = 2

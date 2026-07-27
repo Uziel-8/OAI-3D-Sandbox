@@ -14,7 +14,7 @@
 [ext_resource type="Script" uid="uid://by2578000mfi3" path="res://Scripts/Player/States/jump_state.gd" id="13_jump"]
 [ext_resource type="Script" uid="uid://c3bid1kpj5j8b" path="res://Scripts/Player/States/fall_state.gd" id="14_fall"]
 [ext_resource type="Script" uid="uid://4yt3kg4apko6" path="res://Scripts/Player/States/freefly_state.gd" id="15_freefly"]
-[ext_resource type="Script" path="res://Scripts/Player/States/dead_state.gd" id="16_dead"]
+[ext_resource type="Script" uid="uid://brmiljr3jtxj1" path="res://Scripts/Player/States/dead_state.gd" id="16_dead"]
 
 [sub_resource type="AnimationNodeBlend2" id="AnimationNodeBlend2_46bf6"]
 filter_enabled = true
@@ -189,5 +189,5 @@ script = ExtResource("14_fall")
 [node name="Freefly" type="Node" parent="StateMachine" unique_id=962172527]
 script = ExtResource("15_freefly")
 
-[node name="Dead" type="Node" parent="StateMachine"]
+[node name="Dead" type="Node" parent="StateMachine" unique_id=805024310]
 script = ExtResource("16_dead")

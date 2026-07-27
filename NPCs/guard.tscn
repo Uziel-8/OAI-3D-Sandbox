@@ -1,15 +1,15 @@
-[gd_scene load_steps=5 format=3]
+[gd_scene format=3 uid="uid://cpetqg4mpvl4i"]
 
 [ext_resource type="PackedScene" path="res://NPCs/npc.tscn" id="1_base"]
-[ext_resource type="PackedScene" path="res://Graphics/KayKit Skeletons/characters/gltf/Skeleton_Warrior.glb" id="2_model"]
+[ext_resource type="PackedScene" uid="uid://c2xaswbkqbje0" path="res://Graphics/KayKit Skeletons/characters/gltf/Skeleton_Warrior.glb" id="2_model"]
 [ext_resource type="AnimationLibrary" uid="uid://betdiu5ni0rlt" path="res://Graphics/KayKit Skeletons/Animations/gltf/Rig_Medium/Rig_Medium_General.glb" id="3_anims"]
-[ext_resource type="Resource" path="res://Resources/NPCs/guard_profile.tres" id="4_profile"]
+[ext_resource type="Resource" uid="uid://juym7nyu4f1s" path="res://Resources/NPCs/guard_profile.tres" id="4_profile"]
 
-[node name="Guard" instance=ExtResource("1_base")]
+[node name="Guard" unique_id=118921751 instance=ExtResource("1_base")]
 profile = ExtResource("4_profile")
 
-[node name="Skeleton_Warrior" parent="." instance=ExtResource("2_model")]
+[node name="Skeleton_Warrior" parent="." index="5" unique_id=450799041 instance=ExtResource("2_model")]
 
-[node name="AnimationPlayer" type="AnimationPlayer" parent="Skeleton_Warrior"]
+[node name="AnimationPlayer" type="AnimationPlayer" parent="Skeleton_Warrior" index="1" unique_id=1990124853]
 libraries/Rig_Medium_General = ExtResource("3_anims")
 autoplay = &"Rig_Medium_General/Idle_A"
