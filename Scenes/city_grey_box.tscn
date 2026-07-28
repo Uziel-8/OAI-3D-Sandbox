@@ -1,0 +1,31 @@
+[gd_scene format=3 uid="uid://cuosnyawderbl"]
+
+[ext_resource type="PackedScene" uid="uid://bs72ogkvdd7d6" path="res://Scenes/brackeys-proto-controller-main/proto_controller/proto_controller.tscn" id="1_re1jh"]
+
+[sub_resource type="StandardMaterial3D" id="StandardMaterial3D_jq8tk"]
+transparency = 1
+albedo_color = Color(0.36078432, 0.6901961, 0.8235294, 0.7411765)
+
+[node name="CityGreyBox" type="Node3D" unique_id=1195703063]
+
+[node name="ProtoController" parent="." unique_id=1601463080 instance=ExtResource("1_re1jh")]
+
+[node name="GBFloor" type="CSGBox3D" parent="." unique_id=1560333953]
+transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, 0, -0.5, 0)
+use_collision = true
+size = Vector3(2500, 1, 2500)
+
+[node name="CSGCylinder3D" type="CSGCylinder3D" parent="GBFloor" unique_id=1343239674]
+transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, 0, -1, 1327.899)
+operation = 2
+radius = 600.0
+height = 6.0
+sides = 24
+
+[node name="GBOcean" type="CSGCylinder3D" parent="." unique_id=650465826]
+transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, 0, -2.5, 1327.899)
+operation = 2
+radius = 600.0
+height = 4.0
+sides = 24
+material = SubResource("StandardMaterial3D_jq8tk")
