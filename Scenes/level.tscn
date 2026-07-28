@@ -16,6 +16,7 @@
 [ext_resource type="Script" uid="uid://dkflqnks0maoo" path="res://Scripts/Level/Objectives/interact_objective.gd" id="13_talkobj"]
 [ext_resource type="PackedScene" uid="uid://7ortryb3uht1" path="res://Scenes/level_2.tscn" id="14_nextlvl"]
 [ext_resource type="PackedScene" uid="uid://cpetqg4mpvl4i" path="res://NPCs/guard.tscn" id="15_c7le1"]
+[ext_resource type="Resource" uid="uid://dlik75nfjog42" path="res://Resources/Quests/scope_area.tres" id="15_luodc"]
 [ext_resource type="PackedScene" path="res://NPCs/patroller.tscn" id="16_2klc5"]
 [ext_resource type="Script" uid="uid://v4epnlt7qolu" path="res://Scripts/NPCs/npc_profile.gd" id="18_00k4y"]
 [ext_resource type="PackedScene" uid="uid://d381t0vkqitng" path="res://Objects/gold_stack.tscn" id="18_vofx3"]
@@ -23,6 +24,10 @@
 [ext_resource type="Script" uid="uid://c2umnqsop4kc2" path="res://Scripts/Environment/disposition_reaction.gd" id="19_pnhnk"]
 [ext_resource type="PackedScene" path="res://Objects/Buildings/gate.tscn" id="21_pnhnk"]
 [ext_resource type="PackedScene" uid="uid://cpvew8y2sqp5e" path="res://Objects/torch.tscn" id="22_24uko"]
+[ext_resource type="Script" uid="uid://sjaby5qs2ds6" path="res://Scripts/Quests/quest.gd" id="23_questsc"]
+[ext_resource type="Resource" uid="uid://d04ujlwjvaula" path="res://Resources/Quests/rats_in_the_hold.tres" id="24_ratsq"]
+[ext_resource type="Script" uid="uid://28h35un78w6d" path="res://Scripts/Quests/quest_giver.gd" id="25_giver"]
+[ext_resource type="Script" uid="uid://d0obqa03pjyqg" path="res://Scripts/Level/Objectives/kill_count_objective.gd" id="26_killcnt"]
 
 [sub_resource type="ProceduralSkyMaterial" id="ProceduralSkyMaterial_5xgho"]
 sky_horizon_color = Color(0.66224277, 0.6717428, 0.6867428, 1)
@@ -52,6 +57,19 @@ body = "The Force discipline is blunt but honest: what you can see, you can shov
 
 The scholars insist there is subtlety to be learned. For now, there is leverage."
 category = "Lore"
+
+[sub_resource type="Resource" id="Resource_luodc"]
+script = ExtResource("18_00k4y")
+display_name = "Dock Tough"
+faction = &"hostile"
+char_class = &"fighter"
+max_health = 35.0
+xp_reward = 30.0
+move_speed = 4.2
+turn_speed = 9.0
+chase_range = 10.0
+give_up_range = 16.0
+stop_distance = 1.8
 
 [sub_resource type="StandardMaterial3D" id="StandardMaterial3D_yf5fn"]
 albedo_color = Color(0.50140655, 0.5014065, 0.5014065, 1)
@@ -124,25 +142,47 @@ script = ExtResource("1_754fn")
 transform = Transform3D(-3.5, 0, 5.284853e-07, 0, 3.5, 0, -5.284853e-07, 0, -3.5, 29.791973, -6.109586, 11.3)
 
 [node name="SpiderWalker" parent="." unique_id=259960257 instance=ExtResource("7_8c0lf")]
-transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, 0, 2.4645534, -7.202213)
+transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, 0, 2.4645534, -39.41941)
 
 [node name="SpiderWalker2" parent="." unique_id=1466709724 instance=ExtResource("7_8c0lf")]
-transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, -1.9000006, 2.764554, -15.202213)
+transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, -1.9000006, 2.764554, -47.41941)
 
 [node name="SpiderWalker3" parent="." unique_id=435179433 instance=ExtResource("7_8c0lf")]
-transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, -20.900574, 1.5645533, -18.702213)
+transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, -20.900574, 1.5645533, -50.91941)
 
 [node name="SpiderWalker4" parent="." unique_id=1003662317 instance=ExtResource("7_8c0lf")]
-transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, -5.8000007, 2.4645538, -21.567173)
+transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, -5.8000007, 2.4645538, -53.78437)
 
 [node name="SpiderWalker5" parent="." unique_id=657044591 instance=ExtResource("7_8c0lf")]
-transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, -11.393746, 3.764553, -14.702213)
+transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, -11.393746, 3.764553, -46.91941)
 
 [node name="DockForeman" parent="." unique_id=1948298614 instance=ExtResource("11_qxfql")]
 transform = Transform3D(-0.99956423, 0, 0.029518759, 0, 1, 0, -0.029518759, 0, -0.99956423, -4.741634, 0.5330912, 11.77622)
 
+[node name="QuestGiver" type="Node" parent="DockForeman" unique_id=642910310]
+script = ExtResource("25_giver")
+quests = Array[ExtResource("23_questsc")]([ExtResource("24_ratsq")])
+
+[node name="RatsInTheHold" type="Node" parent="." unique_id=1939987613]
+script = ExtResource("26_killcnt")
+count = 3
+description = "Put down the things in the cargo stacks"
+quest = ExtResource("24_ratsq")
+
+[node name="Recon" type="Node" parent="." unique_id=1270426320 node_paths=PackedStringArray("target")]
+script = ExtResource("13_talkobj")
+target = NodePath("../Guard2")
+optional = true
+xp_reward = 25.0
+quest = ExtResource("15_luodc")
+
 [node name="Guard" parent="." unique_id=699588208 instance=ExtResource("15_c7le1")]
 transform = Transform3D(-0.9844046, 0, 0.17591901, 0, 1, 0, -0.17591901, 0, -0.9844046, -15.659393, 0.14654922, 24.958694)
+profile = SubResource("Resource_luodc")
+
+[node name="QuestGiver" type="Node" parent="Guard" unique_id=1541463820]
+script = ExtResource("25_giver")
+quests = Array[ExtResource("23_questsc")]([ExtResource("15_luodc")])
 
 [node name="Patroller" parent="." unique_id=896890963 node_paths=PackedStringArray("patrol_points") instance=ExtResource("16_2klc5")]
 transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, -16.238281, 1.098877, 0)
@@ -170,9 +210,10 @@ height = 5.0
 material = ExtResource("13_nngtn")
 
 [node name="CSGCylinder3D2" type="CSGCylinder3D" parent="OuterWall" unique_id=1207014264]
+transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, -0.09244537, -0.18332863, 0.050899506)
 operation = 2
 radius = 145.0
-height = 5.0
+height = 10.0
 material = ExtResource("13_nngtn")
 
 [node name="CSGBox3D2" type="CSGBox3D" parent="OuterWall" unique_id=1000419961]

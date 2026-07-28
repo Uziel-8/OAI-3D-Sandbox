@@ -22,6 +22,11 @@ extends CanvasLayer
 
 var _health_receiver: DamageReceiver
 var _toast_tween: Tween
+var _quests: QuestTracker
+## Tracked-sidequest block, appended under the objective panel at runtime.
+var _quest_sep: HSeparator
+var _quest_title: Label
+var _quest_list: VBoxContainer
 
 
 func _ready() -> void:
@@ -51,6 +56,18 @@ func _ready() -> void:
 	# Neutral default; each level's LevelObjectives node sets its own objective.
 	set_objective("No Objective", "Your current objective will appear here.")
 	set_interact_prompt("")
+
+	# Sidequest tracker: its own block below the level mission, so accepting a
+	# quest never disturbs the level's checklist.
+	_build_quest_block()
+	_quests = get_node_or_null("/root/QuestSystem")
+	if _quests:
+		_quests.quest_accepted.connect(_on_quest_changed)
+		_quests.quest_ready.connect(_on_quest_changed)
+		_quests.quest_completed.connect(_on_quest_changed)
+		_quests.quest_progress_changed.connect(_on_quest_changed)
+		_quests.tracked_changed.connect(_on_tracked_changed)
+		_refresh_quest_tracker()
 
 
 ## Shows/hides the centred interaction prompt (e.g. "[F]  Speak"). Driven by the
@@ -104,13 +121,15 @@ func _on_leveled_up(new_level: int, _attribute_points: int, _skill_points: int) 
 	var prog := get_node_or_null("/root/PlayerProgression")
 	if prog:
 		_on_xp_changed(prog.current_xp, prog.xp_to_next(), prog.level)
-		_show_toast("LEVEL UP!", "Level %d   •   +%d attribute, +%d skill points" % [
+		show_toast("LEVEL UP!", "Level %d   •   +%d attribute, +%d skill points" % [
 			new_level, prog.attribute_points_per_level, prog.skill_points_per_level])
 	else:
-		_show_toast("LEVEL UP!", "Level %d" % new_level)
+		show_toast("LEVEL UP!", "Level %d" % new_level)
 
 
-func _show_toast(title: String, subtitle: String) -> void:
+## Fades a message in and out over the centre of the screen. Used for level-ups and
+## for quest accepted/complete; public so any system can announce something.
+func show_toast(title: String, subtitle: String) -> void:
 	_toast.text = "%s\n%s" % [title, subtitle]
 	if _toast_tween and _toast_tween.is_valid():
 		_toast_tween.kill()
@@ -138,6 +157,19 @@ func set_objective_items(title: String, items: Array) -> void:
 	_objective_title.text = title
 	_objective_text.visible = false
 	_clear_objective_list()
+	_fill_checklist(_objective_list, items)
+	_objective_list.visible = true
+
+
+func _clear_objective_list() -> void:
+	for child in _objective_list.get_children():
+		_objective_list.remove_child(child)
+		child.queue_free()
+
+
+## Renders {"text", "complete", "optional"} rows into a container. Shared by the
+## level checklist and the sidequest tracker so both read identically.
+func _fill_checklist(container: VBoxContainer, items: Array) -> void:
 	for item in items:
 		var done: bool = item.get("complete", false)
 		var line := Label.new()
@@ -151,14 +183,80 @@ func set_objective_items(title: String, items: Array) -> void:
 			Color(0.55, 0.78, 0.55) if done else Color(0.82, 0.8, 0.76))
 		line.autowrap_mode = TextServer.AUTOWRAP_WORD_SMART
 		line.mouse_filter = Control.MOUSE_FILTER_IGNORE
-		_objective_list.add_child(line)
-	_objective_list.visible = true
+		container.add_child(line)
 
 
-func _clear_objective_list() -> void:
-	for child in _objective_list.get_children():
-		_objective_list.remove_child(child)
+# --- Sidequest tracker --------------------------------------------------------
+
+## Appends the tracked-quest block (separator + title + checklist) under the
+## existing objective rows. Built in code rather than in hud.tscn, matching how
+## the checklist rows themselves are made.
+func _build_quest_block() -> void:
+	var parent := _objective_list.get_parent()
+
+	_quest_sep = HSeparator.new()
+	_quest_sep.mouse_filter = Control.MOUSE_FILTER_IGNORE
+	_quest_sep.visible = false
+	parent.add_child(_quest_sep)
+
+	_quest_title = Label.new()
+	_quest_title.add_theme_font_size_override("font_size", 14)
+	_quest_title.add_theme_color_override("font_color", Color(0.78, 0.72, 0.95))
+	_quest_title.autowrap_mode = TextServer.AUTOWRAP_WORD_SMART
+	_quest_title.mouse_filter = Control.MOUSE_FILTER_IGNORE
+	_quest_title.visible = false
+	parent.add_child(_quest_title)
+
+	_quest_list = VBoxContainer.new()
+	_quest_list.add_theme_constant_override("separation", 2)
+	_quest_list.mouse_filter = Control.MOUSE_FILTER_IGNORE
+	_quest_list.visible = false
+	parent.add_child(_quest_list)
+
+
+func _on_quest_changed(_quest: Quest) -> void:
+	_refresh_quest_tracker()
+
+
+func _on_tracked_changed(_id: StringName) -> void:
+	_refresh_quest_tracker()
+
+
+func _refresh_quest_tracker() -> void:
+	if _quests == null:
+		return
+	var quest := _quests.quest_by_id(_quests.tracked_id)
+	if quest == null or _quests.is_completed(quest.id):
+		clear_quest_tracker()
+		return
+	var title := quest.title
+	if _quests.is_ready(quest.id):
+		title += "  (ready to report)"
+	set_quest_tracker(title, _quests.checklist_for(quest.id))
+
+
+## Shows a tracked sidequest below the level mission. `items` uses the same row
+## shape as set_objective_items.
+func set_quest_tracker(title: String, items: Array) -> void:
+	_quest_title.text = title
+	for child in _quest_list.get_children():
+		_quest_list.remove_child(child)
 		child.queue_free()
+	_fill_checklist(_quest_list, items)
+	_quest_sep.visible = true
+	_quest_title.visible = true
+	_quest_list.visible = not items.is_empty()
+
+
+func clear_quest_tracker() -> void:
+	if _quest_sep == null:
+		return
+	for child in _quest_list.get_children():
+		_quest_list.remove_child(child)
+		child.queue_free()
+	_quest_sep.visible = false
+	_quest_title.visible = false
+	_quest_list.visible = false
 
 
 ## Toggled by the inventory/character screen so the HUD doesn't show behind its

@@ -54,6 +54,9 @@ var _stagger_timer: float = 0.0
 
 
 func _ready() -> void:
+	# The generic enemy group: what "kill N of them" objectives count (see
+	# KillCountObjective). New enemy types should join it too.
+	add_to_group("enemy")
 	# Wander is centered on wherever this instance was placed in the editor
 	# (or spawned at runtime) -- no external configuration needed.
 	print(tag_data.Tags)

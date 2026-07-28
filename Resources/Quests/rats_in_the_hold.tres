@@ -1,0 +1,29 @@
+[gd_resource type="Resource" script_class="Quest" format=3 uid="uid://d04ujlwjvaula"]
+
+[ext_resource type="Script" uid="uid://sjaby5qs2ds6" path="res://Scripts/Quests/quest.gd" id="1_quest"]
+[ext_resource type="Script" uid="uid://b7lka1ccm38ko" path="res://Scripts/Quests/faction_reward.gd" id="2_faction"]
+
+[sub_resource type="Resource" id="Faction_docks"]
+script = ExtResource("2_faction")
+faction = &"docks"
+delta = 20
+
+[resource]
+script = ExtResource("1_quest")
+id = &"rats_in_the_hold"
+title = "Rats in the Hold"
+summary = "Karrick says something has been nesting in the cargo stacked along the waterfront -- big things, too many legs. He'll pay to have three of them put down before the evening tide, and he'd rather the dockmaster never heard about it."
+giver_name = "Karrick, Yard Foreman"
+offer_lines = Array[String](["Hold a moment. You look like you can handle yourself, and I've a problem that needs handling.", "Something's nesting in the cargo along the waterfront. Big things. Too many legs. Three of my lads won't go near the stacks any more.", "Put down three of them before the evening tide and there's coin in it. And we never had this conversation."])
+accept_text = "Three spiders. Consider it done."
+accept_response = "Good. Try the stacks nearest the water -- and don't come back until they are dead."
+decline_text = "Find someone else."
+in_progress_lines = Array[String](["Still crawling out there, isn't it. Three. That was the number."])
+ready_lines = Array[String](["...You're not bleeding. Either you never went, or you're better than you look.", "Three of them, then. The lads can work the stacks again."])
+turn_in_text = "They're gone."
+turn_in_response = "Then take your coin, and take my word with it -- the docks remember a favour. Mind you don't spend either somewhere stupid."
+completed_lines = Array[String](["The stacks are quiet. Whatever else you are, you're useful."])
+xp_reward = 75.0
+gold_reward = 60
+giver_disposition = 15
+faction_rewards = Array[ExtResource("2_faction")]([SubResource("Faction_docks")])

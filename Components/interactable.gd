@@ -25,13 +25,24 @@ signal interacted(interactor: Node)
 ## disposition (see DialogueChoice). Empty = no choices, dialogue just closes.
 @export var dialogue_choices: Array[DialogueChoice] = []
 
+# Temporary replacement for the authored lines/choices, pushed by a sibling
+# component that wants this NPC to say something state-dependent (QuestGiver does
+# this for its offer / in-progress / ready / completed line sets). Push-based
+# rather than pulled at interact time: everything that can change what should be
+# said already emits a signal, so the pusher can just keep it current.
+var _override_active: bool = false
+var _override_lines: Array[String] = []
+var _override_choices: Array[DialogueChoice] = []
+
 
 ## Triggered by PlayerInteractor on the interact action.
 func interact(interactor: Node) -> void:
 	if not enabled:
 		return
 	interacted.emit(interactor)
-	if dialogue_lines.is_empty() and dialogue_choices.is_empty():
+	var lines := _override_lines if _override_active else dialogue_lines
+	var choices := _override_choices if _override_active else dialogue_choices
+	if lines.is_empty() and choices.is_empty():
 		return
 	# The DialogueScreen script sits on the autoload's Screen child, not the
 	# CanvasLayer root, so find it by group (as the journal/inventory do). The
@@ -39,7 +50,23 @@ func interact(interactor: Node) -> void:
 	# like disposition changes.
 	var dialogue := get_tree().get_first_node_in_group("dialogue_screen")
 	if dialogue and dialogue.has_method("start"):
-		dialogue.start(speaker_name, dialogue_lines, dialogue_choices, get_parent())
+		dialogue.start(speaker_name, lines, choices, get_parent())
+
+
+## Replaces what this Interactable says until cleared. The authored lines/choices
+## are left untouched underneath, so clear_dialogue_override() restores them.
+func set_dialogue_override(lines: Array[String], choices: Array[DialogueChoice]) -> void:
+	_override_active = true
+	_override_lines = lines
+	_override_choices = choices
+
+
+## Falls back to the lines/choices authored on this component (or seeded from an
+## NpcProfile).
+func clear_dialogue_override() -> void:
+	_override_active = false
+	_override_lines = []
+	_override_choices = []
 
 
 ## HUD prompt text including the key currently bound to the interact action.

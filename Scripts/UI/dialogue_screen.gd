@@ -11,6 +11,10 @@ extends Control
 ## mutually exclusive via group "menu_screen"). Flat "lines -> choices" model for
 ## now; branching (a choice leading to more dialogue) is the next step.
 
+## Emitted after a choice's effects are applied. Lets quests/objectives react to a
+## specific dialogue OUTCOME rather than to the fact that talking happened at all.
+signal choice_selected(choice: DialogueChoice, target: Node)
+
 @onready var _speaker_label: Label = %SpeakerLabel
 @onready var _body_label: RichTextLabel = %BodyLabel
 @onready var _advance_button: Button = %AdvanceButton
@@ -129,6 +133,10 @@ func apply_choice(choice: DialogueChoice) -> void:
 			return  # unaffordable -- button should have been disabled
 	if _target and _target.has_method("change_disposition") and choice.disposition_delta != 0:
 		_target.change_disposition(choice.disposition_delta)
+	# Quest effects run after the gold spend, so an unaffordable choice bails out
+	# above without changing any quest state.
+	_apply_quest_action(choice)
+	choice_selected.emit(choice, _target)
 
 	_choices_box.visible = false
 	if choice.response != "":
@@ -141,6 +149,22 @@ func apply_choice(choice: DialogueChoice) -> void:
 		_advance_button.text = "Leave"
 	else:
 		close()
+
+
+## Routes a choice's quest_action to QuestSystem, with the dialogue's target (the
+## NPC) as the giver so giver_disposition rewards land on the right body. Looked up
+## by autoload path so the dialogue screen keeps working with no quest system.
+func _apply_quest_action(choice: DialogueChoice) -> void:
+	if choice.quest == null or choice.quest_action == DialogueChoice.QuestAction.NONE:
+		return
+	var quests := get_node_or_null("/root/QuestSystem")
+	if quests == null:
+		return
+	match choice.quest_action:
+		DialogueChoice.QuestAction.ACCEPT:
+			quests.accept(choice.quest, _target)
+		DialogueChoice.QuestAction.TURN_IN:
+			quests.turn_in(choice.quest, _target)
 
 
 func _clear_choices() -> void:

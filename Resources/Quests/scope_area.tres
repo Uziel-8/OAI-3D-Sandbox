@@ -1,0 +1,18 @@
+[gd_resource type="Resource" script_class="Quest" format=3 uid="uid://dlik75nfjog42"]
+
+[ext_resource type="Script" uid="uid://b7lka1ccm38ko" path="res://Scripts/Quests/faction_reward.gd" id="1_bpahb"]
+[ext_resource type="Script" uid="uid://sjaby5qs2ds6" path="res://Scripts/Quests/quest.gd" id="2_1bsx4"]
+
+[resource]
+script = ExtResource("2_1bsx4")
+id = &"scope_area"
+title = "Scope Out The Gate Guard"
+summary = "This guard is suspicious of one of his comrades. Go to the main gate and chat to him."
+giver_name = "Barry"
+prerequisites = Array[StringName]([&"rats_in_the_hold"])
+accept_response = "Go one then!"
+turn_in_text = "It's done. He seems like a shady character."
+turn_in_response = "Well done, I knew he was up to something!"
+gold_reward = 33
+giver_disposition = 10
+metadata/_custom_type_script = "uid://sjaby5qs2ds6"

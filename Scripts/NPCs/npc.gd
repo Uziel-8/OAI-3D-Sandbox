@@ -68,7 +68,12 @@ func _ready() -> void:
 ## components' own _ready (they're children), so we push health through directly.
 func _apply_profile() -> void:
 	faction = profile.faction
-	disposition = profile.starting_disposition
+	# Faction standing is layered on top of the archetype's starting value, so an
+	# NPC spawned AFTER the player earned (or lost) reputation -- a reloaded scene,
+	# the next level -- starts where they should. NPCs already alive when the shift
+	# happened were nudged directly by Reputation.adjust, so nobody gets it twice.
+	disposition = profile.starting_disposition + _faction_standing(profile.faction)
+	disposition = clampi(disposition, DISPOSITION_MIN, DISPOSITION_MAX)
 	default_movement = profile.movement
 	move_speed = profile.move_speed
 	turn_speed = profile.turn_speed
@@ -203,6 +208,13 @@ func _face_dir(dir: Vector3, delta: float) -> void:
 	# If a specific model faces backwards, flip it in that NPC's inherited scene.
 	var target_yaw := atan2(dir.x, dir.z)
 	rotation.y = lerp_angle(rotation.y, target_yaw, 1.0 - exp(-turn_speed * delta))
+
+## Current standing with a faction, or 0. Looked up by autoload path so NPCs keep
+## working with no reputation system present.
+func _faction_standing(f: StringName) -> int:
+	var reputation := get_node_or_null("/root/Reputation")
+	return reputation.modifier(f) if reputation else 0
+
 
 func _state_node_for(m: NpcProfile.Movement) -> FsmState:
 	match m:
