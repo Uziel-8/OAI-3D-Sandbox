@@ -24,8 +24,15 @@ func _init() -> void:
 
 
 func start_cast() -> void:
+	_spawn_projectile()
+
+
+## Spawns, aims and launches one projectile_scene instance, RETURNING it so
+## subclasses that need to keep hold of what they fired (StickyBombSpell) can,
+## without duplicating the aim maths. Returns null if no scene is assigned.
+func _spawn_projectile() -> Node3D:
 	if projectile_scene == null:
-		return
+		return null
 	var cam := _get_camera()
 	var player := _get_player()
 
@@ -57,3 +64,5 @@ func start_cast() -> void:
 	var prog := get_node_or_null("/root/PlayerProgression") as ProgressionSystem
 	if dealer and prog:
 		dealer.damage *= prog.magic_damage_multiplier()
+
+	return projectile

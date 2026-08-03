@@ -70,6 +70,14 @@ static func schools() -> Array[SkillSchool]:
 			"Fireball punches through its first target. (Upgrade scaffolding -- not yet consumed.)",
 			fire_orange, 2, ["py_fireball"], Vector2i(2, 1),
 			SkillNode.Effect.UPGRADE, "fireball_pierce"),
+		_node("py_stickybomb", "Sticky Bomb",
+			"Unlock a charge that clings to whatever it strikes -- wall, crate or enemy -- and bursts in a fiery radius once its fuse runs out.",
+			fire_orange, 2, ["py_fireball"], Vector2i(1, 1),
+			SkillNode.Effect.UNLOCK_SPELL, "sticky_bomb"),
+		_node("py_detonator", "Remote Detonator",
+			"Your Sticky Bombs no longer burn a fuse. Press the spell again to set off every charge you have planted, at the moment of your choosing.",
+			fire_orange, 2, ["py_stickybomb"], Vector2i(1, 2),
+			SkillNode.Effect.UPGRADE, "sticky_bomb_remote"),
 	]))
 
 	var frost_cyan := Color("4ab0d6")

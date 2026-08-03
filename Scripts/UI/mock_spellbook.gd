@@ -8,6 +8,7 @@ const GRAB_SCENE := preload("res://Scripts/Magic/telekinesis_grab_spell.tscn")
 const PUSH_SCENE := preload("res://Scripts/Magic/telekinesis_push_spell.tscn")
 const FIREBALL_SCENE := preload("res://Scripts/Magic/fireball_spell.tscn")
 const ICEBOLT_SCENE := preload("res://Scripts/Magic/icebolt_spell.tscn")
+const STICKY_BOMB_SCENE := preload("res://Scripts/Magic/sticky_bomb_spell.tscn")
 
 static func _make(id: String, spell_name: String, description: String, icon_color: Color,
 		mana_cost: int, cooldown: float, scene: PackedScene) -> SpellDefinition:
@@ -32,6 +33,9 @@ static func known_spells() -> Array[SpellDefinition]:
 		_make("fireball", "Fireball",
 			"Hurls a bolt of flame that scorches and knocks back whatever it strikes.",
 			Color("d6602c"), 15, 2.0, FIREBALL_SCENE),
+		_make("sticky_bomb", "Sticky Bomb",
+			"Lobs a charge that clings to whatever it touches — wall, crate or throat — and bursts in a fiery radius three seconds later. With a Remote Detonator you set the moment yourself.",
+			Color("d6602c"), 20, 3.0, STICKY_BOMB_SCENE),
 		_make("icebolt", "Ice Bolt",
 			"A fast-moving shard of ice that chills and staggers on impact.",
 			Color("4ab0d6"), 12, 1.5, ICEBOLT_SCENE),

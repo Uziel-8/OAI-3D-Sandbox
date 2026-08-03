@@ -39,7 +39,7 @@ const BASELINE := 10
 ## Skill points the player starts with. With spells fully gated behind the skill
 ## trees, this is what lets a fresh game unlock a root or two immediately; set to
 ## 0 for a hardcore start where nothing is castable until you level.
-@export var starting_skill_points: int = 3
+@export var starting_skill_points: int = 10
 
 @export_group("Stat Scaling (per point above baseline)")
 ## Player health before CON: matches the receiver authored in proto_controller.tscn.
