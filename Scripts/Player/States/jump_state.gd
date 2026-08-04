@@ -11,7 +11,7 @@ func enter(msg: Dictionary = {}) -> void:
 
 func physics_update(delta: float) -> void:
 	player.apply_gravity(delta)
-	player.apply_horizontal_velocity(player.base_speed)  # air control at walk speed
+	player.apply_horizontal_velocity(player.base_speed, delta)  # air control at walk speed
 	player.move_and_slide()
 
 	if player.velocity.y <= 0.0:

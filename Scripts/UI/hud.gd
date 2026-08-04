@@ -27,6 +27,11 @@ var _quests: QuestTracker
 var _quest_sep: HSeparator
 var _quest_title: Label
 var _quest_list: VBoxContainer
+## Spell bar: one socket per SpellCaster.LOADOUT_ACTIONS entry, bound to the
+## player's live SpellCaster (re-acquired on scene reload, like health).
+var _spell_slots: Array[HudSpellSlot] = []
+var _caster: SpellCaster
+var _mana: float = 0.0
 
 
 func _ready() -> void:
@@ -48,10 +53,13 @@ func _ready() -> void:
 		_on_mana_changed(state.mana, state.max_mana)
 		_on_stamina_changed(state.stamina, state.max_stamina)
 
-	# Health lives on the player body, which is recreated on the death-reload,
-	# so (re)bind whenever a player_health receiver enters the tree.
+	# Health and the SpellCaster both live on the player body, which is recreated
+	# on the death-reload, so (re)bind whenever one enters the tree.
 	get_tree().node_added.connect(_on_node_added)
 	_bind_player_health.call_deferred()
+
+	_build_spell_bar()
+	_bind_spell_caster.call_deferred()
 
 	# Neutral default; each level's LevelObjectives node sets its own objective.
 	set_objective("No Objective", "Your current objective will appear here.")
@@ -80,6 +88,10 @@ func set_interact_prompt(text: String) -> void:
 func _on_node_added(node: Node) -> void:
 	if node.is_in_group("player_health"):
 		_bind_player_health()
+	# Matched on type, not on group: SpellCaster joins "spell_caster" in _ready,
+	# which hasn't run yet at node_added time.
+	elif node is SpellCaster:
+		_bind_spell_caster.call_deferred()
 
 
 func _bind_player_health() -> void:
@@ -100,6 +112,7 @@ func _on_health_changed(current: float, maximum: float) -> void:
 func _on_mana_changed(current: float, maximum: float) -> void:
 	_mana_bar.max_value = maximum
 	_mana_bar.value = current
+	_mana = current
 
 
 func _on_stamina_changed(current: float, maximum: float) -> void:
@@ -257,6 +270,96 @@ func clear_quest_tracker() -> void:
 	_quest_sep.visible = false
 	_quest_title.visible = false
 	_quest_list.visible = false
+
+
+# --- Spell bar ----------------------------------------------------------------
+# One socket per hotbar binding, showing what's equipped there and how far its
+# cooldown has left to run. Built in code (like the quest block) because the
+# sockets come from SpellCaster.LOADOUT_ACTIONS rather than being hand-placed.
+
+## Centred above the XP strip along the bottom edge.
+func _build_spell_bar() -> void:
+	var separation := 8
+	var actions := SpellCaster.LOADOUT_ACTIONS
+	var width := actions.size() * HudSpellSlot.SIZE.x + (actions.size() - 1) * separation
+
+	var bar := HBoxContainer.new()
+	bar.name = "SpellBar"
+	bar.mouse_filter = Control.MOUSE_FILTER_IGNORE
+	bar.add_theme_constant_override("separation", separation)
+	bar.anchor_left = 0.5
+	bar.anchor_right = 0.5
+	bar.anchor_top = 1.0
+	bar.anchor_bottom = 1.0
+	bar.grow_horizontal = Control.GROW_DIRECTION_BOTH
+	bar.grow_vertical = Control.GROW_DIRECTION_BEGIN
+	bar.offset_left = -width * 0.5
+	bar.offset_right = width * 0.5
+	bar.offset_top = -HudSpellSlot.SIZE.y - 44.0
+	bar.offset_bottom = -44.0
+	_root.add_child(bar)
+
+	for action in actions:
+		var slot := HudSpellSlot.new()
+		slot.action = action
+		bar.add_child(slot)
+		slot.set_key_text(_key_text_for(action))
+		_spell_slots.append(slot)
+
+
+## Human-readable label for whatever is currently bound to an action, read from
+## the InputMap so rebinding a key relabels the bar with no extra bookkeeping.
+func _key_text_for(action: String) -> String:
+	if not InputMap.has_action(action):
+		return ""
+	for event in InputMap.action_get_events(action):
+		if event is InputEventKey:
+			var code: Key = event.physical_keycode if event.physical_keycode != KEY_NONE else event.keycode
+			return OS.get_keycode_string(code)
+		if event is InputEventMouseButton:
+			match event.button_index:
+				MOUSE_BUTTON_LEFT:
+					return "LMB"
+				MOUSE_BUTTON_RIGHT:
+					return "RMB"
+				MOUSE_BUTTON_MIDDLE:
+					return "MMB"
+				_:
+					return "M%d" % event.button_index
+	return ""
+
+
+func _bind_spell_caster() -> void:
+	var caster := get_tree().get_first_node_in_group("spell_caster") as SpellCaster
+	if caster == _caster:
+		return
+	_caster = caster
+	if _caster and not _caster.loadout_changed.is_connected(_refresh_spell_bar):
+		_caster.loadout_changed.connect(_refresh_spell_bar)
+	_refresh_spell_bar()
+
+
+## Re-reads which spell sits in each slot. Cooldown state is polled per frame in
+## _process instead -- this only runs when the loadout itself changes.
+func _refresh_spell_bar() -> void:
+	var caster_valid := _caster != null and is_instance_valid(_caster)
+	for slot in _spell_slots:
+		var spell: Spell = _caster.equipped_spell(slot.action) if caster_valid else null
+		var definition: SpellDefinition = null
+		if spell:
+			definition = MockSpellbook.find_by_scene_path(spell.scene_file_path)
+		slot.set_spell(spell, definition)
+
+
+func _process(_delta: float) -> void:
+	if not _root.visible:
+		return
+	if _caster != null and not is_instance_valid(_caster):
+		_caster = null
+		_refresh_spell_bar()
+		return
+	for slot in _spell_slots:
+		slot.refresh(_mana)
 
 
 ## Toggled by the inventory/character screen so the HUD doesn't show behind its

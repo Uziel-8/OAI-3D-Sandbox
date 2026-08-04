@@ -7,6 +7,9 @@ class_name SpiderWalker
 ## runtime. No animation clips anywhere -- all leg motion is IK driven by
 ## SpiderGait (spider_gait.gd / spider_skeleton_builder.gd).
 
+## Optional gameplay tags (FLAMMABLE / LIVING / CONDUCTIVE). Authored ahead of the
+## systems that will consume them -- nothing reads it yet, and leaving it unset is
+## fine. Null-check it at the point of use when something finally does.
 @export var tag_data : TagData
 @export var move_speed: float = 2.5
 @export var turn_speed: float = 6.0
@@ -27,6 +30,13 @@ class_name SpiderWalker
 @export var stagger_duration: float = 0.4
 ## How quickly the knockback velocity bleeds off while staggered.
 @export var knockback_friction: float = 6.0
+
+@export_group("Root")
+## Planar distance at which a HELD spider can still land touch damage. A rooted
+## spider can't move into the player, so move_and_slide() stops reporting them
+## as a slide collision -- it's pinned, not defanged, so reach is checked
+## directly while the root is up. Roughly body radius + player radius.
+@export var held_reach: float = 1.4
 
 # Radial leg layout (local X, local Z), order: front-left, front-right,
 # back-left, back-right.
@@ -51,6 +61,7 @@ var _wander_origin: Vector3
 var _wander_point: Vector3
 var _wander_timer: float = 0.0
 var _stagger_timer: float = 0.0
+var _root_timer: float = 0.0
 
 
 func _ready() -> void:
@@ -59,7 +70,6 @@ func _ready() -> void:
 	add_to_group("enemy")
 	# Wander is centered on wherever this instance was placed in the editor
 	# (or spawned at runtime) -- no external configuration needed.
-	print(tag_data.Tags)
 	_wander_origin = global_position
 	_wander_point = _wander_origin
 	_build_rig()
@@ -111,6 +121,25 @@ func apply_impulse(impulse: Vector3, _position := Vector3.ZERO) -> void:
 	_stagger_timer = stagger_duration
 
 
+## Duck-typed crowd control, the same convention as apply_impulse(): anything
+## that wants to hold a body still (ShadowTendril today, snares/webs/traps later)
+## calls this on whatever it caught, checked with has_method("apply_root").
+## Pins locomotion for `duration` seconds -- the spider can still TURN and can
+## still hurt what stands in it; it just can't go anywhere. Stacking takes the
+## longer of the two rather than adding, so overlapping holds can't compound.
+func apply_root(duration: float) -> void:
+	_root_timer = maxf(_root_timer, duration)
+
+
+## Ends a hold early (the tendril calls this when its grip is broken).
+func release_root() -> void:
+	_root_timer = 0.0
+
+
+func is_rooted() -> bool:
+	return _root_timer > 0.0
+
+
 func _physics_process(delta: float) -> void:
 	_update_locomotion(delta)
 	# velocity is NOT multiplied by delta here -- move_and_slide() expects
@@ -123,8 +152,24 @@ func _physics_process(delta: float) -> void:
 			var collider := get_slide_collision(i).get_collider()
 			if collider is Node and collider.is_in_group("player"):
 				_damage_dealer.try_deal(collider)
+		if _root_timer > 0.0:
+			_try_deal_at_reach()
 	if is_instance_valid(_gait) and _gait.has_method("update_gait"):
 		_gait.update_gait(delta)
+
+
+## Touch damage while held. Planar distance only: the spider's origin sits at
+## body height and the player's at their feet, so a 3D distance would read as
+## out of reach while they're plainly standing in it.
+func _try_deal_at_reach() -> void:
+	if not is_instance_valid(_player):
+		_player = get_tree().get_first_node_in_group("player")
+	if not is_instance_valid(_player):
+		return
+	var to := _player.global_position - global_position
+	to.y = 0.0
+	if to.length() <= held_reach:
+		_damage_dealer.try_deal(_player)
 
 
 func _update_locomotion(delta: float) -> void:
@@ -132,6 +177,22 @@ func _update_locomotion(delta: float) -> void:
 		velocity += get_gravity() * delta
 	else:
 		velocity.y = 0.0
+
+	# Root outranks stagger: something holding this body in place shouldn't be
+	# undone by a knockback landing on it mid-hold.
+	if _root_timer > 0.0:
+		_root_timer -= delta
+		velocity.x = 0.0
+		velocity.z = 0.0
+		# Held, not disabled -- it keeps tracking its target so it's still facing
+		# you (and still biting) when the grip lets go.
+		var held_target := _current_target_position(delta)
+		var to_held := held_target - global_position
+		to_held.y = 0.0
+		if to_held.length() > 0.001:
+			var held_dir := to_held.normalized()
+			rotation.y = lerp_angle(rotation.y, atan2(held_dir.x, held_dir.z), 1.0 - exp(-turn_speed * delta))
+		return
 
 	if _stagger_timer > 0.0:
 		_stagger_timer -= delta

@@ -49,6 +49,7 @@ var _receiver: DamageReceiver
 var _interactable: Interactable
 var _player: Node3D
 var _stagger_timer: float = 0.0
+var _root_timer: float = 0.0
 
 
 func _ready() -> void:
@@ -194,11 +195,44 @@ func tick_stagger(delta: float) -> bool:
 	move_and_slide()
 	return true
 
+## While held by a root (ShadowTendril), pins the NPC in place and reports true so
+## states early-out -- the same shape as tick_stagger, and checked BEFORE it, since
+## a knockback landing mid-hold shouldn't shake the hold off. Held, not disabled:
+## it keeps turning to face the player, it just can't move.
+func tick_root(delta: float) -> bool:
+	if _root_timer <= 0.0:
+		return false
+	_root_timer -= delta
+	apply_gravity(delta)
+	velocity.x = 0.0
+	velocity.z = 0.0
+	if has_player():
+		face_towards(player_position(), delta)
+	move_and_slide()
+	return true
+
+
 ## Duck-typed counterpart to RigidBody3D.apply_impulse so spells (TelekinesisPush,
 ## projectile impacts) can shove an NPC without knowing its type. Mass treated as 1.
 func apply_impulse(impulse: Vector3, _position := Vector3.ZERO) -> void:
 	velocity += impulse
 	_stagger_timer = stagger_duration
+
+
+## Duck-typed crowd control, the sibling convention to apply_impulse: anything
+## wanting to hold a body still calls this on whatever it caught, checked with
+## has_method("apply_root"). Stacking takes the longer hold, never the sum.
+func apply_root(duration: float) -> void:
+	_root_timer = maxf(_root_timer, duration)
+
+
+## Ends a hold early (the tendril calls this when its grip is broken).
+func release_root() -> void:
+	_root_timer = 0.0
+
+
+func is_rooted() -> bool:
+	return _root_timer > 0.0
 
 
 # --- Internals ---------------------------------------------------------------

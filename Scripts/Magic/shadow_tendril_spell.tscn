@@ -1,0 +1,10 @@
+[gd_scene load_steps=3 format=3]
+
+[ext_resource type="Script" path="res://Scripts/Magic/shadow_tendril_spell.gd" id="1_spell"]
+[ext_resource type="PackedScene" path="res://Scripts/Magic/shadow_tendril.tscn" id="2_tendril"]
+
+[node name="ShadowTendrilSpell" type="Node"]
+script = ExtResource("1_spell")
+mana_cost = 18.0
+cooldown = 8.0
+tendril_scene = ExtResource("2_tendril")

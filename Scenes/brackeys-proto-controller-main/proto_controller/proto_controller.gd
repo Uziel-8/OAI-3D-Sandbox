@@ -35,6 +35,18 @@ class_name PlayerController
 ## How fast do we freefly?
 @export var freefly_speed : float = 25.0
 
+@export_group("Knockback")
+## How long directed input stays suspended after an apply_impulse() hit ONCE BACK
+## ON THE GROUND. Without a window like this the states' apply_horizontal_velocity()
+## would overwrite the knockback on the very next frame and it'd never be seen.
+@export var knockback_duration: float = 0.35
+## How fast leftover knockback speed skids off, applied only on the floor.
+@export var knockback_friction: float = 12.0
+## Safety ceiling on an airborne knockback: normally the recovery clock doesn't
+## start until the player lands (so a launch carries its momentum through the
+## whole arc), but that alone would strand control if they were blown into a pit.
+@export var knockback_max_airtime: float = 2.0
+
 @export_group("Input Actions")
 @export var input_left : String = "move_left"
 @export var input_right : String = "move_right"
@@ -46,6 +58,9 @@ class_name PlayerController
 
 var mouse_captured : bool = false
 var look_rotation : Vector2
+var _knockback_timer : float = 0.0
+var _knockback_airtime : float = 0.0
+var _root_timer : float = 0.0
 
 @onready var head: Node3D = $Head
 @onready var collider: CollisionShape3D = $Collider
@@ -107,9 +122,77 @@ func wish_direction() -> Vector3:
 	return (transform.basis * Vector3(input.x, 0.0, input.y)).normalized()
 
 
+## Duck-typed counterpart to RigidBody3D.apply_impulse(), so explosions and force
+## spells can throw the player around without knowing this concrete type -- the
+## same convention SpiderWalker and Npc implement. Being a CharacterBody3D there's
+## no physics solver to hand the impulse to, so it folds straight into velocity
+## (treating mass as 1) and directed input is suspended for knockback_duration;
+## otherwise apply_horizontal_velocity() would erase it the very next frame.
+func apply_impulse(impulse: Vector3, _position := Vector3.ZERO) -> void:
+	velocity += impulse
+	_knockback_timer = maxf(_knockback_timer, knockback_duration)
+	_knockback_airtime = 0.0
+
+
+## True while a knockback is still overriding player input.
+func is_knocked_back() -> bool:
+	return _knockback_timer > 0.0
+
+
+## Duck-typed crowd control, the sibling convention to apply_impulse() and the
+## same one SpiderWalker/Npc implement, so a snare can hold the player without
+## knowing this concrete type. Implemented here for the same reason apply_impulse
+## was: without it the player is silently skipped by every has_method("apply_root")
+## check, and enemy casters/traps would just slide off them.
+## Pins horizontal movement and jumping; looking around is untouched (a held
+## player can still aim and cast, which is what makes being rooted survivable).
+func apply_root(duration: float) -> void:
+	_root_timer = maxf(_root_timer, duration)
+	velocity.x = 0.0
+	velocity.z = 0.0
+
+
+## Ends a hold early (whatever applied it calls this when its grip is broken).
+func release_root() -> void:
+	_root_timer = 0.0
+
+
+func is_rooted() -> bool:
+	return _root_timer > 0.0
+
+
 ## Drives horizontal velocity toward `speed` in the wish direction, or decelerates
-## to a stop when there's no input. Vertical velocity is left untouched.
-func apply_horizontal_velocity(speed: float) -> void:
+## to a stop when there's no input. Vertical velocity is left untouched. While
+## recovering from a knockback it bleeds that velocity off instead of steering.
+func apply_horizontal_velocity(speed: float, delta: float) -> void:
+	# Root outranks knockback: being held in place beats being thrown, and this
+	# is the one choke point every movement state already funnels through, so no
+	# state needs to know roots exist. Freefly bypasses it, deliberately -- noclip
+	# is a debug tool and shouldn't be catchable.
+	if _root_timer > 0.0:
+		_root_timer -= delta
+		velocity.x = 0.0
+		velocity.z = 0.0
+		return
+
+	if _knockback_timer > 0.0:
+		if is_on_floor():
+			# Landed: skid the leftover speed off, then hand control back.
+			_knockback_timer -= delta
+			var slide := Vector2(velocity.x, velocity.z).move_toward(Vector2.ZERO, knockback_friction * delta)
+			velocity.x = slide.x
+			velocity.z = slide.y
+		else:
+			# Airborne, so the launch carries: the recovery clock doesn't start
+			# until they land. This matters because the base air control below
+			# is NOT delta-scaled (Brackeys' original), so resuming it mid-arc
+			# with no input snaps horizontal velocity to zero in a single frame
+			# and the blast would look like a hop rather than a launch.
+			_knockback_airtime += delta
+			if _knockback_airtime >= knockback_max_airtime:
+				_knockback_timer = 0.0
+		return
+
 	var dir := wish_direction()
 	if dir != Vector3.ZERO:
 		velocity.x = dir.x * speed

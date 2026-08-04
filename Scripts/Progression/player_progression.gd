@@ -10,8 +10,8 @@ class_name ProgressionSystem
 ## does. Four dual-purpose attributes, flat linear scaling per point above
 ## BASELINE (10):
 ##   CON — max health & health regen        (applied to the player's DamageReceiver)
-##   DEX — stamina regen                    (applied via PlayerState multiplier)
-##         (casting speed reserved for DEX once a cooldown system exists)
+##   DEX — stamina regen & spell cooldowns  (PlayerState multiplier; Spell scales
+##                                           its cooldown by cooldown_multiplier)
 ##   INT — magic damage & max mana          (ProjectileSpell reads magic_damage_multiplier;
 ##   WIL — magic damage & mana regen         PlayerState reads mana bonuses/multipliers)
 ## Consumers either bind to the signals below or read the derived getters.
@@ -47,6 +47,10 @@ const BASELINE := 10
 @export var hp_per_con: float = 8.0
 @export var hp_regen_per_con: float = 0.2
 @export var stamina_regen_pct_per_dex: float = 0.05
+## DEX's second half: spell cooldowns shrink by this fraction per point. Floored
+## at cooldown_multiplier_floor so cooldowns can never be trained away entirely.
+@export var cooldown_pct_per_dex: float = 0.02
+@export var cooldown_multiplier_floor: float = 0.4
 @export var magic_damage_pct_per_int: float = 0.03
 @export var mana_per_int: float = 6.0
 @export var magic_damage_pct_per_wil: float = 0.02
@@ -97,6 +101,13 @@ func mana_regen_multiplier() -> float:
 
 func stamina_regen_multiplier() -> float:
 	return maxf(1.0 + stamina_regen_pct_per_dex * _delta("DEX"), 0.1)
+
+
+## Multiplier applied to a spell's base cooldown -- below 1.0 means faster. Read
+## live by Spell.begin_cooldown() (and by the spellbook tooltip's readout), so a
+## point spent in DEX is felt on the next cast.
+func cooldown_multiplier() -> float:
+	return maxf(1.0 - cooldown_pct_per_dex * _delta("DEX"), cooldown_multiplier_floor)
 
 
 # --- XP / levelling ----------------------------------------------------------

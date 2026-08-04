@@ -287,6 +287,23 @@ func _connect_loadout_slots() -> void:
 		slot.slot_hovered.connect(_on_spell_slot_hovered)
 		slot.slot_unhovered.connect(_on_slot_unhovered)
 		slot.spell_changed.connect(_on_loadout_spell_changed)
+	# This screen is an autoload and survives scene changes; the SpellCaster does
+	# not (it lives on the player, recreated by the death-reload and by loading
+	# the next level). Without this the sockets would still show a loadout that
+	# nothing was actually bound to any more.
+	get_tree().node_added.connect(_on_node_added)
+
+func _on_node_added(node: Node) -> void:
+	if node is SpellCaster:
+		_push_loadout.call_deferred(node)
+
+## Re-equips every filled socket onto a freshly spawned SpellCaster.
+func _push_loadout(caster: SpellCaster) -> void:
+	if not is_instance_valid(caster):
+		return
+	for slot in _loadout_slots():
+		if slot.spell:
+			caster.equip_spell(slot.trigger_action, slot.spell.scene)
 
 func _on_spell_slot_hovered(slot: SpellSlot) -> void:
 	if slot.spell:

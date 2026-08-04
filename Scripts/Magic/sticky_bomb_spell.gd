@@ -22,9 +22,15 @@ const REMOTE_UPGRADE_ID := "sticky_bomb_remote"
 
 var _live: Array[StickyBombProjectile] = []
 
+## True while THIS press is a detonation rather than a throw. Set at the top of
+## start_cast and consumed by begin_cooldown, because detonate_all() empties
+## _live -- so _should_detonate() can no longer answer the question afterwards.
+var _detonating_press: bool = false
+
 
 func start_cast() -> void:
-	if _should_detonate():
+	_detonating_press = _should_detonate()
+	if _detonating_press:
 		detonate_all()
 		return
 
@@ -48,6 +54,24 @@ func try_pay_cost() -> bool:
 	if _should_detonate():
 		return true
 	return super()
+
+
+## Setting off what's already planted is never gated by the throw's cooldown --
+## otherwise throwing a bomb would lock the trigger that detonates it, which is
+## the whole point of the upgrade.
+func is_on_cooldown() -> bool:
+	if _should_detonate():
+		return false
+	return super()
+
+
+## ...and for the same reason a detonation doesn't START one either, matching how
+## try_pay_cost treats it as a trigger press rather than a cast.
+func begin_cooldown() -> void:
+	if _detonating_press:
+		_detonating_press = false
+		return
+	super()
 
 
 ## Sets off every bomb currently stuck to the world.

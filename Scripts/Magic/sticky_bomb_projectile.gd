@@ -32,6 +32,12 @@ signal detonated(bomb: StickyBombProjectile)
 ## knockback on by default: your own bomb can launch you but can't kill you.
 @export var damages_caster: bool = false
 @export var pushes_caster: bool = true
+## Multiplier on blast_force when the blast catches the CASTER. blast_force is
+## tuned for shoving props and enemies around; the player is a CharacterBody3D
+## whose apply_impulse() folds the impulse straight into velocity as if mass were
+## 1, so full force launches them absurdly far. Tune the self-launch here without
+## touching how hard the blast hits everything else.
+@export var caster_force_scale: float = 0.6
 ## Failsafe for a REMOTE bomb whose caster went away (spell unequipped in the
 ## spellbook, player died and the scene reloaded). Without this such a bomb would
 ## sit armed forever with nothing left alive that could trigger it.
@@ -199,7 +205,10 @@ func _apply_blast(body: Node3D, full_damage: float) -> void:
 	if body.has_method("apply_impulse") and (pushes_caster or not is_caster):
 		var dir := offset.normalized() if distance > 0.01 else Vector3.UP
 		dir = (dir + Vector3.UP * 0.35).normalized()
-		body.apply_impulse(dir * blast_force * maxf(falloff, 0.3))
+		var force := blast_force * maxf(falloff, 0.3)
+		if is_caster:
+			force *= caster_force_scale
+		body.apply_impulse(dir * force)
 
 	if _damage_dealer and (damages_caster or not is_caster):
 		_damage_dealer.damage = full_damage * lerpf(edge_damage_scale, 1.0, falloff)

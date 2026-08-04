@@ -10,7 +10,7 @@ func enter(msg: Dictionary = {}) -> void:
 
 func physics_update(delta: float) -> void:
 	player.apply_gravity(delta)
-	player.apply_horizontal_velocity(player.base_speed)
+	player.apply_horizontal_velocity(player.base_speed, delta)
 	player.move_and_slide()
 
 	if player.is_on_floor():

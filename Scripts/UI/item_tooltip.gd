@@ -38,7 +38,13 @@ func show_item(item: InventoryItem) -> void:
 
 func show_spell(spell: SpellDefinition) -> void:
 	var type_str := "%d Mana" % spell.mana_cost if spell.mana_cost > 0 else "No Mana Cost"
-	var footer := "Cooldown %.1fs" % spell.cooldown if spell.cooldown > 0.0 else ""
+	# Shown after DEX's cooldown reduction, so the sheet quotes the cooldown the
+	# player will actually experience rather than the spell's base number.
+	var footer := ""
+	if spell.cooldown > 0.0:
+		var prog := get_node_or_null("/root/PlayerProgression") as ProgressionSystem
+		var seconds := spell.cooldown * (prog.cooldown_multiplier() if prog else 1.0)
+		footer = "Cooldown %.1fs" % seconds
 	show_info(spell.spell_name, spell.icon_color, type_str, spell.description, [], footer)
 
 ## `status` is the live unlock state, built by the caller (SkillTreeView) since the

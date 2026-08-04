@@ -15,11 +15,11 @@ func physics_update(delta: float) -> void:
 	if not player.is_on_floor():
 		transition_to("Fall")
 		return
-	if player.can_jump and Input.is_action_just_pressed(player.input_jump):
+	if player.can_jump and not player.is_rooted() and Input.is_action_just_pressed(player.input_jump):
 		transition_to("Jump")
 		return
 
-	player.apply_horizontal_velocity(player.resolve_move_speed(delta))
+	player.apply_horizontal_velocity(player.resolve_move_speed(delta), delta)
 	player.move_and_slide()
 
 	animator.set_locomotion(player.planar_speed() / player.sprint_speed)

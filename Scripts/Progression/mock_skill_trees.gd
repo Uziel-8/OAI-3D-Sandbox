@@ -96,12 +96,20 @@ static func schools() -> Array[SkillSchool]:
 			SkillNode.Effect.UPGRADE, "icebolt_deepfreeze"),
 	]))
 
-	var shadow_black := Color("2d1f5eff")
-	result.append(_school("shadow", "Shadow", shadow_black, [
+	# Brightened from the authored #2d1f5e: the accent tints the node buttons,
+	# connector lines, tooltip titles and the HUD spell-bar border, all of which
+	# sit on near-black panels -- the deeper tone was legible only as a smudge.
+	# It survives where it reads best, as ShadowTendril's claw_color.
+	var shadow_violet := Color("7a4fd0")
+	result.append(_school("shadow", "Shadow", shadow_violet, [
 		_node("sh_tendril", "Shadow Tendril",
 			"Unlock an ephemeral tendril of liquid shadow to ensnare your enemies.",
-			shadow_black, 1, [], Vector2i(1, 0),
+			shadow_violet, 1, [], Vector2i(1, 0),
 			SkillNode.Effect.UNLOCK_SPELL, "shadow_tendril"),
+		_node("sh_burst", "Grasping Dark",
+			"Your Shadow Tendril no longer reaches for one throat. The dark erupts wherever you aim and takes hold of everything standing around it.",
+			shadow_violet, 2, ["sh_tendril"], Vector2i(1, 1),
+			SkillNode.Effect.UPGRADE, "shadow_tendril_burst"),
 	]))
 
 	return result

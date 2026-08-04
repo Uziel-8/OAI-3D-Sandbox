@@ -9,6 +9,7 @@ const PUSH_SCENE := preload("res://Scripts/Magic/telekinesis_push_spell.tscn")
 const FIREBALL_SCENE := preload("res://Scripts/Magic/fireball_spell.tscn")
 const ICEBOLT_SCENE := preload("res://Scripts/Magic/icebolt_spell.tscn")
 const STICKY_BOMB_SCENE := preload("res://Scripts/Magic/sticky_bomb_spell.tscn")
+const SHADOW_TENDRIL_SCENE := preload("res://Scripts/Magic/shadow_tendril_spell.tscn")
 
 static func _make(id: String, spell_name: String, description: String, icon_color: Color,
 		mana_cost: int, cooldown: float, scene: PackedScene) -> SpellDefinition:
@@ -39,6 +40,9 @@ static func known_spells() -> Array[SpellDefinition]:
 		_make("icebolt", "Ice Bolt",
 			"A fast-moving shard of ice that chills and staggers on impact.",
 			Color("4ab0d6"), 12, 1.5, ICEBOLT_SCENE),
+		_make("shadow_tendril", "Shadow Tendril",
+			"A claw of living shadow bursts from the ground beneath your quarry and holds them fast for three seconds. It draws no blood — and the grip fails the moment anything else does. With Grasping Dark it takes the ground itself, and everything standing on it.",
+			Color("7a4fd0"), 18, 8.0, SHADOW_TENDRIL_SCENE),
 	]
 
 ## trigger_action -> spell id, mirrors the default loadout authored in proto_controller.tscn.
@@ -53,5 +57,17 @@ static func default_loadout() -> Dictionary:
 static func find(id: String) -> SpellDefinition:
 	for s in known_spells():
 		if s.id == id:
+			return s
+	return null
+
+
+## Reverse lookup: a live Spell node back to the definition it was instanced
+## from, matched on scene path. Lets the HUD spell bar label what's equipped
+## without a Spell node having to know anything about spellbook data.
+static func find_by_scene_path(path: String) -> SpellDefinition:
+	if path.is_empty():
+		return null
+	for s in known_spells():
+		if s.scene and s.scene.resource_path == path:
 			return s
 	return null

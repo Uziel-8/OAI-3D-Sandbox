@@ -34,6 +34,7 @@ size = Vector2(0.14, 0.14)
 [node name="StickyBombSpell" type="Node"]
 script = ExtResource("1_spell")
 mana_cost = 20.0
+cooldown = 3.0
 projectile_scene = ExtResource("2_bomb")
 
 [node name="MuzzleParticles" type="GPUParticles3D" parent="."]

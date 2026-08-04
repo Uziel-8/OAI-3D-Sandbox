@@ -1,6 +1,6 @@
-[gd_scene load_steps=14 format=3]
+[gd_scene format=3 uid="uid://j58dpom3om3m"]
 
-[ext_resource type="Script" path="res://Scripts/Magic/sticky_bomb_projectile.gd" id="1_bomb"]
+[ext_resource type="Script" uid="uid://dclaiknp8c8sy" path="res://Scripts/Magic/sticky_bomb_projectile.gd" id="1_bomb"]
 [ext_resource type="PackedScene" uid="uid://4ba3dst1sxrk" path="res://Components/damage_dealer.tscn" id="2_dealer"]
 
 [sub_resource type="SphereShape3D" id="SphereShape3D_hit"]
@@ -81,60 +81,55 @@ billboard_mode = 1
 material = SubResource("StandardMaterial3D_blast_particle")
 size = Vector2(0.3, 0.3)
 
-[node name="StickyBombProjectile" type="Area3D"]
+[node name="StickyBombProjectile" type="Area3D" unique_id=275575486]
 script = ExtResource("1_bomb")
+blast_force = 20.0
 speed = 16.0
+flight_gravity = 12.0
+lob_boost = 2.5
 impact_force = 0.0
 max_lifetime = 5.0
 impact_lifetime = 0.9
-fuse_time = 3.0
-blast_radius = 4.0
-blast_force = 14.0
 
-[node name="CollisionShape3D" type="CollisionShape3D" parent="."]
+[node name="CollisionShape3D" type="CollisionShape3D" parent="." unique_id=388699657]
 shape = SubResource("SphereShape3D_hit")
 
-[node name="Visual" type="Node3D" parent="."]
+[node name="Visual" type="Node3D" parent="." unique_id=1538621077]
 
-[node name="Mesh" type="MeshInstance3D" parent="Visual"]
+[node name="Mesh" type="MeshInstance3D" parent="Visual" unique_id=684247519]
 cast_shadow = 0
 mesh = SubResource("SphereMesh_shell")
 
-[node name="Light" type="OmniLight3D" parent="Visual"]
+[node name="Light" type="OmniLight3D" parent="Visual" unique_id=732653675]
 light_color = Color(1, 0.45, 0.15, 1)
 light_energy = 2.5
-shadow_enabled = false
 omni_range = 2.5
 
-[node name="Trail" type="GPUParticles3D" parent="Visual"]
-emitting = true
+[node name="Trail" type="GPUParticles3D" parent="Visual" unique_id=2140449257]
 amount = 24
 lifetime = 0.35
-local_coords = false
 process_material = SubResource("ParticleProcessMaterial_trail")
 draw_pass_1 = SubResource("QuadMesh_ember_particle")
 
-[node name="StickParticles" type="GPUParticles3D" parent="."]
+[node name="StickParticles" type="GPUParticles3D" parent="." unique_id=1913496528]
 emitting = false
 amount = 16
 lifetime = 0.5
 process_material = SubResource("ParticleProcessMaterial_fuse")
 draw_pass_1 = SubResource("QuadMesh_ember_particle")
 
-[node name="ImpactParticles" type="GPUParticles3D" parent="."]
+[node name="ImpactParticles" type="GPUParticles3D" parent="." unique_id=115622846]
 emitting = false
-one_shot = true
-explosiveness = 1.0
 amount = 90
 lifetime = 0.8
+one_shot = true
+explosiveness = 1.0
 process_material = SubResource("ParticleProcessMaterial_blast")
 draw_pass_1 = SubResource("QuadMesh_blast_particle")
 
-[node name="ExplosionLight" type="OmniLight3D" parent="."]
+[node name="ExplosionLight" type="OmniLight3D" parent="." unique_id=82420800]
 light_color = Color(1, 0.5, 0.18, 1)
 light_energy = 0.0
-shadow_enabled = false
 omni_range = 6.0
 
-[node name="DamageDealer" parent="." instance=ExtResource("2_dealer")]
-damage = 45.0
+[node name="DamageDealer" parent="." unique_id=1358090764 instance=ExtResource("2_dealer")]

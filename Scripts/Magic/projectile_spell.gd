@@ -38,12 +38,11 @@ func _spawn_projectile() -> Node3D:
 
 	# Aim: raycast from the camera through the crosshair so the projectile
 	# lands where the player is actually pointing, even though it launches
-	# from the body and not the lens.
-	var aim_from := cam.global_position
-	var aim_to := aim_from - cam.global_transform.basis.z * aim_range
-	var aim_query := PhysicsRayQueryParameters3D.create(aim_from, aim_to, 0xFFFFFFFF, [player.get_rid()])
-	var aim_hit := cam.get_world_3d().direct_space_state.intersect_ray(aim_query)
-	var aim_point: Vector3 = aim_hit.position if not aim_hit.is_empty() else aim_to
+	# from the body and not the lens. (Shared with the other aimed spells --
+	# see Spell.aim_ray.)
+	var aim_hit := aim_ray(aim_range)
+	var aim_point: Vector3 = aim_hit.position if not aim_hit.is_empty() \
+		else cam.global_position - cam.global_transform.basis.z * aim_range
 
 	var spawn_pos := player.global_position + Vector3.UP * cast_height
 	var direction := (aim_point - spawn_pos).normalized()

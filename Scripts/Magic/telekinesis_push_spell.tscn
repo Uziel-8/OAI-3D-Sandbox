@@ -37,6 +37,7 @@ script = ExtResource("1_push")
 push_range = 15.0
 push_force = 15.0
 mana_cost = 5.0
+cooldown = 1.0
 
 [node name="PushParticles" type="GPUParticles3D" parent="." unique_id=83206152]
 emitting = false

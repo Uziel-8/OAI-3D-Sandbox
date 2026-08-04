@@ -15,6 +15,12 @@ class_name PlayerInteractor
 @onready var _camera: Camera3D = get_parent()
 var _player: Node3D
 var _current: Interactable
+# What the HUD is currently showing. The prompt STRING -- not _current's identity --
+# is what gates the HUD push, because in Godot 4 a freed object compares EQUAL to
+# null: a pickup that queue_free()s itself on interact (gold_stack.gd) leaves
+# `_current` freed, so `_find_interactable()` returning null read as "nothing
+# changed" and the prompt stayed stuck on screen forever.
+var _prompt: String = ""
 
 
 func _ready() -> void:
@@ -24,8 +30,7 @@ func _ready() -> void:
 func _physics_process(_delta: float) -> void:
 	# Only while actually playing (not in a menu / dialogue, which release the mouse).
 	if Input.get_mouse_mode() != Input.MOUSE_MODE_CAPTURED:
-		if _current != null:
-			_set_current(null)
+		_set_current(null)
 		return
 
 	_set_current(_find_interactable())
@@ -56,9 +61,11 @@ func _find_interactable() -> Interactable:
 
 
 func _set_current(interactable: Interactable) -> void:
-	if interactable == _current:
-		return
 	_current = interactable
+	var prompt := _current.prompt_text(interact_action) if _current else ""
+	if prompt == _prompt:
+		return
+	_prompt = prompt
 	var hud := get_tree().get_first_node_in_group("hud")
 	if hud and hud.has_method("set_interact_prompt"):
-		hud.set_interact_prompt(_current.prompt_text(interact_action) if _current else "")
+		hud.set_interact_prompt(_prompt)

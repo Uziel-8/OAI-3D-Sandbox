@@ -13,7 +13,7 @@ func enter(_msg: Dictionary = {}) -> void:
 
 
 func physics_update(delta: float) -> void:
-	if npc.tick_stagger(delta):
+	if npc.tick_root(delta) or npc.tick_stagger(delta):
 		return
 	npc.apply_gravity(delta)
 
