@@ -1,7 +1,7 @@
-[gd_scene load_steps=8 format=3]
+[gd_scene format=3 uid="uid://bqolnxvjd55ob"]
 
-[ext_resource type="Script" path="res://Scripts/Magic/sticky_bomb_spell.gd" id="1_spell"]
-[ext_resource type="PackedScene" path="res://Scripts/Magic/sticky_bomb_projectile.tscn" id="2_bomb"]
+[ext_resource type="Script" uid="uid://ben2jxobd1p8a" path="res://Scripts/Magic/sticky_bomb_spell.gd" id="1_spell"]
+[ext_resource type="PackedScene" uid="uid://j58dpom3om3m" path="res://Scripts/Magic/sticky_bomb_projectile.tscn" id="2_bomb"]
 
 [sub_resource type="Gradient" id="Gradient_muzzle"]
 colors = PackedColorArray(1, 0.7, 0.35, 1, 0.85, 0.25, 0.04, 0)
@@ -31,17 +31,17 @@ billboard_mode = 1
 material = SubResource("StandardMaterial3D_muzzle_particle")
 size = Vector2(0.14, 0.14)
 
-[node name="StickyBombSpell" type="Node"]
+[node name="StickyBombSpell" type="Node" unique_id=1347688412]
 script = ExtResource("1_spell")
+projectile_scene = ExtResource("2_bomb")
 mana_cost = 20.0
 cooldown = 3.0
-projectile_scene = ExtResource("2_bomb")
 
-[node name="MuzzleParticles" type="GPUParticles3D" parent="."]
+[node name="MuzzleParticles" type="GPUParticles3D" parent="." unique_id=297688107]
 emitting = false
-one_shot = true
-explosiveness = 0.9
 amount = 24
 lifetime = 0.35
+one_shot = true
+explosiveness = 0.9
 process_material = SubResource("ParticleProcessMaterial_muzzle")
 draw_pass_1 = SubResource("QuadMesh_muzzle_particle")

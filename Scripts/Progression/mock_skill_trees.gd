@@ -78,6 +78,10 @@ static func schools() -> Array[SkillSchool]:
 			"Your Sticky Bombs no longer burn a fuse. Press the spell again to set off every charge you have planted, at the moment of your choosing.",
 			fire_orange, 2, ["py_stickybomb"], Vector2i(1, 2),
 			SkillNode.Effect.UPGRADE, "sticky_bomb_remote"),
+		_node("py_bombimmunity", "Bomb Immunity",
+			"You are now immune to the damage of your sticky bombs.",
+			fire_orange, 1, ["py_stickybomb"], Vector2i(1, 3),
+			SkillNode.Effect.UPGRADE, "bomb_immunity"),
 	]))
 
 	var frost_cyan := Color("4ab0d6")

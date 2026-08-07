@@ -5,6 +5,10 @@ class_name StickyBombProjectile
 ## a radius, either when its fuse burns down or when the caster triggers it
 ## remotely (the "Remote Detonator" pyromancy upgrade, driven by StickyBombSpell).
 ##
+## Two pyromancy upgrades reach this script, resolved at arm() time: Remote
+## Detonator (handed in by the spell, which owns the plant-then-trigger flow) and
+## Bomb Immunity (read here, since self-damage is decided inside the blast).
+##
 ## Sticking TRACKS the target's transform rather than reparenting to it: the bomb
 ## remembers the local offset it hit at and re-derives its world position each
 ## frame. That way it rides a moving body without inheriting that body's scale,
@@ -20,6 +24,9 @@ class_name StickyBombProjectile
 ## its live list without polling.
 signal detonated(bomb: StickyBombProjectile)
 
+## Must match the upgrade_id of the Bomb Immunity node in MockSkillTrees.
+const IMMUNITY_UPGRADE_ID := "bomb_immunity"
+
 ## Seconds between sticking and going off. Ignored entirely when remote_detonation
 ## is set -- an upgraded bomb waits indefinitely for the trigger.
 @export var fuse_time: float = 3.0
@@ -28,9 +35,12 @@ signal detonated(bomb: StickyBombProjectile)
 ## Damage multiplier at the very edge of the blast; the centre always takes full
 ## damage and everything between is lerped, so hugging the bomb hurts most.
 @export_range(0.0, 1.0) var edge_damage_scale: float = 0.35
-## Whether the blast damages / shoves the player who cast it. Damage is off and
-## knockback on by default: your own bomb can launch you but can't kill you.
-@export var damages_caster: bool = false
+## Whether the blast damages / shoves the player who cast it. BOTH are on by
+## default: your own bomb can launch you and hurt you. The "Bomb Immunity"
+## pyromancy node turns the damage half back off at spawn (see arm()); knockback
+## is deliberately left alone, since rocket-jumping off your own charge is a
+## feature and the upgrade is about survivability, not mobility.
+@export var damages_caster: bool = true
 @export var pushes_caster: bool = true
 ## Multiplier on blast_force when the blast catches the CASTER. blast_force is
 ## tuned for shoving props and enemies around; the player is a CharacterBody3D
@@ -66,9 +76,23 @@ var _light_energy: float = 3.0
 
 ## Called by StickyBombSpell right after launch(). `spell` is only held so an
 ## orphaned remote bomb can notice its caster is gone; nothing is called on it.
+##
+## This is also where the skill tree is read for THIS bomb: the upgrades resolve
+## ONCE per throw, at spawn, rather than being re-asked at detonation. That still
+## honours the read-live rule -- a node bought mid-game applies to the very next
+## bomb -- without a cached bool that a respec (SkillSystem.reset) could strand.
 func arm(spell: Node, remote: bool) -> void:
 	_owner_spell = spell
 	remote_detonation = remote
+	# One-directional on purpose: the upgrade can only ever REMOVE self-damage, so
+	# a bomb authored damages_caster = false in its .tscn is left alone.
+	if _immunity_unlocked():
+		damages_caster = false
+
+
+func _immunity_unlocked() -> bool:
+	var skills := get_node_or_null("/root/SkillSystem") as SkillTreeSystem
+	return skills != null and skills.has_upgrade(IMMUNITY_UPGRADE_ID)
 
 
 func _ready() -> void:

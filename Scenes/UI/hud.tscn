@@ -1,7 +1,7 @@
-[gd_scene load_steps=8 format=3]
+[gd_scene format=3 uid="uid://drytgpci8hef5"]
 
-[ext_resource type="Script" path="res://Scripts/UI/hud.gd" id="1_hud"]
-[ext_resource type="Theme" path="res://Scenes/UI/inventory_theme.tres" id="2_theme"]
+[ext_resource type="Script" uid="uid://e28sc6xj1s1q" path="res://Scripts/UI/hud.gd" id="1_hud"]
+[ext_resource type="Theme" uid="uid://dscwnj6lasakq" path="res://Scenes/UI/inventory_theme.tres" id="2_theme"]
 
 [sub_resource type="StyleBoxFlat" id="Fill_health"]
 bg_color = Color(0.8, 0.26, 0.26, 1)
@@ -32,30 +32,31 @@ corner_radius_bottom_right = 2
 corner_radius_bottom_left = 2
 
 [sub_resource type="StyleBoxFlat" id="Toast_bg"]
+content_margin_left = 24.0
+content_margin_top = 12.0
+content_margin_right = 24.0
+content_margin_bottom = 12.0
 bg_color = Color(0.05, 0.045, 0.06, 0.72)
 corner_radius_top_left = 8
 corner_radius_top_right = 8
 corner_radius_bottom_right = 8
 corner_radius_bottom_left = 8
-content_margin_left = 24.0
-content_margin_top = 12.0
-content_margin_right = 24.0
-content_margin_bottom = 12.0
 
-[node name="HUD" type="CanvasLayer"]
+[node name="HUD" type="CanvasLayer" unique_id=408808201]
 layer = 5
 script = ExtResource("1_hud")
 
-[node name="Root" type="Control" parent="."]
-theme = ExtResource("2_theme")
+[node name="Root" type="Control" parent="." unique_id=831002090]
+layout_mode = 3
 anchors_preset = 15
 anchor_right = 1.0
 anchor_bottom = 1.0
 grow_horizontal = 2
 grow_vertical = 2
 mouse_filter = 2
+theme = ExtResource("2_theme")
 
-[node name="ObjectivePanel" type="PanelContainer" parent="Root"]
+[node name="ObjectivePanel" type="PanelContainer" parent="Root" unique_id=1168168192]
 layout_mode = 1
 offset_left = 16.0
 offset_top = 16.0
@@ -63,36 +64,35 @@ offset_right = 372.0
 offset_bottom = 108.0
 mouse_filter = 2
 
-[node name="ObjVBox" type="VBoxContainer" parent="Root/ObjectivePanel"]
+[node name="ObjVBox" type="VBoxContainer" parent="Root/ObjectivePanel" unique_id=1652273358]
 layout_mode = 2
 mouse_filter = 2
 theme_override_constants/separation = 4
 
-[node name="ObjectiveTitle" type="Label" parent="Root/ObjectivePanel/ObjVBox"]
+[node name="ObjectiveTitle" type="Label" parent="Root/ObjectivePanel/ObjVBox" unique_id=1910789720]
 unique_name_in_owner = true
 layout_mode = 2
-mouse_filter = 2
 theme_override_colors/font_color = Color(0.95, 0.86, 0.6, 1)
 theme_override_font_sizes/font_size = 15
 text = "OBJECTIVE"
 
-[node name="ObjectiveText" type="Label" parent="Root/ObjectivePanel/ObjVBox"]
+[node name="ObjectiveText" type="Label" parent="Root/ObjectivePanel/ObjVBox" unique_id=117330739]
 unique_name_in_owner = true
 layout_mode = 2
-mouse_filter = 2
 theme_override_colors/font_color = Color(0.82, 0.8, 0.76, 1)
 theme_override_font_sizes/font_size = 13
-autowrap_mode = 3
 text = "Objective text"
+autowrap_mode = 3
 
-[node name="ObjectiveList" type="VBoxContainer" parent="Root/ObjectivePanel/ObjVBox"]
+[node name="ObjectiveList" type="VBoxContainer" parent="Root/ObjectivePanel/ObjVBox" unique_id=1964417168]
 unique_name_in_owner = true
 layout_mode = 2
 mouse_filter = 2
 theme_override_constants/separation = 2
 
-[node name="GoldPanel" type="PanelContainer" parent="Root"]
+[node name="GoldPanel" type="PanelContainer" parent="Root" unique_id=398390258]
 layout_mode = 1
+anchors_preset = 1
 anchor_left = 1.0
 anchor_right = 1.0
 offset_left = -150.0
@@ -102,29 +102,29 @@ offset_bottom = 52.0
 grow_horizontal = 0
 mouse_filter = 2
 
-[node name="GoldBox" type="HBoxContainer" parent="Root/GoldPanel"]
+[node name="GoldBox" type="HBoxContainer" parent="Root/GoldPanel" unique_id=1276144131]
 layout_mode = 2
 mouse_filter = 2
 theme_override_constants/separation = 8
 alignment = 1
 
-[node name="Coin" type="ColorRect" parent="Root/GoldPanel/GoldBox"]
+[node name="Coin" type="ColorRect" parent="Root/GoldPanel/GoldBox" unique_id=1188937381]
 custom_minimum_size = Vector2(16, 16)
 layout_mode = 2
 size_flags_vertical = 4
 mouse_filter = 2
 color = Color(0.95, 0.78, 0.28, 1)
 
-[node name="GoldLabel" type="Label" parent="Root/GoldPanel/GoldBox"]
+[node name="GoldLabel" type="Label" parent="Root/GoldPanel/GoldBox" unique_id=1577932297]
 unique_name_in_owner = true
 layout_mode = 2
-mouse_filter = 2
 theme_override_colors/font_color = Color(0.95, 0.86, 0.6, 1)
 theme_override_font_sizes/font_size = 16
 text = "0"
 
-[node name="Vitals" type="VBoxContainer" parent="Root"]
+[node name="Vitals" type="VBoxContainer" parent="Root" unique_id=1425455731]
 layout_mode = 1
+anchors_preset = 2
 anchor_top = 1.0
 anchor_bottom = 1.0
 offset_left = 16.0
@@ -135,80 +135,75 @@ grow_vertical = 0
 mouse_filter = 2
 theme_override_constants/separation = 6
 
-[node name="HealthRow" type="HBoxContainer" parent="Root/Vitals"]
+[node name="HealthRow" type="HBoxContainer" parent="Root/Vitals" unique_id=216366043]
 layout_mode = 2
 mouse_filter = 2
 theme_override_constants/separation = 8
 
-[node name="HealthTag" type="Label" parent="Root/Vitals/HealthRow"]
+[node name="HealthTag" type="Label" parent="Root/Vitals/HealthRow" unique_id=614249924]
 custom_minimum_size = Vector2(34, 0)
 layout_mode = 2
-mouse_filter = 2
 theme_override_colors/font_color = Color(0.82, 0.8, 0.76, 1)
 theme_override_font_sizes/font_size = 12
 text = "HP"
 
-[node name="HealthBar" type="ProgressBar" parent="Root/Vitals/HealthRow"]
+[node name="HealthBar" type="ProgressBar" parent="Root/Vitals/HealthRow" unique_id=1875679981]
 unique_name_in_owner = true
 custom_minimum_size = Vector2(0, 16)
 layout_mode = 2
 size_flags_horizontal = 3
 mouse_filter = 2
 theme_override_styles/fill = SubResource("Fill_health")
-max_value = 100.0
 value = 100.0
 show_percentage = false
 
-[node name="ManaRow" type="HBoxContainer" parent="Root/Vitals"]
+[node name="ManaRow" type="HBoxContainer" parent="Root/Vitals" unique_id=1229636773]
 layout_mode = 2
 mouse_filter = 2
 theme_override_constants/separation = 8
 
-[node name="ManaTag" type="Label" parent="Root/Vitals/ManaRow"]
+[node name="ManaTag" type="Label" parent="Root/Vitals/ManaRow" unique_id=523784076]
 custom_minimum_size = Vector2(34, 0)
 layout_mode = 2
-mouse_filter = 2
 theme_override_colors/font_color = Color(0.82, 0.8, 0.76, 1)
 theme_override_font_sizes/font_size = 12
 text = "MP"
 
-[node name="ManaBar" type="ProgressBar" parent="Root/Vitals/ManaRow"]
+[node name="ManaBar" type="ProgressBar" parent="Root/Vitals/ManaRow" unique_id=2137869416]
 unique_name_in_owner = true
 custom_minimum_size = Vector2(0, 16)
 layout_mode = 2
 size_flags_horizontal = 3
 mouse_filter = 2
 theme_override_styles/fill = SubResource("Fill_mana")
-max_value = 100.0
 value = 100.0
 show_percentage = false
 
-[node name="StaminaRow" type="HBoxContainer" parent="Root/Vitals"]
+[node name="StaminaRow" type="HBoxContainer" parent="Root/Vitals" unique_id=864591532]
 layout_mode = 2
 mouse_filter = 2
 theme_override_constants/separation = 8
 
-[node name="StaminaTag" type="Label" parent="Root/Vitals/StaminaRow"]
+[node name="StaminaTag" type="Label" parent="Root/Vitals/StaminaRow" unique_id=1692455488]
 custom_minimum_size = Vector2(34, 0)
 layout_mode = 2
-mouse_filter = 2
 theme_override_colors/font_color = Color(0.82, 0.8, 0.76, 1)
 theme_override_font_sizes/font_size = 12
 text = "SP"
 
-[node name="StaminaBar" type="ProgressBar" parent="Root/Vitals/StaminaRow"]
+[node name="StaminaBar" type="ProgressBar" parent="Root/Vitals/StaminaRow" unique_id=997334136]
 unique_name_in_owner = true
 custom_minimum_size = Vector2(0, 16)
 layout_mode = 2
 size_flags_horizontal = 3
 mouse_filter = 2
 theme_override_styles/fill = SubResource("Fill_stamina")
-max_value = 100.0
 value = 100.0
 show_percentage = false
 
-[node name="XPStrip" type="HBoxContainer" parent="Root"]
+[node name="XPStrip" type="HBoxContainer" parent="Root" unique_id=864024017]
 layout_mode = 1
+anchors_preset = 12
 anchor_top = 1.0
 anchor_right = 1.0
 anchor_bottom = 1.0
@@ -220,16 +215,15 @@ grow_vertical = 0
 mouse_filter = 2
 theme_override_constants/separation = 8
 
-[node name="LevelLabel" type="Label" parent="Root/XPStrip"]
+[node name="LevelLabel" type="Label" parent="Root/XPStrip" unique_id=1152652724]
 unique_name_in_owner = true
 custom_minimum_size = Vector2(46, 0)
 layout_mode = 2
-mouse_filter = 2
 theme_override_colors/font_color = Color(0.95, 0.86, 0.6, 1)
 theme_override_font_sizes/font_size = 12
 text = "Lv 1"
 
-[node name="XPBar" type="ProgressBar" parent="Root/XPStrip"]
+[node name="XPBar" type="ProgressBar" parent="Root/XPStrip" unique_id=104139456]
 unique_name_in_owner = true
 custom_minimum_size = Vector2(0, 10)
 layout_mode = 2
@@ -237,13 +231,12 @@ size_flags_horizontal = 3
 size_flags_vertical = 4
 mouse_filter = 2
 theme_override_styles/fill = SubResource("Fill_xp")
-max_value = 100.0
-value = 0.0
 show_percentage = false
 
-[node name="LevelUpToast" type="Label" parent="Root"]
+[node name="LevelUpToast" type="Label" parent="Root" unique_id=1688785714]
 unique_name_in_owner = true
 layout_mode = 1
+anchors_preset = -1
 anchor_left = 0.5
 anchor_top = 0.22
 anchor_right = 0.5
@@ -253,7 +246,6 @@ offset_right = 320.0
 offset_bottom = 90.0
 grow_horizontal = 2
 grow_vertical = 2
-mouse_filter = 2
 theme_override_colors/font_color = Color(0.98, 0.88, 0.55, 1)
 theme_override_font_sizes/font_size = 30
 theme_override_styles/normal = SubResource("Toast_bg")
@@ -261,9 +253,10 @@ text = "LEVEL UP!"
 horizontal_alignment = 1
 vertical_alignment = 1
 
-[node name="InteractPrompt" type="Label" parent="Root"]
+[node name="InteractPrompt" type="Label" parent="Root" unique_id=331733265]
 unique_name_in_owner = true
 layout_mode = 1
+anchors_preset = 8
 anchor_left = 0.5
 anchor_top = 0.5
 anchor_right = 0.5
@@ -274,7 +267,6 @@ offset_right = 200.0
 offset_bottom = 68.0
 grow_horizontal = 2
 grow_vertical = 2
-mouse_filter = 2
 theme_override_colors/font_color = Color(0.98, 0.94, 0.82, 1)
 theme_override_colors/font_outline_color = Color(0, 0, 0, 0.85)
 theme_override_constants/outline_size = 5

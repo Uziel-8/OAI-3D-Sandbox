@@ -9,7 +9,7 @@ class_name SkillTreeSystem
 ## Effect consumption:
 ##   UNLOCK_SPELL -> unlocked_spell_ids(), read by the spellbook to gate what's equippable (FULLY WIRED)
 ##   PASSIVE      -> passive_total(key)  (scaffolding: summed and queryable, no consumers yet)
-##   UPGRADE      -> has_upgrade(id)     (scaffolding: queryable, no Spell reads it yet)
+##   UPGRADE      -> has_upgrade(id)     (LIVE: sticky_bomb_remote, shadow_tendril_burst, bomb_immunity)
 
 signal skill_unlocked(node_id: String)
 ## Fired on any change to the unlocked set (unlock or reset) so UI can rebuild.
@@ -113,8 +113,10 @@ func passive_total(key: String) -> float:
 			total += float(node.passive_bonuses.get(key, 0.0))
 	return total
 
-## Whether an unlocked UPGRADE node grants the given tag. Scaffolding: no Spell
-## script checks this yet.
+## Whether an unlocked UPGRADE node grants the given tag. Consumers must ask this
+## LIVE -- per press, or per spawn of whatever the cast creates -- never caching
+## the answer at _ready, so a mid-game purchase (or a reset() respec) takes effect
+## on the very next cast.
 func has_upgrade(upgrade_id: String) -> bool:
 	for node_id in _unlocked:
 		var node: SkillNode = _nodes_by_id.get(node_id, null)

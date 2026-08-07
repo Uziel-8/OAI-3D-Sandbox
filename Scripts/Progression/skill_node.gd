@@ -8,10 +8,10 @@ extends Resource
 ## (column, row) places the node on the SkillTreeView canvas and is also what the
 ## connector lines are drawn from/to.
 ##
-## A node does exactly one thing, chosen by `effect`. Only UNLOCK_SPELL is fully
-## consumed today; PASSIVE and UPGRADE store their payload and expose query hooks
-## on SkillSystem (passive_total / has_upgrade) but nothing reads them yet -- they
-## are deliberately just the bones for a later pass.
+## A node does exactly one thing, chosen by `effect`. UNLOCK_SPELL and UPGRADE are
+## both fully consumed today (the spellbook gates its palette by the former; three
+## spells read the latter via SkillSystem.has_upgrade). PASSIVE still stores its
+## payload and exposes passive_total() with no consumers -- bones for a later pass.
 
 enum Effect { UNLOCK_SPELL, PASSIVE, UPGRADE }
 
@@ -30,8 +30,8 @@ enum Effect { UNLOCK_SPELL, PASSIVE, UPGRADE }
 ## PASSIVE: additive bonuses keyed by an arbitrary stat string (e.g. {"fire_damage_pct": 0.1}),
 ## summed across unlocked nodes by SkillSystem.passive_total(). Bones only for now.
 @export var passive_bonuses: Dictionary = {}
-## UPGRADE: a tag a Spell script can later check via SkillSystem.has_upgrade().
-## Bones only for now -- no Spell reads it yet.
+## UPGRADE: a tag a Spell (or something it spawns) checks via SkillSystem.has_upgrade().
+## Mirror it as a const on the consumer so the string isn't loose in two files.
 @export var upgrade_id: String = ""
 
 ## Short label for the effect, used on the tooltip's subtitle line.

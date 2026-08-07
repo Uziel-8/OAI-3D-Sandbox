@@ -1,14 +1,8 @@
 extends RigidBody3D
+## Pile of coins that pays out and disappears when picked up. The Interactable
+## child's `interacted` signal is connected to _on_node_interacted in gold_stack.tscn.
 
 
-
-var _interactable = Interactable
-
-func _ready() -> void:
-	_interactable = Interactable.find_in(self)
-
-
-
-func _on_node_interacted(interactor: Node) -> void:
+func _on_node_interacted(_interactor: Node) -> void:
 	PlayerState.add_gold(50)
 	queue_free()
