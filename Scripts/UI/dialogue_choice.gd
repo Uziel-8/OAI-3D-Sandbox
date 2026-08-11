@@ -27,6 +27,11 @@ enum QuestAction {
 ## The NPC's reply, shown after choosing. Blank = close immediately.
 @export_multiline var response: String = ""
 
+## Opens the target's shop after this choice's response is dismissed. The vendor
+## is whatever ShopKeeper component sits on the NPC, so making a trader is one
+## checkbox plus that component -- no bespoke merchant dialogue code.
+@export var opens_shop: bool = false
+
 @export_group("Quest")
 ## The quest this choice acts on. QuestGiver builds these choices automatically
 ## from a Quest's dialogue fields, but they're hand-authorable too -- so a bespoke

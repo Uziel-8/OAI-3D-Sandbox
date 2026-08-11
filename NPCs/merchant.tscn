@@ -1,0 +1,33 @@
+[gd_scene format=3 uid="uid://4pu52oy67opc"]
+
+[ext_resource type="PackedScene" path="res://NPCs/npc.tscn" id="1_base"]
+[ext_resource type="Resource" uid="uid://4l60keib8akn" path="res://Resources/NPCs/merchant_profile.tres" id="2_kcfhk"]
+[ext_resource type="Script" uid="uid://hlppmi8dhefm" path="res://Scripts/UI/dialogue_choice.gd" id="3_7et0p"]
+[ext_resource type="PackedScene" uid="uid://bixnuuwn433b4" path="res://Graphics/KayKit Skeletons/characters/gltf/Ranger.glb" id="3_x4qd2"]
+[ext_resource type="AnimationLibrary" uid="uid://cuvcg0cr1bc3l" path="res://Graphics/KayKit_Character_Animations_1.1/Animations/gltf/Rig_Medium/Rig_Medium_General.glb" id="4_kcfhk"]
+[ext_resource type="Script" path="res://Scripts/Shop/shop_keeper.gd" id="5_shopkeeper"]
+
+[sub_resource type="Resource" id="Resource_h5lsu"]
+script = ExtResource("3_7et0p")
+text = "Could you show me your wares?"
+response = "Of course young man!"
+opens_shop = true
+metadata/_custom_type_script = "uid://hlppmi8dhefm"
+
+[node name="Merchant" unique_id=1891560480 instance=ExtResource("1_base")]
+profile = ExtResource("2_kcfhk")
+
+[node name="Interactable" parent="." index="3"]
+dialogue_lines = Array[String](["Hey Stranger! How can I help you today?"])
+dialogue_choices = Array[ExtResource("3_7et0p")]([SubResource("Resource_h5lsu")])
+
+[node name="Ranger" parent="." index="5" unique_id=554096039 instance=ExtResource("3_x4qd2")]
+
+[node name="AnimationPlayer" type="AnimationPlayer" parent="Ranger" index="1" unique_id=326243184]
+libraries/Rig_Medium_General = ExtResource("4_kcfhk")
+autoplay = &"Rig_Medium_General/Idle_A"
+
+[node name="ShopKeeper" type="Node" parent="." index="6"]
+script = ExtResource("5_shopkeeper")
+shop_name = "Tom's Sundries"
+gold = 350

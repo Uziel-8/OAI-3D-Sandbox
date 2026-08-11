@@ -2,7 +2,12 @@ class_name InventoryScreen
 extends Control
 ## Top-level controller for the inventory/character screen: builds the backpack grid,
 ## wires the paper-doll equipment sockets, and drives the tooltip + carry-weight readout.
-## Item data is mock/placeholder (see MockItemDatabase) until a real item/save system exists.
+##
+## The items themselves live in the `PlayerInventory` autoload, NOT here -- this
+## screen is a view over it, so shops/loot/quests can change what the player is
+## carrying without the UI being open. The two stay in step both ways: the model is
+## pulled into the slots when something outside changes it, and the slots are
+## pushed back after a drag/drop rearrange. `_syncing` keeps that from ping-ponging.
 
 const GRID_COLUMNS := 8
 const GRID_ROWS := 5
@@ -62,6 +67,9 @@ const _SKILLTREE_PATH := "Center/Frame/Layout/Tabs/Skills/TreeScroll/SkillTreeVi
 
 var is_open := false
 var _grid_slots: Array[InventorySlot] = []
+## True while one side of the model/view sync is writing the other, so the change
+## it causes doesn't bounce straight back.
+var _syncing := false
 
 func _ready() -> void:
 	add_to_group("inventory_screen")
@@ -70,8 +78,10 @@ func _ready() -> void:
 	_close_button.pressed.connect(close)
 	_build_grid()
 	_connect_equipment_slots()
-	_populate_mock_data()
-	on_inventory_changed()
+	var inventory := _inventory()
+	if inventory:
+		inventory.inventory_changed.connect(_on_model_changed)
+	_load_from_model()
 	_populate_spellbook()
 	_connect_loadout_slots()
 	_setup_progression()
@@ -155,15 +165,47 @@ func _equipment_slots() -> Array[InventorySlot]:
 	return [_head_slot, _chest_slot, _legs_slot, _boots_slot, _hands_slot,
 		_main_hand_slot, _off_hand_slot, _amulet_slot, _ring_slot]
 
-func _populate_mock_data() -> void:
-	var equipped := MockItemDatabase.make_starting_equipment()
-	for equip_slot_enum in equipped.keys():
-		var node := _equipment_slot_for(equip_slot_enum)
-		if node:
-			node.set_item(equipped[equip_slot_enum])
-	var pool := MockItemDatabase.make_starting_inventory()
-	for i in range(mini(pool.size(), _grid_slots.size())):
-		_grid_slots[i].set_item(pool[i])
+func _inventory() -> PlayerInventorySystem:
+	return get_node_or_null("/root/PlayerInventory") as PlayerInventorySystem
+
+## Something outside this screen changed what the player is carrying (a purchase,
+## a sale, a loot drop). Ignored while we're the ones writing.
+func _on_model_changed() -> void:
+	if not _syncing:
+		_load_from_model()
+
+## Model -> slots. The whole pass is guarded: every set_item() fires item_changed,
+## which would otherwise write each half-filled intermediate state back out.
+func _load_from_model() -> void:
+	var inventory := _inventory()
+	if inventory == null:
+		return
+	_syncing = true
+	for i in _grid_slots.size():
+		_grid_slots[i].set_item(inventory.slot(i))
+	for slot in _equipment_slots():
+		slot.set_item(inventory.equipped(slot.accepted_equip_slot))
+	_syncing = false
+	_refresh_readouts()
+
+## Slots -> model, after a drag/drop or quick-transfer rearranged them. The slots
+## are the interaction surface, so the layout they end up in is authoritative.
+func _push_to_model() -> void:
+	if _syncing:
+		return
+	var inventory := _inventory()
+	if inventory == null:
+		return
+	var items: Array[InventoryItem] = []
+	for slot in _grid_slots:
+		items.append(slot.item)
+	var worn := {}
+	for slot in _equipment_slots():
+		if slot.item:
+			worn[slot.accepted_equip_slot] = slot.item
+	_syncing = true
+	inventory.replace_all(items, worn)
+	_syncing = false
 
 func _equipment_slot_for(equip_slot_enum: InventoryItem.EquipSlot) -> InventorySlot:
 	match equip_slot_enum:
@@ -219,7 +261,13 @@ func _first_empty_grid_slot() -> InventorySlot:
 			return slot
 	return null
 
+## Called by the slots after any change they make. Redraws the readouts, then
+## writes the new layout back to PlayerInventory.
 func on_inventory_changed() -> void:
+	_refresh_readouts()
+	_push_to_model()
+
+func _refresh_readouts() -> void:
 	var total_weight := 0.0
 	var total_armor := 0
 	for slot in _grid_slots:

@@ -1,0 +1,14 @@
+[gd_resource type="Resource" script_class="NpcProfile" format=3 uid="uid://4l60keib8akn"]
+
+[ext_resource type="Script" uid="uid://v4epnlt7qolu" path="res://Scripts/NPCs/npc_profile.gd" id="1_h5lsu"]
+
+[resource]
+script = ExtResource("1_h5lsu")
+display_name = "Tom"
+faction = &"Merchant\'s Guild"
+char_class = &"Merchant"
+starting_disposition = 10
+max_health = 50.0
+health_regen = 5.0
+speaker_name = "Tom"
+metadata/_custom_type_script = "uid://v4epnlt7qolu"

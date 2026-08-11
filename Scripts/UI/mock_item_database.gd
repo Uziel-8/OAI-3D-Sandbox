@@ -21,6 +21,25 @@ static func _make(id: String, item_name: String, description: String, item_type:
 	it.stat_bonuses = stat_bonuses
 	return it
 
+## Every item this placeholder database knows about, across all three pools.
+## What a real item database's "load by id" would replace.
+static func catalogue() -> Array[InventoryItem]:
+	var all: Array[InventoryItem] = []
+	all.append_array(make_starting_inventory())
+	all.append_array(make_merchant_stock())
+	var equipped := make_starting_equipment()
+	for equip_slot in equipped:
+		all.append(equipped[equip_slot])
+	return all
+
+## Fresh copy of the item with this id, or null. Lets a world pickup or a quest
+## reward name an item by id instead of authoring the whole resource inline.
+static func find_by_id(id: String) -> InventoryItem:
+	for entry in catalogue():
+		if entry.id == id:
+			return entry
+	return null
+
 ## Items sitting loose in the backpack grid.
 static func make_starting_inventory() -> Array[InventoryItem]:
 	var items: Array[InventoryItem] = []
@@ -66,6 +85,39 @@ static func make_starting_inventory() -> Array[InventoryItem]:
 	items.append(_make("iron_key", "Iron Key", "Worn smooth. No idea what it opens.",
 		InventoryItem.ItemType.QUEST, InventoryItem.EquipSlot.NONE, InventoryItem.Rarity.RARE,
 		1, 1, 0.05, 0, Color("b0a888")))
+	return items
+
+## Default wares for a ShopKeeper that was dropped in without authored stock.
+## stack_count is the number in stock, so a line depletes as it's bought out.
+static func make_merchant_stock() -> Array[InventoryItem]:
+	var items: Array[InventoryItem] = []
+	items.append(_make("healing_potion", "Healing Potion", "Restores a modest amount of health when consumed.",
+		InventoryItem.ItemType.CONSUMABLE, InventoryItem.EquipSlot.NONE, InventoryItem.Rarity.COMMON,
+		8, 10, 0.5, 15, Color("c94b3f")))
+	items.append(_make("mana_draught", "Mana Draught", "A bitter tonic that restores magical reserves.",
+		InventoryItem.ItemType.CONSUMABLE, InventoryItem.EquipSlot.NONE, InventoryItem.Rarity.UNCOMMON,
+		5, 10, 0.5, 22, Color("3f6fc9")))
+	items.append(_make("torch", "Torch", "A pitch-soaked torch. Sheds light in dark places.",
+		InventoryItem.ItemType.MISC, InventoryItem.EquipSlot.NONE, InventoryItem.Rarity.COMMON,
+		10, 12, 1.0, 2, Color("d68a3c")))
+	items.append(_make("lockpick", "Lockpick", "Fragile, but good enough for most dungeon doors.",
+		InventoryItem.ItemType.MISC, InventoryItem.EquipSlot.NONE, InventoryItem.Rarity.COMMON,
+		12, 12, 0.1, 3, Color("9a9a9a")))
+	items.append(_make("traveling_cloak", "Traveling Cloak", "Waxed wool. Keeps the harbour damp off your back.",
+		InventoryItem.ItemType.ARMOR, InventoryItem.EquipSlot.CHEST, InventoryItem.Rarity.COMMON,
+		1, 1, 2.2, 35, Color("4a5a6a"), {"Armor": 4}))
+	items.append(_make("guild_signet", "Guild Signet", "A merchant's ring. Opens doors, if the right people see it.",
+		InventoryItem.ItemType.ARMOR, InventoryItem.EquipSlot.RING, InventoryItem.Rarity.RARE,
+		1, 1, 0.1, 120, Color("d6b23c"), {"WIL": 2}))
+	items.append(_make("warding_amulet", "Warding Amulet", "The glass bead is warm. Tom swears it turns a blade.",
+		InventoryItem.ItemType.ARMOR, InventoryItem.EquipSlot.AMULET, InventoryItem.Rarity.UNCOMMON,
+		1, 1, 0.3, 85, Color("7a5fd6"), {"Armor": 2, "INT": 1}))
+	items.append(_make("scroll_of_fire", "Scroll of Fire", "A single-use scroll inscribed with a fire glyph.",
+		InventoryItem.ItemType.CONSUMABLE, InventoryItem.EquipSlot.NONE, InventoryItem.Rarity.RARE,
+		2, 5, 0.1, 60, Color("d67a2c")))
+	items.append(_make("dockhand_boots", "Dockhand's Boots", "Salt-stained, but the soles grip a wet deck.",
+		InventoryItem.ItemType.ARMOR, InventoryItem.EquipSlot.BOOTS, InventoryItem.Rarity.COMMON,
+		1, 1, 1.1, 18, Color("5c452e"), {"Armor": 2}))
 	return items
 
 ## Gear worn on the paper doll at scene start, keyed by InventoryItem.EquipSlot.

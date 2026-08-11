@@ -1,0 +1,240 @@
+[gd_scene load_steps=6 format=3]
+
+[ext_resource type="Script" path="res://Scripts/UI/shop_screen.gd" id="1_script"]
+[ext_resource type="Theme" path="res://Scenes/UI/inventory_theme.tres" id="2_theme"]
+[ext_resource type="PackedScene" path="res://Scenes/UI/item_tooltip.tscn" id="3_tooltip"]
+
+[sub_resource type="StyleBoxFlat" id="StyleBoxFlat_frame"]
+bg_color = Color(0.055, 0.05, 0.06, 0.98)
+corner_radius_top_left = 12
+corner_radius_top_right = 12
+corner_radius_bottom_right = 12
+corner_radius_bottom_left = 12
+border_width_left = 2
+border_width_top = 2
+border_width_right = 2
+border_width_bottom = 2
+border_color = Color(0.55, 0.42, 0.22, 0.6)
+content_margin_left = 22.0
+content_margin_top = 18.0
+content_margin_right = 22.0
+content_margin_bottom = 18.0
+shadow_size = 20
+shadow_color = Color(0, 0, 0, 0.5)
+
+[sub_resource type="StyleBoxFlat" id="StyleBoxFlat_column"]
+bg_color = Color(0.085, 0.08, 0.095, 1)
+corner_radius_top_left = 8
+corner_radius_top_right = 8
+corner_radius_bottom_right = 8
+corner_radius_bottom_left = 8
+border_width_left = 1
+border_width_top = 1
+border_width_right = 1
+border_width_bottom = 1
+border_color = Color(1, 1, 1, 0.08)
+content_margin_left = 14.0
+content_margin_top = 12.0
+content_margin_right = 14.0
+content_margin_bottom = 12.0
+
+[node name="ShopUI" type="CanvasLayer"]
+process_mode = 3
+layer = 10
+
+[node name="Screen" type="Control" parent="."]
+process_mode = 3
+theme = ExtResource("2_theme")
+anchors_preset = 15
+anchor_right = 1.0
+anchor_bottom = 1.0
+grow_horizontal = 2
+grow_vertical = 2
+script = ExtResource("1_script")
+
+[node name="Backdrop" type="ColorRect" parent="Screen"]
+layout_mode = 1
+anchors_preset = 15
+anchor_right = 1.0
+anchor_bottom = 1.0
+grow_horizontal = 2
+grow_vertical = 2
+mouse_filter = 0
+color = Color(0, 0, 0, 0.62)
+
+[node name="Center" type="CenterContainer" parent="Screen"]
+layout_mode = 1
+anchors_preset = 15
+anchor_right = 1.0
+anchor_bottom = 1.0
+grow_horizontal = 2
+grow_vertical = 2
+
+[node name="Frame" type="PanelContainer" parent="Screen/Center"]
+layout_mode = 2
+custom_minimum_size = Vector2(1180, 720)
+theme_override_styles/panel = SubResource("StyleBoxFlat_frame")
+
+[node name="Layout" type="VBoxContainer" parent="Screen/Center/Frame"]
+layout_mode = 2
+theme_override_constants/separation = 14
+
+[node name="Header" type="HBoxContainer" parent="Screen/Center/Frame/Layout"]
+layout_mode = 2
+
+[node name="ShopTitle" type="Label" parent="Screen/Center/Frame/Layout/Header"]
+unique_name_in_owner = true
+layout_mode = 2
+theme_override_colors/font_color = Color(0.95, 0.86, 0.6, 1)
+theme_override_font_sizes/font_size = 28
+text = "TRADER"
+
+[node name="HeaderSpacer" type="Control" parent="Screen/Center/Frame/Layout/Header"]
+layout_mode = 2
+size_flags_horizontal = 3
+
+[node name="CloseButton" type="Button" parent="Screen/Center/Frame/Layout/Header"]
+unique_name_in_owner = true
+layout_mode = 2
+text = "Leave  (Esc)"
+
+[node name="Sep1" type="HSeparator" parent="Screen/Center/Frame/Layout"]
+layout_mode = 2
+
+[node name="Body" type="HBoxContainer" parent="Screen/Center/Frame/Layout"]
+layout_mode = 2
+size_flags_vertical = 3
+theme_override_constants/separation = 18
+
+[node name="MerchantPanel" type="PanelContainer" parent="Screen/Center/Frame/Layout/Body"]
+layout_mode = 2
+size_flags_horizontal = 3
+theme_override_styles/panel = SubResource("StyleBoxFlat_column")
+
+[node name="MerchantVBox" type="VBoxContainer" parent="Screen/Center/Frame/Layout/Body/MerchantPanel"]
+layout_mode = 2
+theme_override_constants/separation = 10
+
+[node name="MerchantHeader" type="HBoxContainer" parent="Screen/Center/Frame/Layout/Body/MerchantPanel/MerchantVBox"]
+layout_mode = 2
+
+[node name="MerchantLabel" type="Label" parent="Screen/Center/Frame/Layout/Body/MerchantPanel/MerchantVBox/MerchantHeader"]
+layout_mode = 2
+theme_override_colors/font_color = Color(0.72, 0.68, 0.62, 1)
+theme_override_font_sizes/font_size = 15
+text = "FOR SALE"
+
+[node name="MerchantSpacer" type="Control" parent="Screen/Center/Frame/Layout/Body/MerchantPanel/MerchantVBox/MerchantHeader"]
+layout_mode = 2
+size_flags_horizontal = 3
+
+[node name="MerchantGold" type="Label" parent="Screen/Center/Frame/Layout/Body/MerchantPanel/MerchantVBox/MerchantHeader"]
+unique_name_in_owner = true
+layout_mode = 2
+theme_override_colors/font_color = Color(0.85, 0.72, 0.32, 1)
+theme_override_font_sizes/font_size = 16
+text = "0 g"
+
+[node name="MerchantSep" type="HSeparator" parent="Screen/Center/Frame/Layout/Body/MerchantPanel/MerchantVBox"]
+layout_mode = 2
+
+[node name="StockScroll" type="ScrollContainer" parent="Screen/Center/Frame/Layout/Body/MerchantPanel/MerchantVBox"]
+layout_mode = 2
+size_flags_horizontal = 3
+size_flags_vertical = 3
+horizontal_scroll_mode = 0
+
+[node name="StockList" type="VBoxContainer" parent="Screen/Center/Frame/Layout/Body/MerchantPanel/MerchantVBox/StockScroll"]
+unique_name_in_owner = true
+layout_mode = 2
+size_flags_horizontal = 3
+theme_override_constants/separation = 5
+
+[node name="BuyRow" type="HBoxContainer" parent="Screen/Center/Frame/Layout/Body/MerchantPanel/MerchantVBox"]
+layout_mode = 2
+theme_override_constants/separation = 8
+
+[node name="BuyButton" type="Button" parent="Screen/Center/Frame/Layout/Body/MerchantPanel/MerchantVBox/BuyRow"]
+unique_name_in_owner = true
+layout_mode = 2
+size_flags_horizontal = 3
+disabled = true
+text = "Buy"
+
+[node name="BuyAllButton" type="Button" parent="Screen/Center/Frame/Layout/Body/MerchantPanel/MerchantVBox/BuyRow"]
+unique_name_in_owner = true
+layout_mode = 2
+visible = false
+text = "Buy All"
+
+[node name="PlayerPanel" type="PanelContainer" parent="Screen/Center/Frame/Layout/Body"]
+layout_mode = 2
+size_flags_horizontal = 3
+theme_override_styles/panel = SubResource("StyleBoxFlat_column")
+
+[node name="PlayerVBox" type="VBoxContainer" parent="Screen/Center/Frame/Layout/Body/PlayerPanel"]
+layout_mode = 2
+theme_override_constants/separation = 10
+
+[node name="PlayerHeader" type="HBoxContainer" parent="Screen/Center/Frame/Layout/Body/PlayerPanel/PlayerVBox"]
+layout_mode = 2
+
+[node name="PlayerLabel" type="Label" parent="Screen/Center/Frame/Layout/Body/PlayerPanel/PlayerVBox/PlayerHeader"]
+layout_mode = 2
+theme_override_colors/font_color = Color(0.72, 0.68, 0.62, 1)
+theme_override_font_sizes/font_size = 15
+text = "YOUR PACK"
+
+[node name="PlayerSpacer" type="Control" parent="Screen/Center/Frame/Layout/Body/PlayerPanel/PlayerVBox/PlayerHeader"]
+layout_mode = 2
+size_flags_horizontal = 3
+
+[node name="PlayerGold" type="Label" parent="Screen/Center/Frame/Layout/Body/PlayerPanel/PlayerVBox/PlayerHeader"]
+unique_name_in_owner = true
+layout_mode = 2
+theme_override_colors/font_color = Color(0.85, 0.72, 0.32, 1)
+theme_override_font_sizes/font_size = 16
+text = "0 g"
+
+[node name="PlayerSep" type="HSeparator" parent="Screen/Center/Frame/Layout/Body/PlayerPanel/PlayerVBox"]
+layout_mode = 2
+
+[node name="BagScroll" type="ScrollContainer" parent="Screen/Center/Frame/Layout/Body/PlayerPanel/PlayerVBox"]
+layout_mode = 2
+size_flags_horizontal = 3
+size_flags_vertical = 3
+horizontal_scroll_mode = 0
+
+[node name="BagList" type="VBoxContainer" parent="Screen/Center/Frame/Layout/Body/PlayerPanel/PlayerVBox/BagScroll"]
+unique_name_in_owner = true
+layout_mode = 2
+size_flags_horizontal = 3
+theme_override_constants/separation = 5
+
+[node name="SellRow" type="HBoxContainer" parent="Screen/Center/Frame/Layout/Body/PlayerPanel/PlayerVBox"]
+layout_mode = 2
+theme_override_constants/separation = 8
+
+[node name="SellButton" type="Button" parent="Screen/Center/Frame/Layout/Body/PlayerPanel/PlayerVBox/SellRow"]
+unique_name_in_owner = true
+layout_mode = 2
+size_flags_horizontal = 3
+disabled = true
+text = "Sell"
+
+[node name="SellAllButton" type="Button" parent="Screen/Center/Frame/Layout/Body/PlayerPanel/PlayerVBox/SellRow"]
+unique_name_in_owner = true
+layout_mode = 2
+visible = false
+text = "Sell All"
+
+[node name="StatusLabel" type="Label" parent="Screen/Center/Frame/Layout"]
+unique_name_in_owner = true
+layout_mode = 2
+theme_override_colors/font_color = Color(0.88, 0.45, 0.4, 1)
+theme_override_font_sizes/font_size = 15
+horizontal_alignment = 1
+text = ""
+
+[node name="Tooltip" parent="Screen" instance=ExtResource("3_tooltip")]
+layout_mode = 1

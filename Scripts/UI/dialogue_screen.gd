@@ -25,6 +25,11 @@ var _lines: Array[String] = []
 var _choices: Array[DialogueChoice] = []
 var _target: Node = null
 var _index := 0
+## Vendor to hand over to once the player dismisses the chosen line. Deferring to
+## the dismissal rather than opening immediately is what lets a merchant still
+## deliver his "Of course, young man!" before the counter appears; backing out
+## with Escape drops it (close() clears this).
+var _pending_shop: ShopKeeper = null
 
 
 func _ready() -> void:
@@ -79,6 +84,7 @@ func close() -> void:
 	_lines = []
 	_choices = []
 	_target = null
+	_pending_shop = null
 	_set_hud_visible(true)
 	get_tree().paused = false
 	Input.mouse_mode = Input.MOUSE_MODE_CAPTURED
@@ -101,8 +107,22 @@ func _advance() -> void:
 		_show_line()
 	elif not _choices.is_empty():
 		_show_choices()
+	elif _pending_shop:
+		_open_pending_shop()
 	else:
 		close()
+
+
+## Hands over to the shop screen. close() clears _pending_shop, so the keeper is
+## captured first -- and closing before opening keeps the tree from being left
+## paused by two screens at once (the same ordering LevelCompleteScreen needs).
+func _open_pending_shop() -> void:
+	var keeper := _pending_shop
+	close()
+	if is_instance_valid(keeper):
+		var shop := get_tree().get_first_node_in_group("shop_screen")
+		if shop and shop.has_method("open"):
+			shop.open(keeper)
 
 
 func _show_choices() -> void:
@@ -136,6 +156,8 @@ func apply_choice(choice: DialogueChoice) -> void:
 	# Quest effects run after the gold spend, so an unaffordable choice bails out
 	# above without changing any quest state.
 	_apply_quest_action(choice)
+	if choice.opens_shop:
+		_pending_shop = ShopKeeper.find_in(_target)
 	choice_selected.emit(choice, _target)
 
 	_choices_box.visible = false
@@ -146,7 +168,9 @@ func apply_choice(choice: DialogueChoice) -> void:
 		_choices = []
 		_index = 0
 		_advance_button.visible = true
-		_advance_button.text = "Leave"
+		_advance_button.text = "Browse Wares" if _pending_shop else "Leave"
+	elif _pending_shop:
+		_open_pending_shop()
 	else:
 		close()
 

@@ -21,12 +21,14 @@
 [ext_resource type="Script" uid="uid://v4epnlt7qolu" path="res://Scripts/NPCs/npc_profile.gd" id="18_00k4y"]
 [ext_resource type="PackedScene" uid="uid://d381t0vkqitng" path="res://Objects/gold_stack.tscn" id="18_vofx3"]
 [ext_resource type="Script" uid="uid://hlppmi8dhefm" path="res://Scripts/UI/dialogue_choice.gd" id="19_0cmrb"]
+[ext_resource type="PackedScene" uid="uid://4pu52oy67opc" path="res://NPCs/merchant.tscn" id="19_hcs0j"]
 [ext_resource type="Script" uid="uid://c2umnqsop4kc2" path="res://Scripts/Environment/disposition_reaction.gd" id="19_pnhnk"]
 [ext_resource type="PackedScene" path="res://Objects/Buildings/gate.tscn" id="21_pnhnk"]
 [ext_resource type="PackedScene" uid="uid://cpvew8y2sqp5e" path="res://Objects/torch.tscn" id="22_24uko"]
 [ext_resource type="Script" uid="uid://sjaby5qs2ds6" path="res://Scripts/Quests/quest.gd" id="23_questsc"]
 [ext_resource type="Resource" uid="uid://d04ujlwjvaula" path="res://Resources/Quests/rats_in_the_hold.tres" id="24_ratsq"]
 [ext_resource type="Script" uid="uid://28h35un78w6d" path="res://Scripts/Quests/quest_giver.gd" id="25_giver"]
+[ext_resource type="Resource" uid="uid://dtglljaug7kf2" path="res://Resources/NPCs/patroller_profile.tres" id="25_t205d"]
 [ext_resource type="Script" uid="uid://d0obqa03pjyqg" path="res://Scripts/Level/Objectives/kill_count_objective.gd" id="26_killcnt"]
 
 [sub_resource type="ProceduralSkyMaterial" id="ProceduralSkyMaterial_5xgho"]
@@ -187,6 +189,9 @@ quests = Array[ExtResource("23_questsc")]([ExtResource("15_luodc")])
 [node name="Patroller" parent="." unique_id=896890963 node_paths=PackedStringArray("patrol_points") instance=ExtResource("16_2klc5")]
 transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, -16.238281, 1.098877, 0)
 patrol_points = [NodePath("../Marker3D"), NodePath("../Marker3D2"), NodePath("../Marker3D3")]
+
+[node name="Merchant" parent="." unique_id=1891560480 instance=ExtResource("19_hcs0j")]
+transform = Transform3D(0.82924443, 0, -0.55888605, 0, 1, 0, 0.55888605, 0, 0.82924443, 5.035907, 1.098877, -9.43236)
 
 [node name="Marker3D" type="Marker3D" parent="." unique_id=1791838495]
 transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, -15.232209, 1.1057558, -10.63852)
@@ -849,7 +854,7 @@ material = SubResource("StandardMaterial3D_yf5fn")
 
 [node name="Guard2" parent="." unique_id=676007783 instance=ExtResource("15_c7le1")]
 transform = Transform3D(0.18077566, 0, -0.9835244, 0, 1, 0, 0.9835244, 0, 0.18077566, -135.94888, 0, 41.679462)
-profile = null
+profile = ExtResource("25_t205d")
 
 [node name="Interactable" parent="Guard2" index="3"]
 dialogue_lines = Array[String](["What are you lookin' at?"])
