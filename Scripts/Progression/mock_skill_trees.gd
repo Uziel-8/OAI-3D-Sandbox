@@ -114,6 +114,14 @@ static func schools() -> Array[SkillSchool]:
 			"Your Shadow Tendril no longer reaches for one throat. The dark erupts wherever you aim and takes hold of everything standing around it.",
 			shadow_violet, 2, ["sh_tendril"], Vector2i(1, 1),
 			SkillNode.Effect.UPGRADE, "shadow_tendril_burst"),
+		_node("sh_wall", "Wall of Night",
+			"Unlock a slab of solid shadow, raised out of the ground wherever you aim. Cover, a barricade, or a step to jump onto -- it lasts a few seconds and then sinks away.",
+			shadow_violet, 2, ["sh_tendril"], Vector2i(0, 1),
+			SkillNode.Effect.UNLOCK_SPELL, "shadow_wall"),
+		_node("sh_bridge", "Shadow Bridge",
+			"Unlock a road of solid shadow, laid out from your feet in the direction you face. It needs no ground beneath it -- and it can be cast in mid-air.",
+			shadow_violet, 2, ["sh_wall"], Vector2i(0, 2),
+			SkillNode.Effect.UNLOCK_SPELL, "shadow_bridge"),
 	]))
 
 	return result

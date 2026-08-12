@@ -35,7 +35,6 @@ size = Vector2(0.1, 0.1)
 [node name="TelekinesisPush" type="Node" unique_id=414339277]
 script = ExtResource("1_push")
 push_range = 15.0
-push_force = 15.0
 mana_cost = 5.0
 cooldown = 1.0
 

@@ -1,0 +1,10 @@
+[gd_scene format=3 uid="uid://d13xrk4tx8kae"]
+
+[ext_resource type="Script" uid="uid://bxue1valye6b2" path="res://Scripts/Magic/shadow_wall_spell.gd" id="1_spell"]
+[ext_resource type="PackedScene" path="res://Scripts/Magic/shadow_wall.tscn" id="2_wall"]
+
+[node name="ShadowWallSpell" type="Node" unique_id=350896081]
+script = ExtResource("1_spell")
+wall_scene = ExtResource("2_wall")
+mana_cost = 25.0
+cooldown = 3.0

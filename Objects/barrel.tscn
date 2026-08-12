@@ -8,6 +8,7 @@ height = 0.6
 radius = 0.3
 
 [node name="Barrel" type="RigidBody3D" unique_id=1793100144 groups=["grabbable"]]
+mass = 2.0
 
 [node name="barrel2" parent="." unique_id=908401967 instance=ExtResource("1_sfr48")]
 

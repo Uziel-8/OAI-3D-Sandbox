@@ -1,0 +1,11 @@
+[gd_scene load_steps=3 format=3]
+
+[ext_resource type="Script" path="res://Scripts/Magic/shadow_bridge_spell.gd" id="1_spell"]
+[ext_resource type="PackedScene" path="res://Scripts/Magic/shadow_bridge.tscn" id="2_bridge"]
+
+[node name="ShadowBridgeSpell" type="Node"]
+script = ExtResource("1_spell")
+wall_scene = ExtResource("2_bridge")
+mana_cost = 30.0
+cooldown = 6.0
+max_live_walls = 2

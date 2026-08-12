@@ -393,7 +393,7 @@ transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, 10, 0.5, -15)
 transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, 14, 0.5, -15)
 
 [node name="Wall8" parent="Walls" unique_id=327200010 instance=ExtResource("4_0f350")]
-transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, 14.4, 0.6, -7.5)
+transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, 14.4, 0.6, -7.395071)
 
 [node name="Wall3" parent="Walls" unique_id=829698392 instance=ExtResource("4_0f350")]
 transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, 18, 0.5, -15)

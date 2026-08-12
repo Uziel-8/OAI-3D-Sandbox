@@ -10,6 +10,8 @@ const FIREBALL_SCENE := preload("res://Scripts/Magic/fireball_spell.tscn")
 const ICEBOLT_SCENE := preload("res://Scripts/Magic/icebolt_spell.tscn")
 const STICKY_BOMB_SCENE := preload("res://Scripts/Magic/sticky_bomb_spell.tscn")
 const SHADOW_TENDRIL_SCENE := preload("res://Scripts/Magic/shadow_tendril_spell.tscn")
+const SHADOW_WALL_SCENE := preload("res://Scripts/Magic/shadow_wall_spell.tscn")
+const SHADOW_BRIDGE_SCENE := preload("res://Scripts/Magic/shadow_bridge_spell.tscn")
 
 static func _make(id: String, spell_name: String, description: String, icon_color: Color,
 		mana_cost: int, cooldown: float, scene: PackedScene) -> SpellDefinition:
@@ -43,6 +45,12 @@ static func known_spells() -> Array[SpellDefinition]:
 		_make("shadow_tendril", "Shadow Tendril",
 			"A claw of living shadow bursts from the ground beneath your quarry and holds them fast for three seconds. It draws no blood — and the grip fails the moment anything else does. With Grasping Dark it takes the ground itself, and everything standing on it.",
 			Color("7a4fd0"), 18, 8.0, SHADOW_TENDRIL_SCENE),
+		_make("shadow_wall", "Wall of Night",
+			"Tears a slab of solid dark out of the ground wherever you look. It draws no blood and holds no one — it is simply there, for twelve seconds: cover to break a line of sight, a barricade across a doorway, or a step to climb. Raise a second against the first and you have a stair.",
+			Color("7a4fd0"), 25, 3.0, SHADOW_WALL_SCENE),
+		_make("shadow_bridge", "Shadow Bridge",
+			"Lays a road of solid dark out from your feet, level however far the drop beneath it falls away. It asks nothing of the ground — cast it over a chasm, off a ledge, or halfway down one, and walk across before it withdraws.",
+			Color("7a4fd0"), 30, 6.0, SHADOW_BRIDGE_SCENE),
 	]
 
 ## trigger_action -> spell id, mirrors the default loadout authored in proto_controller.tscn.
