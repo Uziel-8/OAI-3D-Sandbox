@@ -1,0 +1,13 @@
+[gd_resource type="Resource" script_class="MarketEvent" format=3]
+
+[ext_resource type="Script" path="res://Scripts/Market/market_event.gd" id="1_event"]
+
+[resource]
+script = ExtResource("1_event")
+id = &"dock_warehouse_fire"
+headline = "Dockside iron store burns"
+detail = "The guild's ingot store went up overnight. Nobody is saying how. The yards have already started reordering in timber."
+commodity = &"iron"
+magnitude = -0.45
+decay_days = 6
+rival_scale = 0.6

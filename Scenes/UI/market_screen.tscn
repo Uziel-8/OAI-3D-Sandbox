@@ -1,0 +1,285 @@
+[gd_scene load_steps=5 format=3]
+
+[ext_resource type="Script" path="res://Scripts/UI/market_screen.gd" id="1_script"]
+[ext_resource type="Theme" path="res://Scenes/UI/inventory_theme.tres" id="2_theme"]
+
+[sub_resource type="StyleBoxFlat" id="StyleBoxFlat_frame"]
+bg_color = Color(0.055, 0.05, 0.06, 0.98)
+corner_radius_top_left = 12
+corner_radius_top_right = 12
+corner_radius_bottom_right = 12
+corner_radius_bottom_left = 12
+border_width_left = 2
+border_width_top = 2
+border_width_right = 2
+border_width_bottom = 2
+border_color = Color(0.55, 0.42, 0.22, 0.6)
+content_margin_left = 22.0
+content_margin_top = 18.0
+content_margin_right = 22.0
+content_margin_bottom = 18.0
+shadow_size = 20
+shadow_color = Color(0, 0, 0, 0.5)
+
+[sub_resource type="StyleBoxFlat" id="StyleBoxFlat_column"]
+bg_color = Color(0.085, 0.08, 0.095, 1)
+corner_radius_top_left = 8
+corner_radius_top_right = 8
+corner_radius_bottom_right = 8
+corner_radius_bottom_left = 8
+border_width_left = 1
+border_width_top = 1
+border_width_right = 1
+border_width_bottom = 1
+border_color = Color(1, 1, 1, 0.08)
+content_margin_left = 14.0
+content_margin_top = 12.0
+content_margin_right = 14.0
+content_margin_bottom = 12.0
+
+[node name="MarketUI" type="CanvasLayer"]
+process_mode = 3
+layer = 10
+
+[node name="Screen" type="Control" parent="."]
+process_mode = 3
+theme = ExtResource("2_theme")
+anchors_preset = 15
+anchor_right = 1.0
+anchor_bottom = 1.0
+grow_horizontal = 2
+grow_vertical = 2
+script = ExtResource("1_script")
+
+[node name="Backdrop" type="ColorRect" parent="Screen"]
+layout_mode = 1
+anchors_preset = 15
+anchor_right = 1.0
+anchor_bottom = 1.0
+grow_horizontal = 2
+grow_vertical = 2
+mouse_filter = 0
+color = Color(0, 0, 0, 0.62)
+
+[node name="Center" type="CenterContainer" parent="Screen"]
+layout_mode = 1
+anchors_preset = 15
+anchor_right = 1.0
+anchor_bottom = 1.0
+grow_horizontal = 2
+grow_vertical = 2
+
+[node name="Frame" type="PanelContainer" parent="Screen/Center"]
+layout_mode = 2
+custom_minimum_size = Vector2(1180, 760)
+theme_override_styles/panel = SubResource("StyleBoxFlat_frame")
+
+[node name="Layout" type="VBoxContainer" parent="Screen/Center/Frame"]
+layout_mode = 2
+theme_override_constants/separation = 12
+
+[node name="Header" type="HBoxContainer" parent="Screen/Center/Frame/Layout"]
+layout_mode = 2
+theme_override_constants/separation = 14
+
+[node name="ExchangeTitle" type="Label" parent="Screen/Center/Frame/Layout/Header"]
+unique_name_in_owner = true
+layout_mode = 2
+theme_override_colors/font_color = Color(0.95, 0.86, 0.6, 1)
+theme_override_font_sizes/font_size = 28
+text = "EXCHANGE"
+
+[node name="DayLabel" type="Label" parent="Screen/Center/Frame/Layout/Header"]
+unique_name_in_owner = true
+layout_mode = 2
+size_flags_vertical = 4
+theme_override_colors/font_color = Color(0.62, 0.6, 0.57, 1)
+theme_override_font_sizes/font_size = 16
+text = "Day 1"
+
+[node name="HeaderSpacer" type="Control" parent="Screen/Center/Frame/Layout/Header"]
+layout_mode = 2
+size_flags_horizontal = 3
+
+[node name="PlayerGold" type="Label" parent="Screen/Center/Frame/Layout/Header"]
+unique_name_in_owner = true
+layout_mode = 2
+size_flags_vertical = 4
+theme_override_colors/font_color = Color(0.85, 0.72, 0.32, 1)
+theme_override_font_sizes/font_size = 20
+text = "0 g"
+
+[node name="CloseButton" type="Button" parent="Screen/Center/Frame/Layout/Header"]
+unique_name_in_owner = true
+layout_mode = 2
+text = "Leave  (Esc)"
+
+[node name="Sep1" type="HSeparator" parent="Screen/Center/Frame/Layout"]
+layout_mode = 2
+
+[node name="Body" type="HBoxContainer" parent="Screen/Center/Frame/Layout"]
+layout_mode = 2
+size_flags_vertical = 3
+theme_override_constants/separation = 18
+
+[node name="BoardPanel" type="PanelContainer" parent="Screen/Center/Frame/Layout/Body"]
+layout_mode = 2
+size_flags_horizontal = 3
+size_flags_stretch_ratio = 1.5
+theme_override_styles/panel = SubResource("StyleBoxFlat_column")
+
+[node name="BoardVBox" type="VBoxContainer" parent="Screen/Center/Frame/Layout/Body/BoardPanel"]
+layout_mode = 2
+theme_override_constants/separation = 8
+
+[node name="BoardHeader" type="HBoxContainer" parent="Screen/Center/Frame/Layout/Body/BoardPanel/BoardVBox"]
+layout_mode = 2
+
+[node name="BoardLabel" type="Label" parent="Screen/Center/Frame/Layout/Body/BoardPanel/BoardVBox/BoardHeader"]
+layout_mode = 2
+theme_override_colors/font_color = Color(0.72, 0.68, 0.62, 1)
+theme_override_font_sizes/font_size = 15
+text = "THE BOARD"
+
+[node name="BoardSpacer" type="Control" parent="Screen/Center/Frame/Layout/Body/BoardPanel/BoardVBox/BoardHeader"]
+layout_mode = 2
+size_flags_horizontal = 3
+
+[node name="LimitLabel" type="Label" parent="Screen/Center/Frame/Layout/Body/BoardPanel/BoardVBox/BoardHeader"]
+unique_name_in_owner = true
+layout_mode = 2
+theme_override_colors/font_color = Color(0.62, 0.6, 0.57, 1)
+theme_override_font_sizes/font_size = 13
+text = "Position limit: 8"
+
+[node name="BoardSep" type="HSeparator" parent="Screen/Center/Frame/Layout/Body/BoardPanel/BoardVBox"]
+layout_mode = 2
+
+[node name="BoardScroll" type="ScrollContainer" parent="Screen/Center/Frame/Layout/Body/BoardPanel/BoardVBox"]
+layout_mode = 2
+size_flags_horizontal = 3
+size_flags_vertical = 3
+horizontal_scroll_mode = 0
+
+[node name="BoardList" type="VBoxContainer" parent="Screen/Center/Frame/Layout/Body/BoardPanel/BoardVBox/BoardScroll"]
+unique_name_in_owner = true
+layout_mode = 2
+size_flags_horizontal = 3
+theme_override_constants/separation = 5
+
+[node name="DetailLabel" type="RichTextLabel" parent="Screen/Center/Frame/Layout/Body/BoardPanel/BoardVBox"]
+unique_name_in_owner = true
+layout_mode = 2
+custom_minimum_size = Vector2(0, 112)
+bbcode_enabled = true
+fit_content = true
+scroll_active = false
+theme_override_colors/default_color = Color(0.8, 0.78, 0.74, 1)
+theme_override_font_sizes/normal_font_size = 13
+
+[node name="BuyRow" type="HBoxContainer" parent="Screen/Center/Frame/Layout/Body/BoardPanel/BoardVBox"]
+layout_mode = 2
+theme_override_constants/separation = 8
+
+[node name="BuyButton" type="Button" parent="Screen/Center/Frame/Layout/Body/BoardPanel/BoardVBox/BuyRow"]
+unique_name_in_owner = true
+layout_mode = 2
+size_flags_horizontal = 3
+disabled = true
+text = "Buy 1"
+
+[node name="BuyFiveButton" type="Button" parent="Screen/Center/Frame/Layout/Body/BoardPanel/BoardVBox/BuyRow"]
+unique_name_in_owner = true
+layout_mode = 2
+size_flags_horizontal = 3
+disabled = true
+text = "Buy 5"
+
+[node name="BuyMaxButton" type="Button" parent="Screen/Center/Frame/Layout/Body/BoardPanel/BoardVBox/BuyRow"]
+unique_name_in_owner = true
+layout_mode = 2
+size_flags_horizontal = 3
+visible = false
+text = "Buy Max"
+
+[node name="SellRow" type="HBoxContainer" parent="Screen/Center/Frame/Layout/Body/BoardPanel/BoardVBox"]
+layout_mode = 2
+theme_override_constants/separation = 8
+
+[node name="SellButton" type="Button" parent="Screen/Center/Frame/Layout/Body/BoardPanel/BoardVBox/SellRow"]
+unique_name_in_owner = true
+layout_mode = 2
+size_flags_horizontal = 3
+disabled = true
+text = "Sell 1"
+
+[node name="SellFiveButton" type="Button" parent="Screen/Center/Frame/Layout/Body/BoardPanel/BoardVBox/SellRow"]
+unique_name_in_owner = true
+layout_mode = 2
+size_flags_horizontal = 3
+disabled = true
+text = "Sell 5"
+
+[node name="SellAllButton" type="Button" parent="Screen/Center/Frame/Layout/Body/BoardPanel/BoardVBox/SellRow"]
+unique_name_in_owner = true
+layout_mode = 2
+size_flags_horizontal = 3
+visible = false
+text = "Sell All"
+
+[node name="NewsPanel" type="PanelContainer" parent="Screen/Center/Frame/Layout/Body"]
+layout_mode = 2
+size_flags_horizontal = 3
+theme_override_styles/panel = SubResource("StyleBoxFlat_column")
+
+[node name="NewsVBox" type="VBoxContainer" parent="Screen/Center/Frame/Layout/Body/NewsPanel"]
+layout_mode = 2
+theme_override_constants/separation = 8
+
+[node name="NewsHeader" type="Label" parent="Screen/Center/Frame/Layout/Body/NewsPanel/NewsVBox"]
+layout_mode = 2
+theme_override_colors/font_color = Color(0.72, 0.68, 0.62, 1)
+theme_override_font_sizes/font_size = 15
+text = "NEWS & TALK"
+
+[node name="NewsSep" type="HSeparator" parent="Screen/Center/Frame/Layout/Body/NewsPanel/NewsVBox"]
+layout_mode = 2
+
+[node name="NewsScroll" type="ScrollContainer" parent="Screen/Center/Frame/Layout/Body/NewsPanel/NewsVBox"]
+layout_mode = 2
+size_flags_horizontal = 3
+size_flags_vertical = 3
+horizontal_scroll_mode = 0
+
+[node name="NewsList" type="VBoxContainer" parent="Screen/Center/Frame/Layout/Body/NewsPanel/NewsVBox/NewsScroll"]
+unique_name_in_owner = true
+layout_mode = 2
+size_flags_horizontal = 3
+theme_override_constants/separation = 6
+
+[node name="HeatSep" type="HSeparator" parent="Screen/Center/Frame/Layout/Body/NewsPanel/NewsVBox"]
+layout_mode = 2
+
+[node name="HeatLabel" type="Label" parent="Screen/Center/Frame/Layout/Body/NewsPanel/NewsVBox"]
+unique_name_in_owner = true
+layout_mode = 2
+theme_override_colors/font_color = Color(0.62, 0.6, 0.57, 1)
+theme_override_font_sizes/font_size = 13
+autowrap_mode = 3
+text = "Guild scrutiny: none"
+
+[node name="HeatBar" type="ProgressBar" parent="Screen/Center/Frame/Layout/Body/NewsPanel/NewsVBox"]
+unique_name_in_owner = true
+layout_mode = 2
+custom_minimum_size = Vector2(0, 10)
+max_value = 100.0
+value = 0.0
+show_percentage = false
+
+[node name="StatusLabel" type="Label" parent="Screen/Center/Frame/Layout"]
+unique_name_in_owner = true
+layout_mode = 2
+theme_override_colors/font_color = Color(0.88, 0.45, 0.4, 1)
+theme_override_font_sizes/font_size = 15
+horizontal_alignment = 1
+text = ""

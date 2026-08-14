@@ -22,6 +22,8 @@ SkillSystem="*res://Scripts/Progression/skill_system.gd"
 PlayerState="*res://Scripts/Player/player_state.gd"
 PlayerInventory="*res://Scripts/Inventory/player_inventory.gd"
 Reputation="*res://Scripts/Quests/reputation_system.gd"
+WorldClock="*res://Scripts/World/world_clock.gd"
+Market="*res://Scripts/Market/market_system.gd"
 QuestSystem="*res://Scripts/Quests/quest_system.gd"
 HUD="*res://Scenes/UI/hud.tscn"
 InventoryUI="*res://Scenes/UI/inventory_screen.tscn"
@@ -29,6 +31,7 @@ JournalUI="*res://Scenes/UI/journal_screen.tscn"
 LevelCompleteUI="*res://Scenes/UI/level_complete_screen.tscn"
 DialogueUI="*res://Scenes/UI/dialogue_screen.tscn"
 ShopUI="*res://Scenes/UI/shop_screen.tscn"
+MarketUI="*res://Scenes/UI/market_screen.tscn"
 
 [display]
 

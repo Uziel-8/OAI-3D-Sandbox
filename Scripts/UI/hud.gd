@@ -22,6 +22,12 @@ extends CanvasLayer
 
 var _health_receiver: DamageReceiver
 var _toast_tween: Tween
+## Toasts wait their turn rather than clobbering each other, and only play while
+## the HUD is actually on screen -- resting can land several days of market news
+## while a dialogue panel is up, and news the player never saw is news wasted.
+var _toast_queue: Array[Dictionary] = []
+## Date readout under the gold counter. Built in code, like the quest block.
+var _day_label: Label
 var _quests: QuestTracker
 ## Tracked-sidequest block, appended under the objective panel at runtime.
 var _quest_sep: HSeparator
@@ -60,6 +66,18 @@ func _ready() -> void:
 
 	_build_spell_bar()
 	_bind_spell_caster.call_deferred()
+
+	# Calendar + market. Both are display-only here: the date under the gold, and a
+	# toast whenever news breaks or the guild takes an interest in you.
+	_build_day_label()
+	var clock := get_node_or_null("/root/WorldClock")
+	if clock:
+		clock.day_changed.connect(_on_day_changed)
+		_on_day_changed(clock.day, 0)
+	var market := get_node_or_null("/root/Market")
+	if market:
+		market.event_fired.connect(_on_market_event)
+		market.investigated.connect(_on_investigated)
 
 	# Neutral default; each level's LevelObjectives node sets its own objective.
 	set_objective("No Objective", "Your current objective will appear here.")
@@ -140,17 +158,69 @@ func _on_leveled_up(new_level: int, _attribute_points: int, _skill_points: int) 
 		show_toast("LEVEL UP!", "Level %d" % new_level)
 
 
-## Fades a message in and out over the centre of the screen. Used for level-ups and
-## for quest accepted/complete; public so any system can announce something.
+## Queues a message to fade in and out over the centre of the screen. Used for
+## level-ups, quest accepted/complete and market news; public so any system can
+## announce something.
+##
+## QUEUED, not immediate: several things can announce themselves in one moment (a
+## three-day rest can land two market events and a quest tick), and a toast that
+## overwrites the previous one loses information the player needed. Playback also
+## waits for the HUD to be visible, so news that breaks behind a dialogue panel is
+## still delivered once the panel closes.
 func show_toast(title: String, subtitle: String) -> void:
-	_toast.text = "%s\n%s" % [title, subtitle]
-	if _toast_tween and _toast_tween.is_valid():
-		_toast_tween.kill()
+	_toast_queue.append({"title": title, "subtitle": subtitle})
+	while _toast_queue.size() > 4:
+		_toast_queue.pop_front()
+	_play_next_toast()
+
+
+func _play_next_toast() -> void:
+	if _toast_queue.is_empty() or not _root.visible:
+		return
+	if _toast_tween and _toast_tween.is_valid() and _toast_tween.is_running():
+		return  # one is already on screen; it chains to the next when it finishes
+	var entry: Dictionary = _toast_queue.pop_front()
+	_toast.text = "%s\n%s" % [entry["title"], entry["subtitle"]]
 	_toast.modulate.a = 0.0
 	_toast_tween = create_tween()
 	_toast_tween.tween_property(_toast, "modulate:a", 1.0, 0.3)
 	_toast_tween.tween_interval(2.2)
 	_toast_tween.tween_property(_toast, "modulate:a", 0.0, 0.6)
+	_toast_tween.finished.connect(_play_next_toast, CONNECT_ONE_SHOT)
+
+
+# --- Calendar & market --------------------------------------------------------
+
+## Date readout, tucked under the gold counter at the top right. Built in code
+## rather than added to hud.tscn, matching the quest block and spell bar.
+func _build_day_label() -> void:
+	_day_label = Label.new()
+	_day_label.name = "DayLabel"
+	_day_label.mouse_filter = Control.MOUSE_FILTER_IGNORE
+	_day_label.horizontal_alignment = HORIZONTAL_ALIGNMENT_RIGHT
+	_day_label.add_theme_font_size_override("font_size", 14)
+	_day_label.add_theme_color_override("font_color", Color(0.72, 0.68, 0.62))
+	_day_label.anchor_left = 1.0
+	_day_label.anchor_right = 1.0
+	_day_label.offset_left = -150.0
+	_day_label.offset_right = -16.0
+	_day_label.offset_top = 54.0
+	_day_label.offset_bottom = 76.0
+	_root.add_child(_day_label)
+
+
+func _on_day_changed(day: int, _elapsed: int) -> void:
+	if _day_label:
+		_day_label.text = "Day %d" % day
+
+
+func _on_market_event(event: MarketEvent, player_caused: bool) -> void:
+	var subtitle := event.detail if not event.detail.is_empty() else event.headline
+	show_toast("Your doing." if player_caused else "Word on the docks.", subtitle)
+
+
+func _on_investigated(_level: int, message: String) -> void:
+	show_toast("THE GUILD", message)
 
 
 ## Sets the on-screen mission objective as plain prose. Used for levels with no
@@ -366,3 +436,6 @@ func _process(_delta: float) -> void:
 ## full-screen backdrop.
 func set_hud_visible(shown: bool) -> void:
 	_root.visible = shown
+	if shown:
+		# Anything that announced itself while a menu was up gets its turn now.
+		_play_next_toast()

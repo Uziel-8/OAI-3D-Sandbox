@@ -1,0 +1,33 @@
+[gd_scene load_steps=6 format=3]
+
+[ext_resource type="Script" path="res://Components/interactable.gd" id="1_interact"]
+[ext_resource type="Script" path="res://Scripts/World/rest_point.gd" id="2_rest"]
+
+[sub_resource type="BoxMesh" id="BoxMesh_bedroll"]
+size = Vector3(2.1, 0.3, 1.1)
+
+[sub_resource type="StandardMaterial3D" id="StandardMaterial3D_bedroll"]
+albedo_color = Color(0.42, 0.29, 0.22, 1)
+roughness = 1.0
+
+[sub_resource type="BoxShape3D" id="BoxShape3D_bedroll"]
+size = Vector3(2.1, 0.3, 1.1)
+
+[node name="Bedroll" type="StaticBody3D" groups=["interactable"]]
+
+[node name="Mesh" type="MeshInstance3D" parent="."]
+transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, 0, 0.15, 0)
+mesh = SubResource("BoxMesh_bedroll")
+surface_material_override/0 = SubResource("StandardMaterial3D_bedroll")
+
+[node name="CollisionShape3D" type="CollisionShape3D" parent="."]
+transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, 0, 0.15, 0)
+shape = SubResource("BoxShape3D_bedroll")
+
+[node name="Interactable" type="Node" parent="."]
+script = ExtResource("1_interact")
+prompt = "Rest"
+speaker_name = "Bedroll"
+
+[node name="RestPoint" type="Node" parent="."]
+script = ExtResource("2_rest")

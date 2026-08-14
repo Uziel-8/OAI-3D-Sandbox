@@ -25,11 +25,15 @@ var _lines: Array[String] = []
 var _choices: Array[DialogueChoice] = []
 var _target: Node = null
 var _index := 0
-## Vendor to hand over to once the player dismisses the chosen line. Deferring to
-## the dismissal rather than opening immediately is what lets a merchant still
-## deliver his "Of course, young man!" before the counter appears; backing out
-## with Escape drops it (close() clears this).
-var _pending_shop: ShopKeeper = null
+## Counter to hand over to once the player dismisses the chosen line -- a
+## ShopKeeper (opens_shop) or a TradeExchange (opens_market). Deferring to the
+## dismissal rather than opening immediately is what lets a merchant still deliver
+## his "Of course, young man!" before the counter appears; backing out with Escape
+## drops it (close() clears this). Kept generic (component + which screen opens it +
+## what the button reads) so the next counter type needs no new fields here.
+var _pending_counter: Node = null
+var _pending_screen_group: StringName = &""
+var _pending_label: String = ""
 
 
 func _ready() -> void:
@@ -84,7 +88,7 @@ func close() -> void:
 	_lines = []
 	_choices = []
 	_target = null
-	_pending_shop = null
+	_clear_pending_counter()
 	_set_hud_visible(true)
 	get_tree().paused = false
 	Input.mouse_mode = Input.MOUSE_MODE_CAPTURED
@@ -107,22 +111,31 @@ func _advance() -> void:
 		_show_line()
 	elif not _choices.is_empty():
 		_show_choices()
-	elif _pending_shop:
-		_open_pending_shop()
+	elif _pending_counter:
+		_open_pending_counter()
 	else:
 		close()
 
 
-## Hands over to the shop screen. close() clears _pending_shop, so the keeper is
-## captured first -- and closing before opening keeps the tree from being left
-## paused by two screens at once (the same ordering LevelCompleteScreen needs).
-func _open_pending_shop() -> void:
-	var keeper := _pending_shop
+## Hands over to whichever counter screen was queued. close() clears the pending
+## fields, so they're captured first -- and closing before opening keeps the tree
+## from being left paused by two screens at once (the same ordering
+## LevelCompleteScreen needs).
+func _open_pending_counter() -> void:
+	var component := _pending_counter
+	var group := _pending_screen_group
 	close()
-	if is_instance_valid(keeper):
-		var shop := get_tree().get_first_node_in_group("shop_screen")
-		if shop and shop.has_method("open"):
-			shop.open(keeper)
+	if not is_instance_valid(component):
+		return
+	var screen := get_tree().get_first_node_in_group(group)
+	if screen and screen.has_method("open"):
+		screen.open(component)
+
+
+func _clear_pending_counter() -> void:
+	_pending_counter = null
+	_pending_screen_group = &""
+	_pending_label = ""
 
 
 func _show_choices() -> void:
@@ -156,8 +169,13 @@ func apply_choice(choice: DialogueChoice) -> void:
 	# Quest effects run after the gold spend, so an unaffordable choice bails out
 	# above without changing any quest state.
 	_apply_quest_action(choice)
+	# Counter handoffs. A choice that sets both takes the shop, arbitrarily -- an
+	# NPC who is both a vendor and a broker should offer two choices, not one.
+	_clear_pending_counter()
 	if choice.opens_shop:
-		_pending_shop = ShopKeeper.find_in(_target)
+		_queue_counter(ShopKeeper.find_in(_target), &"shop_screen", "Browse Wares")
+	elif choice.opens_market:
+		_queue_counter(TradeExchange.find_in(_target), &"market_screen", "See the Board")
 	choice_selected.emit(choice, _target)
 
 	_choices_box.visible = false
@@ -168,11 +186,22 @@ func apply_choice(choice: DialogueChoice) -> void:
 		_choices = []
 		_index = 0
 		_advance_button.visible = true
-		_advance_button.text = "Browse Wares" if _pending_shop else "Leave"
-	elif _pending_shop:
-		_open_pending_shop()
+		_advance_button.text = _pending_label if _pending_counter else "Leave"
+	elif _pending_counter:
+		_open_pending_counter()
 	else:
 		close()
+
+
+## Queues a counter component for handoff once the response line is dismissed.
+## A missing component is simply not queued, so a choice pointed at an NPC with no
+## such component just closes rather than dead-ending.
+func _queue_counter(component: Node, screen_group: StringName, button_label: String) -> void:
+	if component == null:
+		return
+	_pending_counter = component
+	_pending_screen_group = screen_group
+	_pending_label = button_label
 
 
 ## Routes a choice's quest_action to QuestSystem, with the dialogue's target (the

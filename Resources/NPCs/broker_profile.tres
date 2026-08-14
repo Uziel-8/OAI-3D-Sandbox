@@ -1,0 +1,16 @@
+[gd_resource type="Resource" script_class="NpcProfile" format=3]
+
+[ext_resource type="Script" uid="uid://v4epnlt7qolu" path="res://Scripts/NPCs/npc_profile.gd" id="1_profile"]
+
+[resource]
+script = ExtResource("1_profile")
+display_name = "Corrin Vask"
+faction = &"Merchant\'s Guild"
+char_class = &"Broker"
+starting_disposition = 5
+max_health = 45.0
+health_regen = 3.0
+interact_prompt = "Speak"
+speaker_name = "Corrin Vask"
+dialogue_lines = Array[String](["Guild business, is it? Grain, iron, cloth — I'll take a position for you, and I'll take my cut."])
+metadata/_custom_type_script = "uid://v4epnlt7qolu"

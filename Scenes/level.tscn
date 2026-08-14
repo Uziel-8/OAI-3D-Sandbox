@@ -28,6 +28,11 @@
 [ext_resource type="Script" uid="uid://sjaby5qs2ds6" path="res://Scripts/Quests/quest.gd" id="23_questsc"]
 [ext_resource type="Resource" uid="uid://d04ujlwjvaula" path="res://Resources/Quests/rats_in_the_hold.tres" id="24_ratsq"]
 [ext_resource type="Script" uid="uid://28h35un78w6d" path="res://Scripts/Quests/quest_giver.gd" id="25_giver"]
+[ext_resource type="PackedScene" path="res://NPCs/exchange_broker.tscn" id="27_broker"]
+[ext_resource type="PackedScene" path="res://Objects/Buildings/warehouse.tscn" id="28_warehouse"]
+[ext_resource type="PackedScene" path="res://Objects/bedroll.tscn" id="29_bedroll"]
+[ext_resource type="Script" path="res://Scripts/Market/Triggers/destroy_event_trigger.gd" id="30_destroytrig"]
+[ext_resource type="Resource" path="res://Resources/Market/warehouse_fire.tres" id="31_fire"]
 [ext_resource type="Resource" uid="uid://dtglljaug7kf2" path="res://Resources/NPCs/patroller_profile.tres" id="25_t205d"]
 [ext_resource type="Script" uid="uid://d0obqa03pjyqg" path="res://Scripts/Level/Objectives/kill_count_objective.gd" id="26_killcnt"]
 
@@ -192,6 +197,21 @@ patrol_points = [NodePath("../Marker3D"), NodePath("../Marker3D2"), NodePath("..
 
 [node name="Merchant" parent="." unique_id=1891560480 instance=ExtResource("19_hcs0j")]
 transform = Transform3D(0.82924443, 0, -0.55888605, 0, 1, 0, 0.55888605, 0, 0.82924443, 5.035907, 1.098877, -9.43236)
+
+[node name="ExchangeBroker" parent="." instance=ExtResource("27_broker")]
+transform = Transform3D(0.86602545, 0, -0.5, 0, 1, 0, 0.5, 0, 0.86602545, 9.5, 1.098877, -13)
+
+[node name="IronWarehouse" parent="." instance=ExtResource("28_warehouse")]
+transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, 17, 1.098877, -21)
+
+[node name="WarehouseFire" type="Node" parent="IronWarehouse" node_paths=PackedStringArray("target")]
+script = ExtResource("30_destroytrig")
+target = NodePath("..")
+event = ExtResource("31_fire")
+player_caused = true
+
+[node name="Bedroll" parent="." instance=ExtResource("29_bedroll")]
+transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, 3, 1.098877, -13.5)
 
 [node name="Marker3D" type="Marker3D" parent="." unique_id=1791838495]
 transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, -15.232209, 1.1057558, -10.63852)

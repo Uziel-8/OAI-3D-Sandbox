@@ -32,6 +32,12 @@ enum QuestAction {
 ## checkbox plus that component -- no bespoke merchant dialogue code.
 @export var opens_shop: bool = false
 
+## Opens the target's commodity board after this choice's response is dismissed --
+## the same one-checkbox handoff as opens_shop, but to whatever TradeExchange sits
+## on the NPC. TradeExchange generates one of these itself, so this is only needed
+## when hand-authoring a broker with `manage_dialogue` turned off.
+@export var opens_market: bool = false
+
 @export_group("Quest")
 ## The quest this choice acts on. QuestGiver builds these choices automatically
 ## from a Quest's dialogue fields, but they're hand-authorable too -- so a bespoke

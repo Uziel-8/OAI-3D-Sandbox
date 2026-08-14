@@ -1,0 +1,20 @@
+[gd_scene format=3]
+
+[ext_resource type="PackedScene" path="res://NPCs/npc.tscn" id="1_base"]
+[ext_resource type="Resource" path="res://Resources/NPCs/broker_profile.tres" id="2_profile"]
+[ext_resource type="PackedScene" uid="uid://bixnuuwn433b4" path="res://Graphics/KayKit Skeletons/characters/gltf/Ranger.glb" id="3_model"]
+[ext_resource type="AnimationLibrary" uid="uid://cuvcg0cr1bc3l" path="res://Graphics/KayKit_Character_Animations_1.1/Animations/gltf/Rig_Medium/Rig_Medium_General.glb" id="4_anims"]
+[ext_resource type="Script" path="res://Scripts/Market/trade_exchange.gd" id="5_exchange"]
+
+[node name="ExchangeBroker" instance=ExtResource("1_base")]
+profile = ExtResource("2_profile")
+
+[node name="Ranger" parent="." index="5" instance=ExtResource("3_model")]
+
+[node name="AnimationPlayer" type="AnimationPlayer" parent="Ranger" index="1"]
+libraries/Rig_Medium_General = ExtResource("4_anims")
+autoplay = &"Rig_Medium_General/Idle_A"
+
+[node name="TradeExchange" type="Node" parent="." index="6"]
+script = ExtResource("5_exchange")
+exchange_name = "Guild Exchange"
