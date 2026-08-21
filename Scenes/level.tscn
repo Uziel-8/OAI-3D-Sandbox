@@ -37,6 +37,7 @@
 [ext_resource type="Resource" path="res://Resources/Market/warehouse_fire.tres" id="31_fire"]
 [ext_resource type="PackedScene" path="res://Objects/pressure_plate.tscn" id="36_fq0f7"]
 [ext_resource type="PackedScene" uid="uid://bm8r512hnlo2v" path="res://Objects/Buildings/test_house_1.tscn" id="37_bp4cd"]
+[ext_resource type="PackedScene" uid="uid://dyn3u0d76bxey" path="res://Objects/box_large.tscn" id="38_d3deu"]
 
 [sub_resource type="ProceduralSkyMaterial" id="ProceduralSkyMaterial_5xgho"]
 sky_horizon_color = Color(0.66224277, 0.6717428, 0.6867428, 1)
@@ -48,8 +49,15 @@ sky_material = SubResource("ProceduralSkyMaterial_5xgho")
 [sub_resource type="Environment" id="Environment_vonw3"]
 background_mode = 2
 sky = SubResource("Sky_u52ul")
+ambient_light_color = Color(0.6633111, 0.5241397, 0.3754368, 1)
 ambient_light_sky_contribution = 0.5
+ambient_light_energy = 0.7
 glow_enabled = true
+fog_enabled = true
+fog_light_energy = 0.8
+fog_sun_scatter = 0.5
+fog_density = 0.005
+fog_sky_affect = 0.5
 
 [sub_resource type="Resource" id="Entry_docks"]
 script = ExtResource("9_entry")
@@ -80,6 +88,9 @@ chase_range = 10.0
 give_up_range = 16.0
 stop_distance = 1.8
 
+[sub_resource type="StandardMaterial3D" id="StandardMaterial3D_d3deu"]
+albedo_color = Color(0.27063546, 0.37331074, 0.48708838, 1)
+
 [sub_resource type="StandardMaterial3D" id="StandardMaterial3D_yf5fn"]
 albedo_color = Color(0.50140655, 0.5014065, 0.5014065, 1)
 
@@ -108,6 +119,7 @@ stop_distance = 1.8
 
 [node name="DirectionalLight3D" type="DirectionalLight3D" parent="." unique_id=1657399630]
 transform = Transform3D(-0.9909832, -0.08790279, 0.1011206, 0, 0.7547096, 0.656059, -0.1339861, 0.65014344, -0.74790454, 0, 0, 0)
+light_color = Color(0.90588236, 0.84705883, 0.78431374, 1)
 shadow_enabled = true
 
 [node name="WorldEnvironment" type="WorldEnvironment" parent="." unique_id=629858973]
@@ -146,6 +158,7 @@ omni_range = 7.0
 script = ExtResource("1_754fn")
 
 [node name="ProtoController" parent="." unique_id=1601463080 instance=ExtResource("1_6phgx")]
+transform = Transform3D(-4.371139e-08, 0, -1, 0, 1, 0, 1, 0, -4.371139e-08, -156.2799, 0, 5.004463)
 
 [node name="ship-pirate-large2" parent="." unique_id=1372184279 instance=ExtResource("2_81xng")]
 transform = Transform3D(-3.5, 0, 5.284853e-07, 0, 3.5, 0, -5.284853e-07, 0, -3.5, 29.791973, -6.109586, 11.3)
@@ -228,24 +241,10 @@ transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, -88.81642, -7.6293945e-06, 0.
 use_collision = true
 size = Vector3(222.12929, 1, 400)
 
-[node name="OuterWall" type="CSGCylinder3D" parent="." unique_id=1761529379]
-transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, 0, 2.5, 0)
-use_collision = true
-radius = 150.0
-height = 5.0
-material = ExtResource("13_nngtn")
-
-[node name="CSGCylinder3D2" type="CSGCylinder3D" parent="OuterWall" unique_id=1207014264]
-transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, 0.9075546, 0.8166714, -1.9491005)
-operation = 2
-radius = 145.0
-height = 10.0
-material = ExtResource("13_nngtn")
-
-[node name="CSGBox3D2" type="CSGBox3D" parent="OuterWall" unique_id=1000419961]
-transform = Transform3D(0.4218538, 0, -0.9066517, 0, 1, 0, 0.9066517, 0, 0.4218538, -127.7956, -0.21377778, 47.408527)
-operation = 2
-size = Vector3(2.928711, 3.7241669, 6.7107544)
+[node name="BoundaryFloorBox2" type="CSGBox3D" parent="." unique_id=1914313723]
+transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, 133.18358, -1.0000076, 0.0700531)
+size = Vector3(222.12929, 1, 400)
+material = SubResource("StandardMaterial3D_d3deu")
 
 [node name="MainStructure" type="CSGCombiner3D" parent="." unique_id=1198104336]
 transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, 0, 0, -40.430534)
@@ -869,12 +868,31 @@ transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, 20, 0.5, 20)
 transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, 20, 0.5, 24)
 
 [node name="Road1" type="CSGBox3D" parent="." unique_id=1985919731]
-transform = Transform3D(0.91964597, 0, 0.39274833, 0, 1, 0, -0.39274833, 0, 0.91964597, -116.70944, 0.12718439, 42.67818)
+transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, -120.70944, 0.12718439, 4.6781807)
 size = Vector3(192, 1, 10)
 material = SubResource("StandardMaterial3D_yf5fn")
 
+[node name="OuterWall" type="CSGCylinder3D" parent="." unique_id=1761529379]
+transform = Transform3D(0.9238795, 0, -0.38268346, 0, 1, 0, 0.38268346, 0, 0.9238795, 0, 2.5, 0)
+use_collision = true
+radius = 150.0
+height = 5.0
+material = ExtResource("13_nngtn")
+
+[node name="CSGCylinder3D2" type="CSGCylinder3D" parent="OuterWall" unique_id=1207014264]
+transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, 0.9075546, 0.8166714, -1.9491005)
+operation = 2
+radius = 145.0
+height = 10.0
+material = ExtResource("13_nngtn")
+
+[node name="CSGBox3D2" type="CSGBox3D" parent="OuterWall" unique_id=1000419961]
+transform = Transform3D(0.42185372, 0, -0.90665144, 0, 1, 0, 0.90665144, 0, 0.42185372, -123.3843, -0.21377778, 56.375385)
+operation = 2
+size = Vector3(2.928711, 3.7241669, 8)
+
 [node name="Guard2" parent="." unique_id=676007783 instance=ExtResource("15_c7le1")]
-transform = Transform3D(0.18077566, 0, -0.9835244, 0, 1, 0, 0.9835244, 0, 0.18077566, -135.94888, 0, 41.679462)
+transform = Transform3D(-4.371139e-08, 0, -1, 0, 1, 0, 1, 0, -4.371139e-08, -140.94888, 0, 1.6794624)
 profile = ExtResource("25_t205d")
 
 [node name="Interactable" parent="Guard2" index="3"]
@@ -888,11 +906,11 @@ threshold = 10
 target = NodePath("../../Gate")
 
 [node name="Guard3" parent="." unique_id=1777859633 instance=ExtResource("15_c7le1")]
-transform = Transform3D(0.18077566, 0, -0.9835244, 0, 1, 0, 0.9835244, 0, 0.18077566, -128.46693, 0, 54.188255)
+transform = Transform3D(-4.371139e-08, 0, -1, 0, 1, 0, 1, 0, -4.371139e-08, -141.46693, 0, 9.188255)
 profile = SubResource("Resource_24uko")
 
 [node name="CSGBox3D" type="CSGBox3D" parent="." unique_id=404342014]
-transform = Transform3D(0.9135513, 0, 0.40672365, 0, 1, 0, -0.40672365, 0, 0.9135513, -177.26, 4.5, 55.228493)
+transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, -177.26, 4.5, -8.771507)
 use_collision = true
 size = Vector3(10, 9, 11.708984)
 
@@ -913,12 +931,12 @@ transform = Transform3D(0.9999999, 0, 2.9802322e-08, 0, 1, 0, -2.9802322e-08, 0,
 transform = Transform3D(0.99999994, 0, 5.9604645e-08, 0, 1, 0, -5.9604645e-08, 0, 0.99999994, 1.8534241, -1.368475, -5.0565224)
 
 [node name="CSGBox3D2" type="CSGBox3D" parent="." unique_id=1763825347]
-transform = Transform3D(0.9135513, 0, 0.40672365, 0, 1, 0, -0.40672365, 0, 0.9135513, -166.52663, 2.9179688, 45.19325)
+transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, -166.52663, 2.9179688, -12.806751)
 use_collision = true
 size = Vector3(7.914551, 5.8359375, 20.21045)
 
 [node name="CSGBox3D3" type="CSGBox3D" parent="." unique_id=180302424]
-transform = Transform3D(0.9135513, 0, 0.40672365, 0, 1, 0, -0.40672365, 0, 0.9135513, -151.88568, 5.441437, 44.453438)
+transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, -151.88568, 5.441437, 16.453438)
 use_collision = true
 size = Vector3(7.914551, 10.882874, 10.184814)
 
@@ -926,7 +944,7 @@ size = Vector3(7.914551, 10.882874, 10.184814)
 transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, 5, 1, 7)
 
 [node name="Gate" parent="." unique_id=287371162 instance=ExtResource("21_pnhnk")]
-transform = Transform3D(0.6574246, 0, -1.3482554, 0, 1.5, 0, 1.3482554, 0, 0.6574246, -130.3457, 0.6289253, 48.600353)
+transform = Transform3D(-6.556708e-08, 0, -1.4999999, 0, 1.5000002, 0, 1.4999999, 0, -6.556708e-08, -138.3457, 0.6289253, 5.1003532)
 
 [node name="PressurePlate" parent="." unique_id=1689412349 node_paths=PackedStringArray("target") instance=ExtResource("36_fq0f7")]
 transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, 0, 0.54547, 29.09275)
@@ -937,6 +955,21 @@ target = NodePath("../Gate2")
 transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, 0, 0.43826938, 30.220592)
 
 [node name="TestHouse1" parent="." unique_id=402465543 instance=ExtResource("37_bp4cd")]
-transform = Transform3D(0.86602545, 0, 0.50000006, 0, 1, 0, -0.50000006, 0, 0.86602545, -118, 2.5, 9)
+transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, -151.10951, 2.5, -6.3073616)
+
+[node name="Barrel" parent="TestHouse1" unique_id=1209163620 instance=ExtResource("3_wqkje")]
+transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, 1.962265, -1.6014433, -6.7911243)
+
+[node name="Barrel2" parent="TestHouse1" unique_id=1807208181 instance=ExtResource("3_wqkje")]
+transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, 0.5298157, -1.6014433, -6.57493)
+
+[node name="BoxLarge" parent="TestHouse1" unique_id=1694475199 instance=ExtResource("38_d3deu")]
+transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, -2.9970093, -1.6014433, -7.4237747)
+
+[node name="BoxLarge2" parent="TestHouse1" unique_id=980282458 instance=ExtResource("38_d3deu")]
+transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, -1.1244812, -1.6014433, -7.1532593)
+
+[node name="BoxLarge3" parent="TestHouse1" unique_id=316073952 instance=ExtResource("38_d3deu")]
+transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, -4.6062775, 2.2114582, -4.269497)
 
 [editable path="Guard2"]
