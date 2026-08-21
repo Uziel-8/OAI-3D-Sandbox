@@ -36,6 +36,7 @@
 [ext_resource type="Script" uid="uid://b1hbrnsoewri2" path="res://Scripts/Market/Triggers/destroy_event_trigger.gd" id="30_destroytrig"]
 [ext_resource type="Resource" path="res://Resources/Market/warehouse_fire.tres" id="31_fire"]
 [ext_resource type="PackedScene" path="res://Objects/pressure_plate.tscn" id="36_fq0f7"]
+[ext_resource type="PackedScene" uid="uid://bm8r512hnlo2v" path="res://Objects/Buildings/test_house_1.tscn" id="37_bp4cd"]
 
 [sub_resource type="ProceduralSkyMaterial" id="ProceduralSkyMaterial_5xgho"]
 sky_horizon_color = Color(0.66224277, 0.6717428, 0.6867428, 1)
@@ -235,7 +236,7 @@ height = 5.0
 material = ExtResource("13_nngtn")
 
 [node name="CSGCylinder3D2" type="CSGCylinder3D" parent="OuterWall" unique_id=1207014264]
-transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, -0.09244537, -0.18332863, 0.050899506)
+transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, 0.9075546, 0.8166714, -1.9491005)
 operation = 2
 radius = 145.0
 height = 10.0
@@ -868,8 +869,8 @@ transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, 20, 0.5, 20)
 transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, 20, 0.5, 24)
 
 [node name="Road1" type="CSGBox3D" parent="." unique_id=1985919731]
-transform = Transform3D(0.91964597, 0, 0.39274833, 0, 1, 0, -0.39274833, 0, 0.91964597, -167.35756, 0.12718439, 64.308205)
-size = Vector3(81.853, 1, 10)
+transform = Transform3D(0.91964597, 0, 0.39274833, 0, 1, 0, -0.39274833, 0, 0.91964597, -116.70944, 0.12718439, 42.67818)
+size = Vector3(192, 1, 10)
 material = SubResource("StandardMaterial3D_yf5fn")
 
 [node name="Guard2" parent="." unique_id=676007783 instance=ExtResource("15_c7le1")]
@@ -934,5 +935,8 @@ target = NodePath("../Gate2")
 
 [node name="Gate2" parent="." unique_id=177616484 instance=ExtResource("21_pnhnk")]
 transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, 0, 0.43826938, 30.220592)
+
+[node name="TestHouse1" parent="." unique_id=402465543 instance=ExtResource("37_bp4cd")]
+transform = Transform3D(0.86602545, 0, 0.50000006, 0, 1, 0, -0.50000006, 0, 0.86602545, -118, 2.5, 9)
 
 [editable path="Guard2"]

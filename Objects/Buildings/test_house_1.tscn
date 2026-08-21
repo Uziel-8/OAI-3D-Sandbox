@@ -1,0 +1,15 @@
+[gd_scene format=3 uid="uid://bm8r512hnlo2v"]
+
+[node name="TestHouse1" type="Node3D" unique_id=402465543]
+
+[node name="CSGBox3D" type="CSGBox3D" parent="." unique_id=1890204902]
+size = Vector3(15, 4, 10)
+
+[node name="CSGBox3D2" type="CSGBox3D" parent="CSGBox3D" unique_id=386423830]
+operation = 2
+size = Vector3(14, 3.5, 9)
+
+[node name="CSGBox3D" type="CSGBox3D" parent="CSGBox3D" unique_id=994361171]
+transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, 0, 0, 4.66)
+operation = 2
+size = Vector3(2, 3.5688477, 3.538086)
