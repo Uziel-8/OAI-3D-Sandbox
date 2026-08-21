@@ -887,9 +887,9 @@ height = 10.0
 material = ExtResource("13_nngtn")
 
 [node name="CSGBox3D2" type="CSGBox3D" parent="OuterWall" unique_id=1000419961]
-transform = Transform3D(0.42185372, 0, -0.90665144, 0, 1, 0, 0.90665144, 0, 0.42185372, -123.3843, -0.21377778, 56.375385)
+transform = Transform3D(0.4218537, 0, -0.90665144, 0, 1, 0, 0.90665144, 0, 0.4218537, -124.007965, -0.13800001, 56.7423)
 operation = 2
-size = Vector3(2.928711, 3.7241669, 8)
+size = Vector3(2.928711, 4, 8.5)
 
 [node name="Guard2" parent="." unique_id=676007783 instance=ExtResource("15_c7le1")]
 transform = Transform3D(-4.371139e-08, 0, -1, 0, 1, 0, 1, 0, -4.371139e-08, -140.94888, 0, 1.6794624)
