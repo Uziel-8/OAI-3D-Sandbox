@@ -19,6 +19,13 @@ class_name PressurePlate
 ## more than the player alone can provide -- the "weigh it down and walk away"
 ## puzzle, which is the whole reason weight beats presence here.
 ##
+## STACKS COUNT. The detector is a tall column (`stack_height`) so a pile is
+## sensed all the way up, and each sensed body is then checked for whether its
+## weight actually BEARS on the plate -- resting on it, or on something that
+## already does (see _resolve_supported). A body merely passing through the column
+## -- a player mid-jump, a barrel in flight, anything on a walkway overhead --
+## holds nothing up and is not weighed.
+##
 ## The collider is deliberately SHALLOW and centred on the node origin, so a plate
 ## placed at floor level is ~4cm proud and not a curb the player has to climb.
 ## Only the mesh sinks when pressed; the collider never moves, so nothing standing
@@ -31,6 +38,12 @@ signal released(plate: PressurePlate)
 ## Any change in the load, for a scale readout or a debug label.
 signal weight_changed(total: float, required: float)
 
+## Give up resolving the support chain after this many passes -- one pass per
+## layer of the stack, so this is the tallest pile that can be worked out.
+const MAX_SUPPORT_PASSES := 8
+## Bodies one downward probe will look at. A stack layer touches very few things.
+const MAX_SUPPORT_HITS := 16
+
 ## Load needed to trip it. 1.0 = almost anything; the barrel's mass is 2.0 and the
 ## player counts as `player_weight`, so raise this to demand more than one thing.
 @export var required_weight: float = 1.0
@@ -38,6 +51,10 @@ signal weight_changed(total: float, required: float)
 @export var player_weight: float = 5.0
 ## What anything else without a `mass` counts as -- NPCs, spiders, a shadow wall.
 @export var default_body_weight: float = 3.0
+## How tall a stack is sensed, measured up from just above the plate. A barrel is
+## 1.2m, so the default is about three of them. Raise it for taller piles; there's
+## little cost to a generous column, since unsupported bodies are filtered out.
+@export var stack_height: float = 4.0
 ## Only bodies in one of these groups count. Empty = everything counts.
 @export var accepted_groups: Array[StringName] = []
 ## Latch down once tripped: the weight can come off and it stays pressed. Right for
@@ -61,19 +78,29 @@ signal weight_changed(total: float, required: float)
 @export var idle_color: Color = Color(0.35, 0.33, 0.30)
 @export var pressed_color: Color = Color(0.85, 0.55, 0.20)
 
+@export_group("Tuning")
+## How far below a body to look for whatever is holding it up. Needs to clear the
+## small separation the physics engine keeps between resting bodies.
+@export var support_probe: float = 0.06
+## How often the load is re-checked while the column holds anything. Nothing is
+## polled while it's empty.
+@export var poll_interval: float = 0.1
+
 var is_pressed: bool = false
 
 @onready var _mesh: MeshInstance3D = get_node_or_null("Mesh")
 @onready var _area: Area3D = get_node_or_null("DetectionArea")
 
-## instance_id -> weight. Ids, not node references, so a body freed while standing
-## on the plate can't leave a dangling reference here (and a freed Object compares
-## EQUAL to null in Godot 4, which makes references worse than useless as keys).
+## instance_id -> weight, for everything SENSED in the column (supported or not).
+## Ids, not node references, so a body freed while standing on the plate can't
+## leave a dangling reference here -- and a freed Object compares EQUAL to null in
+## Godot 4, which makes references worse than useless as keys.
 var _loads: Dictionary = {}
 var _total_weight: float = 0.0
 var _mesh_rest: Vector3 = Vector3.ZERO
 var _material: StandardMaterial3D = null
 var _tween: Tween = null
+var _poll_accum: float = 0.0
 
 
 func _ready() -> void:
@@ -84,11 +111,26 @@ func _ready() -> void:
 	if _area == null:
 		push_warning("PressurePlate '%s': no DetectionArea child -- it can never trip." % name)
 		return
+	_setup_detector()
 	_area.body_entered.connect(_on_body_entered)
 	_area.body_exited.connect(_on_body_exited)
 
 
-## The load currently on the plate, for a readout or a scale puzzle.
+func _physics_process(delta: float) -> void:
+	# Stacking a barrel DOES fire an Area3D event for it, but the moment it stops
+	# falling and starts resting does not -- so a barrel dropped onto the pile
+	# would land unnoticed and never be weighed. Re-check while the column holds
+	# anything at all; costs nothing while it's empty.
+	if _loads.is_empty():
+		return
+	_poll_accum += delta
+	if _poll_accum < poll_interval:
+		return
+	_poll_accum = 0.0
+	_recompute()
+
+
+## The load currently bearing on the plate, for a readout or a scale puzzle.
 func current_weight() -> float:
 	return _total_weight
 
@@ -142,20 +184,97 @@ func _weight_of(body: Node3D) -> float:
 
 
 func _recompute() -> void:
-	var total := 0.0
+	var candidates: Array[PhysicsBody3D] = []
 	for id: int in _loads.keys():
 		# Belt and braces: a body freed while on the plate normally emits
 		# body_exited on leaving the tree, but a dead id would otherwise hold the
 		# plate down forever. keys() is a fresh array, so erasing here is safe.
-		if instance_from_id(id) == null:
+		var body := instance_from_id(id) as PhysicsBody3D
+		if body == null:
 			_loads.erase(id)
 			continue
+		candidates.append(body)
+
+	var total := 0.0
+	for id: int in _resolve_supported(candidates):
 		total += _loads[id]
+
 	if is_equal_approx(total, _total_weight):
 		return
 	_total_weight = total
 	weight_changed.emit(total, required_weight)
 	_set_pressed(total >= required_weight)
+
+
+## Works out which of the sensed bodies actually bear on the plate, so a stack is
+## weighed in full but a body merely passing through the column is not.
+##
+## One pass settles the layer resting directly on the plate, the next settles what
+## rests on THAT, and so on -- a fixed point, reached in as many passes as the
+## stack is tall. Bailing as soon as a whole pass adds nothing means the common
+## case costs one extra sweep rather than MAX_SUPPORT_PASSES of them.
+func _resolve_supported(candidates: Array[PhysicsBody3D]) -> Dictionary:
+	var supported: Dictionary = {}
+	if candidates.is_empty() or _area == null:
+		return supported
+	var space := get_world_3d().direct_space_state
+	if space == null:
+		return supported
+
+	var pending: Array[PhysicsBody3D] = candidates.duplicate()
+	for _pass: int in MAX_SUPPORT_PASSES:
+		var still: Array[PhysicsBody3D] = []
+		for body: PhysicsBody3D in pending:
+			if _rests_on_stack(space, body, supported):
+				supported[body.get_instance_id()] = true
+			else:
+				still.append(body)
+		if still.size() == pending.size():
+			break  # a whole pass resolved nothing -- the remainder is unsupported
+		pending = still
+		if pending.is_empty():
+			break
+	return supported
+
+
+## True if `body` is held up by the plate itself or by something already known to
+## be. Probes with the body's OWN collision shapes dropped a few cm, rather than a
+## ray from its origin, so a barrel resting off-centre or overhanging the one below
+## is still seen to be resting on it.
+func _rests_on_stack(space: PhysicsDirectSpaceState3D, body: PhysicsBody3D, supported: Dictionary) -> bool:
+	var rid := body.get_rid()
+	var query := PhysicsShapeQueryParameters3D.new()
+	query.exclude = [rid]
+	query.collision_mask = _area.collision_mask
+	query.margin = 0.0
+	var body_y := body.global_position.y
+
+	for i: int in PhysicsServer3D.body_get_shape_count(rid):
+		query.shape_rid = PhysicsServer3D.body_get_shape(rid, i)
+		var xform := body.global_transform * PhysicsServer3D.body_get_shape_transform(rid, i)
+		xform.origin.y -= support_probe
+		query.transform = xform
+		for hit: Dictionary in space.intersect_shape(query, MAX_SUPPORT_HITS):
+			var other := hit.get("collider") as Node3D
+			if other == null:
+				continue
+			if other == self:
+				return true  # resting directly on the plate
+			# Only something genuinely BELOW can be holding this up. Without the
+			# height test a barrel sitting on the floor and merely touching the
+			# side of the stack would inherit the stack's support and be weighed.
+			# Known limit: this compares ORIGINS, so a body resting on its own
+			# scenery ABOVE floor level, jutting into the column and leaning on
+			# the pile, is still weighed (verified: reads 6.0 where the stack
+			# alone is 4.0). It takes a pedestal beside the plate to arrange; at
+			# floor level it cannot happen, because the plate collider is WIDER
+			# than the sense column, so anything sensed down there is genuinely
+			# on the plate. Erring toward counting is deliberate -- a puzzle
+			# that will not trigger reads as broken, one that triggers a little
+			# eagerly reads as generous.
+			if other.global_position.y < body_y and supported.has(other.get_instance_id()):
+				return true
+	return false
 
 
 func _set_pressed(value: bool) -> void:
@@ -191,6 +310,28 @@ func _animate(down: bool) -> void:
 	_tween.tween_property(_mesh, "position", _mesh_rest - Vector3(0, press_depth, 0) if down else _mesh_rest, press_time)
 	if _material:
 		_tween.tween_property(_material, "albedo_color", pressed_color if down else idle_color, press_time)
+
+
+## Raises the detector to `stack_height` so a whole pile is sensed. Keeps the
+## authored footprint and floor and only moves the ceiling, so the column still
+## starts just above the plate's own collider.
+func _setup_detector() -> void:
+	var shape_node: CollisionShape3D = null
+	for child in _area.get_children():
+		if child is CollisionShape3D and (child as CollisionShape3D).shape is BoxShape3D:
+			shape_node = child
+			break
+	if shape_node == null:
+		push_warning("PressurePlate '%s': DetectionArea has no BoxShape3D to raise." % name)
+		return
+	# An owned copy: the authored box is a SHARED sub-resource, so resizing it in
+	# place would give every plate in the level this one's column. Same trap as
+	# the material below.
+	var box: BoxShape3D = (shape_node.shape as BoxShape3D).duplicate()
+	var base_y := shape_node.position.y - box.size.y * 0.5
+	box.size = Vector3(box.size.x, stack_height, box.size.z)
+	shape_node.shape = box
+	shape_node.position.y = base_y + stack_height * 0.5
 
 
 func _setup_material() -> void:
