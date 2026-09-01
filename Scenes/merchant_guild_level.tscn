@@ -2,6 +2,7 @@
 
 [ext_resource type="PackedScene" uid="uid://bs72ogkvdd7d6" path="res://Scenes/brackeys-proto-controller-main/proto_controller/proto_controller.tscn" id="1_ofyp5"]
 [ext_resource type="PackedScene" path="res://Objects/Buildings/gate.tscn" id="2_h6bvw"]
+[ext_resource type="Script" uid="uid://cr60chex38utm" path="res://Components/interactable.gd" id="3_dcjck"]
 [ext_resource type="PackedScene" uid="uid://cpvew8y2sqp5e" path="res://Objects/torch.tscn" id="3_t21dm"]
 [ext_resource type="PackedScene" uid="uid://b3mxd4md0rime" path="res://Objects/barrel.tscn" id="4_nql5a"]
 [ext_resource type="PackedScene" uid="uid://dyn3u0d76bxey" path="res://Objects/box_large.tscn" id="5_xymbn"]
@@ -112,6 +113,13 @@ size = Vector3(19, 1, 3)
 
 [node name="Gate" parent="." unique_id=1475726628 instance=ExtResource("2_h6bvw")]
 transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, 0, 0, -13)
+
+[node name="Interactable" type="Node3D" parent="Gate" unique_id=802867971 node_paths=PackedStringArray("target")]
+script = ExtResource("3_dcjck")
+buyable = true
+cost = 10
+target = NodePath("..")
+method = &"open"
 
 [node name="CSGBox3D9" type="CSGBox3D" parent="." unique_id=2087973354]
 transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, -43, 12.5, 4)

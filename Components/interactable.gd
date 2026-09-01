@@ -15,6 +15,12 @@ signal interacted(interactor: Node)
 ## When false the component is ignored: no prompt, can't be triggered.
 @export var enabled: bool = true
 
+@export_group("Purchasing")
+@export var buyable: bool = false
+@export var cost: int = 0
+@export var target: Node
+@export var method: StringName
+
 @export_group("Dialogue")
 ## Name shown in the dialogue panel header. Blank = no speaker line.
 @export var speaker_name: String = ""
@@ -34,6 +40,10 @@ var _override_active: bool = false
 var _override_lines: Array[String] = []
 var _override_choices: Array[DialogueChoice] = []
 
+func _ready() -> void:
+	if buyable == true:
+		prompt = "Buy (" + str(cost) + ")"
+
 
 ## Triggered by PlayerInteractor on the interact action.
 func interact(interactor: Node) -> void:
@@ -42,6 +52,12 @@ func interact(interactor: Node) -> void:
 	interacted.emit(interactor)
 	var lines := _override_lines if _override_active else dialogue_lines
 	var choices := _override_choices if _override_active else dialogue_choices
+	if buyable:
+		if PlayerState.gold >= cost:
+			PlayerState.spend_gold(cost)
+			if target.has_method(method):
+				target.call(method)
+		return
 	if lines.is_empty() and choices.is_empty():
 		return
 	# The DialogueScreen script sits on the autoload's Screen child, not the
