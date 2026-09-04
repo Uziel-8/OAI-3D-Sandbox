@@ -1,0 +1,29 @@
+[gd_scene format=3 uid="uid://dpnrlg2pgnp5x"]
+
+[ext_resource type="PackedScene" uid="uid://ru2co7cvfhiy" path="res://Scenes/merchant_guild_level.tscn" id="1_56mpk"]
+[ext_resource type="Shader" uid="uid://klni2dkrjcle" path="res://Scenes/shader_test.gdshader" id="1_wso2r"]
+
+[sub_resource type="ShaderMaterial" id="ShaderMaterial_nca7j"]
+shader = ExtResource("1_wso2r")
+shader_parameter/enabled = true
+shader_parameter/dithering = true
+shader_parameter/colors = 12
+shader_parameter/dither_size = 1
+
+[node name="ShaderTest" type="SubViewportContainer" unique_id=526854021]
+texture_filter = 1
+material = SubResource("ShaderMaterial_nca7j")
+anchors_preset = 15
+anchor_right = 1.0
+anchor_bottom = 1.0
+grow_horizontal = 2
+grow_vertical = 2
+mouse_filter = 2
+stretch = true
+
+[node name="SubViewport" type="SubViewport" parent="." unique_id=801589633]
+handle_input_locally = false
+size = Vector2i(1920, 1080)
+render_target_update_mode = 4
+
+[node name="MerchantGuildLevel" parent="SubViewport" unique_id=1637015838 instance=ExtResource("1_56mpk")]
