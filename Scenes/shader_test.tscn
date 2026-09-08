@@ -7,7 +7,7 @@
 shader = ExtResource("1_wso2r")
 shader_parameter/enabled = true
 shader_parameter/dithering = true
-shader_parameter/colors = 12
+shader_parameter/colors = 8
 shader_parameter/dither_size = 1
 
 [node name="ShaderTest" type="SubViewportContainer" unique_id=526854021]
@@ -18,7 +18,6 @@ anchor_right = 1.0
 anchor_bottom = 1.0
 grow_horizontal = 2
 grow_vertical = 2
-mouse_filter = 2
 stretch = true
 
 [node name="SubViewport" type="SubViewport" parent="." unique_id=801589633]

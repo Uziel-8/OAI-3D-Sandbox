@@ -28,6 +28,16 @@ background_mode = 2
 sky = SubResource("Sky_h6bvw")
 glow_enabled = true
 
+[sub_resource type="StandardMaterial3D" id="StandardMaterial3D_5xker"]
+
+[sub_resource type="StandardMaterial3D" id="StandardMaterial3D_nca7j"]
+albedo_color = Color(0.3146416, 0.19671422, 0.15776786, 1)
+
+[sub_resource type="StandardMaterial3D" id="StandardMaterial3D_nf7p3"]
+albedo_color = Color(0.7333683, 0.6313401, 0.45380402, 1)
+metallic = 0.94
+metallic_specular = 0.74
+
 [node name="MerchantGuildLevel" type="Node3D" unique_id=1637015838]
 
 [node name="WorldEnvironment" type="WorldEnvironment" parent="." unique_id=206949990]
@@ -49,6 +59,7 @@ size = Vector3(60, 1, 50)
 transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, -42.5, 9, 0)
 use_collision = true
 size = Vector3(25, 1, 50)
+material = SubResource("StandardMaterial3D_5xker")
 
 [node name="CSGBox3D8" type="CSGBox3D" parent="." unique_id=193995255]
 transform = Transform3D(-4.371139e-08, 1, 0, -1, -4.371139e-08, 0, 0, 0, 1, -30.5, 12.5, 0)
@@ -160,26 +171,32 @@ size = Vector3(5, 2, 1)
 transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, -42.5, 10, -8)
 use_collision = true
 size = Vector3(11, 2, 3)
+material = SubResource("StandardMaterial3D_nca7j")
 
 [node name="CSGBox3D" type="CSGBox3D" parent="CSGBox3D16" unique_id=946465047]
 transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, 0, 0, -4)
 
 [node name="CSGBox3D2" type="CSGBox3D" parent="CSGBox3D16" unique_id=78740900]
 transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, 3, 0, 3)
+material = SubResource("StandardMaterial3D_nf7p3")
 
 [node name="CSGBox3D3" type="CSGBox3D" parent="CSGBox3D16" unique_id=606749505]
 transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, -3, 0, 3)
+material = SubResource("StandardMaterial3D_nf7p3")
 
 [node name="CSGBox3D15" type="CSGBox3D" parent="." unique_id=1765788793]
-transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, -31.5, 10, 10.5)
+transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, -31.58545, 10, 10.5)
 use_collision = true
-size = Vector3(3, 2, 12)
+size = Vector3(2.8291016, 2, 12)
 
 [node name="Torch" parent="." unique_id=849798539 instance=ExtResource("3_t21dm")]
 transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, -33.5, 14, -13)
 
 [node name="Torch3" parent="." unique_id=1127961342 instance=ExtResource("3_t21dm")]
 transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, -33.5, 7, -13)
+
+[node name="Torch9" parent="." unique_id=1742030883 instance=ExtResource("3_t21dm")]
+transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, -20.18697, 6.363963, -13)
 
 [node name="Torch2" parent="." unique_id=159994675 instance=ExtResource("3_t21dm")]
 transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, -52.5, 14, -13)
