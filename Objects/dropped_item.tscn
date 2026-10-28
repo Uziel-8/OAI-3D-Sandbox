@@ -1,0 +1,20 @@
+[gd_scene format=3 uid="uid://ct4fb2qitkion"]
+
+[ext_resource type="Script" uid="uid://cr60chex38utm" path="res://Components/interactable.gd" id="1_hd8g5"]
+
+[sub_resource type="SphereShape3D" id="SphereShape3D_g4v7s"]
+
+[sub_resource type="SphereMesh" id="SphereMesh_yf5fn"]
+radial_segments = 16
+rings = 8
+
+[node name="DroppedItem" type="RigidBody3D" unique_id=1541441213]
+
+[node name="CollisionShape3D" type="CollisionShape3D" parent="." unique_id=209188352]
+shape = SubResource("SphereShape3D_g4v7s")
+
+[node name="MeshInstance3D" type="MeshInstance3D" parent="." unique_id=2045270600]
+mesh = SubResource("SphereMesh_yf5fn")
+
+[node name="InteractableComponent" type="Node" parent="." unique_id=1673740148]
+script = ExtResource("1_hd8g5")

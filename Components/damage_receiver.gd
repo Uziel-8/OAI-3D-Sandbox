@@ -30,6 +30,8 @@ enum DeathBehavior {
 ## is driven by CON via PlayerProgression; enemies/props can set it per instance.
 @export var health_regen: float = 0.0
 
+@export var drop_table : DropTable
+
 var health: float
 
 
@@ -58,6 +60,7 @@ func take_damage(amount: float, source: Node = null) -> void:
 	damaged.emit(amount, health, source)
 	health_changed.emit(health, max_health)
 	if health <= 0.0:
+		roll_loot()
 		died.emit(source)
 		_award_experience()
 		match death_behavior:
@@ -66,6 +69,17 @@ func take_damage(amount: float, source: Node = null) -> void:
 			DeathBehavior.RELOAD_SCENE:
 				get_tree().reload_current_scene.call_deferred()
 
+func roll_loot():
+	print("Rolling Loot...")
+	var drops = drop_table.drops
+	var loot_roll := randf()
+	var cumulative := 0.0
+	for item in drops:
+		cumulative += drops[item]
+		if loot_roll < cumulative:
+			print(item)
+			return item
+	return ""
 
 ## Restores health up to max_health (no effect once dead). For potions/regen.
 func heal(amount: float) -> void:

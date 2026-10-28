@@ -1,0 +1,13 @@
+[gd_resource type="Resource" script_class="DropTable" format=3 uid="uid://dwojxwn4w57na"]
+
+[ext_resource type="Script" uid="uid://dsiqdx2ataio6" path="res://Scripts/NPCs/drop_table.gd" id="1_yon2k"]
+
+[resource]
+script = ExtResource("1_yon2k")
+drops = Dictionary[String, float]({
+"Coin": 0.5,
+"Mana Crystal": 0.1,
+"Spider Eye": 0.1,
+"Spider Leg": 0.3
+})
+metadata/_custom_type_script = "uid://dsiqdx2ataio6"

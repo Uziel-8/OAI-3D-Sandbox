@@ -38,6 +38,7 @@
 [ext_resource type="PackedScene" path="res://Objects/pressure_plate.tscn" id="36_fq0f7"]
 [ext_resource type="PackedScene" uid="uid://bm8r512hnlo2v" path="res://Objects/Buildings/test_house_1.tscn" id="37_bp4cd"]
 [ext_resource type="PackedScene" uid="uid://dyn3u0d76bxey" path="res://Objects/box_large.tscn" id="38_d3deu"]
+[ext_resource type="PackedScene" uid="uid://ct4fb2qitkion" path="res://Objects/dropped_item.tscn" id="39_csjfj"]
 
 [sub_resource type="ProceduralSkyMaterial" id="ProceduralSkyMaterial_5xgho"]
 sky_horizon_color = Color(0.66224277, 0.6717428, 0.6867428, 1)
@@ -971,5 +972,8 @@ transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, -1.1244812, -1.6014433, -7.15
 
 [node name="BoxLarge3" parent="TestHouse1" unique_id=316073952 instance=ExtResource("38_d3deu")]
 transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, -4.6062775, 2.2114582, -4.269497)
+
+[node name="DroppedItem" parent="." unique_id=1541441213 instance=ExtResource("39_csjfj")]
+transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, -150, 1.5, 5)
 
 [editable path="Guard2"]
