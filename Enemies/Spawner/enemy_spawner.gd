@@ -77,7 +77,7 @@ func _try_spawn() -> void:
 
 	var enemy := enemy_scene.instantiate()
 	var parent := get_parent()
-	var spawn_pos := _spawn_position()
+	var spawn_pos = _spawn_position()
 	# Set the position BEFORE adding to the tree: add_child runs the enemy's
 	# _ready synchronously, and self-contained enemies (e.g. SpiderWalker) read
 	# their spawn position there to anchor wander/AI. Convert to the parent's

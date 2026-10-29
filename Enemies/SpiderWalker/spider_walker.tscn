@@ -8,6 +8,7 @@
 [ext_resource type="PackedScene" uid="uid://dvito1lehljda" path="res://Components/damage_receiver.tscn" id="5_receiver"]
 [ext_resource type="PackedScene" path="res://Components/health_bar_3d.tscn" id="6_healthbar"]
 [ext_resource type="Resource" uid="uid://dwojxwn4w57na" path="res://Resources/NPCs/spider_walker_drop_table.tres" id="7_4bp6r"]
+[ext_resource type="PackedScene" uid="uid://ct4fb2qitkion" path="res://Objects/dropped_item.tscn" id="8_lokcc"]
 
 [sub_resource type="CapsuleShape3D" id="CapsuleShape3D_body"]
 radius = 0.35
@@ -59,6 +60,7 @@ cooldown = 1.0
 max_health = 50.0
 xp_reward = 25.0
 drop_table = ExtResource("7_4bp6r")
+drop_scene = ExtResource("8_lokcc")
 
 [node name="HealthBar3D" parent="." unique_id=1471280850 instance=ExtResource("6_healthbar")]
 transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, 0, 1.1, 0)

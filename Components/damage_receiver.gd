@@ -31,6 +31,7 @@ enum DeathBehavior {
 @export var health_regen: float = 0.0
 
 @export var drop_table : DropTable
+@export var drop_scene : PackedScene
 
 var health: float
 
@@ -61,6 +62,14 @@ func take_damage(amount: float, source: Node = null) -> void:
 	health_changed.emit(health, max_health)
 	if health <= 0.0:
 		roll_loot()
+		#var dropped_item = drop_scene.instantiate()
+		#var parent : CharacterBody3D = get_parent()
+		#var spawn_pos = parent.global_position
+		#if dropped_item != null:
+			#dropped_item.position = parent.to_local(spawn_pos)
+			#parent.add_child(dropped_item)
+		#else:
+			#return
 		died.emit(source)
 		_award_experience()
 		match death_behavior:
@@ -71,6 +80,12 @@ func take_damage(amount: float, source: Node = null) -> void:
 
 func roll_loot():
 	print("Rolling Loot...")
+	var dropped_item = drop_scene.instantiate()
+	var parent : CharacterBody3D = get_parent()
+	var spawn_pos = parent.global_position
+	dropped_item.position = parent.to_local(spawn_pos)
+	parent.add_child(dropped_item)
+
 	var drops = drop_table.drops
 	var loot_roll := randf()
 	var cumulative := 0.0
