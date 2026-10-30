@@ -62,14 +62,6 @@ func take_damage(amount: float, source: Node = null) -> void:
 	health_changed.emit(health, max_health)
 	if health <= 0.0:
 		roll_loot()
-		#var dropped_item = drop_scene.instantiate()
-		#var parent : CharacterBody3D = get_parent()
-		#var spawn_pos = parent.global_position
-		#if dropped_item != null:
-			#dropped_item.position = parent.to_local(spawn_pos)
-			#parent.add_child(dropped_item)
-		#else:
-			#return
 		died.emit(source)
 		_award_experience()
 		match death_behavior:
@@ -79,6 +71,8 @@ func take_damage(amount: float, source: Node = null) -> void:
 				get_tree().reload_current_scene.call_deferred()
 
 func roll_loot():
+	if drop_table == null or drop_scene == null:
+		return
 	print("Rolling Loot...")
 	var dropped_item = drop_scene.instantiate()
 	var parent : CharacterBody3D = get_parent()
@@ -95,6 +89,65 @@ func roll_loot():
 			print(item)
 			return item
 	return ""
+
+#Step 1 — Guard the two exports
+#take_damage calls roll_loot() on every death, so the player's receiver and the barrel's both land in here with drop_table and drop_scene unset. Bail out first:
+#
+#
+#if drop_table == null or drop_scene == null:
+	#return ""
+#Without this, killing the player or a barrel throws "Cannot call method 'instantiate' on a null value" before the death behaviour ever runs.
+#
+#Step 2 — Move the roll above the spawn
+#Right now lines 83-87 spawn the sphere, and then lines 89-96 roll the table. So the roll result is thrown away and an item appears regardless of the outcome. Cut the roll block up to the top of the function and keep its result in a variable:
+#
+#
+#var dropped_id := ""
+#var loot_roll := randf()
+#var cumulative := 0.0
+#for item in drop_table.drops:
+	#cumulative += drop_table.drops[item]
+	#if loot_roll < cumulative:
+		#dropped_id = item
+		#break
+#if dropped_id == "":
+	#return ""          # table rolled nothing -- spawn nothing
+#(Your spider's weights sum to exactly 1.0 so it always hits, but a table that sums to 0.6 should mean a 40% chance of no drop, and that only works if the spawn comes after the roll.)
+#
+#Step 3 — Parent the drop to the LEVEL, not the dying body
+#This is the actual reason you see nothing. get_parent() on a DamageReceiver is the body the component sits on — the spider. So the drop becomes a child of the spider, and take_damage then runs get_parent().queue_free(), which frees the spider and everything under it, including the drop you just added.
+#
+#You need the body's parent, which is the level:
+#
+#
+#var body := get_parent() as Node3D
+#var level := body.get_parent()
+#if level == null:
+	#return dropped_id
+#Note in enemy_spawner.gd:86-87 — the lines you borrowed — parent is already a sibling of the spawner, which is why it works there and not here.
+#
+#Step 4 — Convert the position into the level's space
+#With parent being the body, parent.to_local(parent.global_position) is always Vector3.ZERO — it's converting a point into the space of the thing it came from. Now that the new parent is the level, the conversion means something:
+#
+#
+#var dropped_item := drop_scene.instantiate() as Node3D
+#dropped_item.position = level.to_local(body.global_position)
+#level.add_child(dropped_item)
+#return dropped_id
+#Keep position before add_child — that's the physics-sync rule in CLAUDE.md. A PhysicsBody3D moved after it enters the tree doesn't reach the physics server until the frame ends, so for one frame its collider sits at the world origin.
+#
+#Also drop the : CharacterBody3D type hint you have on line 84. It's fine for the spider, but the moment you give a drop table to a barrel or a spawner (StaticBody3D) that typed assignment hard-errors.
+#
+#Step 5 — Delete the dead commented block
+#Lines 65-72 in take_damage are the old copy of this code and have the same corpse-parenting bug. Worth removing so you don't come back and re-enable it later.
+#
+#Two things that are next, not now, so you know what to expect when the sphere starts appearing:
+#
+#It won't be pickable yet. dropped_item.tscn's root has an Interactable child, but the root node isn't in group "interactable", so PlayerInteractor's raycast skips it entirely — see the note at the top of interactable.gd. Add groups=["interactable"] to the root. (gold_stack.tscn and item_pickup.tscn have the same gap; bedroll.tscn is the one that does it right.)
+#Your table keys aren't item ids. "Coin" / "Spider Leg" / "Mana Crystal" / "Spider Eye" have no match in MockItemDatabase, whose ids are gold_pouch, wolf_pelt, mana_draught and so on. When you get to the inventory link, the cheap path is to return the id from roll_loot(), spawn Objects/item_pickup.tscn instead of dropped_item.tscn, and set item_id on it before add_child — item_pickup.gd already resolves the id, names the prompt, tints the mesh and calls PlayerInventory.add_item(), so that's the whole "link it to the inventory" step done for you.
+#
+#
+
 
 ## Restores health up to max_health (no effect once dead). For potions/regen.
 func heal(amount: float) -> void:
