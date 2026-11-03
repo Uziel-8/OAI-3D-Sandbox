@@ -107,8 +107,10 @@ func _spawn_position() -> Vector3:
 
 func _prune_dead() -> void:
 	# filter() returns an untyped Array, so assign() it back rather than a plain
-	# `=`, which would fail to convert Array -> Array[Node].
-	_alive.assign(_alive.filter(func(e: Node) -> bool: return is_instance_valid(e)))
+	# `=`, which would fail to convert Array -> Array[Node]. The lambda's parameter
+	# is deliberately UNTYPED: a dead enemy is a freed object, and passing one to a
+	# `Node`-typed parameter errors before is_instance_valid() ever sees it.
+	_alive.assign(_alive.filter(func(e) -> bool: return is_instance_valid(e)))
 
 
 func _player_in_range() -> bool:

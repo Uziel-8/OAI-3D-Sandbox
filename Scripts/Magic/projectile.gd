@@ -87,7 +87,9 @@ func _impact(body: Node) -> void:
 		_damage_dealer.try_deal(body)
 	_visual.visible = false
 	set_physics_process(false)
-	monitoring = false
+	# Deferred: Area3D forbids toggling monitoring from inside its own body_entered.
+	# _spent already ignores any further contacts until it takes effect.
+	set_deferred("monitoring", false)
 	if _impact_particles:
 		_impact_particles.restart()
 		_impact_particles.emitting = true

@@ -9,8 +9,6 @@ extends Control
 ## pulled into the slots when something outside changes it, and the slots are
 ## pushed back after a drag/drop rearrange. `_syncing` keeps that from ping-ponging.
 
-const GRID_COLUMNS := 8
-const GRID_ROWS := 5
 const CARRY_CAPACITY := 60.0
 
 const SlotScene := preload("res://Scenes/UI/inventory_slot.tscn")
@@ -146,8 +144,13 @@ func _refresh_character_stats() -> void:
 		_cs_stamina_bar.max_value = state.max_stamina
 		_cs_stamina_bar.value = state.stamina
 
+## One slot per unit of PlayerInventory.capacity, so the bag's size is defined in
+## one place. The column count is set on ItemGrid in the scene; extra rows scroll.
 func _build_grid() -> void:
-	for i in range(GRID_COLUMNS * GRID_ROWS):
+	var inventory := _inventory()
+	if inventory == null:
+		return
+	for i in range(inventory.capacity):
 		var slot := SlotScene.instantiate() as InventorySlot
 		_item_grid.add_child(slot)
 		_grid_slots.append(slot)

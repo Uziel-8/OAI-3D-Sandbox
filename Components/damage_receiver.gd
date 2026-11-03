@@ -74,7 +74,6 @@ func roll_loot():
 	if drop_table == null or drop_scene == null:
 		return
 	print("Rolling Loot...")
-	var dropped_item = drop_scene.instantiate()
 	var body := get_parent()
 	var level := body.get_parent()
 	
@@ -90,6 +89,9 @@ func roll_loot():
 	for item in drops:
 		cumulative += drops[item]
 		if loot_roll < cumulative:
+			# Instanced only once something has actually dropped -- made before the
+			# roll, a miss would leave an orphan node that's never added or freed.
+			var dropped_item = drop_scene.instantiate()
 			dropped_item.item_id = item
 			dropped_id = item
 			dropped_item.position = level.to_local(body.global_position)

@@ -45,7 +45,7 @@ static func make_starting_inventory() -> Array[InventoryItem]:
 	var items: Array[InventoryItem] = []
 	items.append(_make("torch", "Torch", "A pitch-soaked torch. Sheds light in dark places.",
 		InventoryItem.ItemType.MISC, InventoryItem.EquipSlot.NONE, InventoryItem.Rarity.COMMON,
-		3, 5, 1.0, 2, Color("d68a3c")))
+		3, 12, 1.0, 2, Color("d68a3c")))
 	items.append(_make("healing_potion", "Healing Potion", "Restores a modest amount of health when consumed.",
 		InventoryItem.ItemType.CONSUMABLE, InventoryItem.EquipSlot.NONE, InventoryItem.Rarity.COMMON,
 		4, 10, 0.5, 15, Color("c94b3f")))
@@ -61,9 +61,6 @@ static func make_starting_inventory() -> Array[InventoryItem]:
 	items.append(_make("hunting_knife", "Hunting Knife", "Light, quick, and easy to conceal.",
 		InventoryItem.ItemType.WEAPON, InventoryItem.EquipSlot.MAIN_HAND, InventoryItem.Rarity.COMMON,
 		1, 1, 1.2, 18, Color("9aa0a8"), {"Damage": 4}))
-	items.append(_make("gold_pouch", "Gold Coins", "Currency accepted almost everywhere.",
-		InventoryItem.ItemType.MISC, InventoryItem.EquipSlot.NONE, InventoryItem.Rarity.COMMON,
-		132, 999, 0.01, 1, Color("d6b23c")))
 	items.append(_make("iron_ore", "Iron Ore", "Raw ore, could be smelted or sold.",
 		InventoryItem.ItemType.MISC, InventoryItem.EquipSlot.NONE, InventoryItem.Rarity.COMMON,
 		5, 20, 2.0, 4, Color("6f6a63")))

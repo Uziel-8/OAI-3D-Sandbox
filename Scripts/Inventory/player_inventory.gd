@@ -20,8 +20,8 @@ signal inventory_changed
 signal item_added(item: InventoryItem, count: int)
 signal item_removed(item: InventoryItem, count: int)
 
-## Backpack size. Must match the InventoryScreen's grid (8 x 5); the screen reads
-## this rather than the reverse, so widening the bag is a change here.
+## Backpack size. The InventoryScreen builds one grid slot per unit of this, so
+## widening the bag is a change here and nowhere else.
 @export var capacity: int = 40
 ## Seeds the bag with MockItemDatabase's placeholder pool on startup. Turn off for
 ## an empty start once real loot exists.
