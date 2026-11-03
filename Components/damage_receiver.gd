@@ -77,25 +77,30 @@ func roll_loot():
 	var dropped_item = drop_scene.instantiate()
 	var body := get_parent()
 	var level := body.get_parent()
-	dropped_item.position = level.to_local(body.global_position)
-	level.add_child(dropped_item)
-
+	
 	var drops = drop_table.drops
 	var dropped_id := ""
 	var loot_roll := randf()
 	var cumulative := 0.0
 	
 	if level == null:
+		print("level null")
 		return dropped_id
 	
 	for item in drops:
 		cumulative += drops[item]
 		if loot_roll < cumulative:
+			dropped_item.item_id = item
 			dropped_id = item
+			dropped_item.position = level.to_local(body.global_position)
+			level.add_child(dropped_item)
 			print(item)
 			return item
+	
 	if dropped_id == "":
+		print("id empty")
 		return ""
+
 
 
 ## Restores health up to max_health (no effect once dead). For potions/regen.

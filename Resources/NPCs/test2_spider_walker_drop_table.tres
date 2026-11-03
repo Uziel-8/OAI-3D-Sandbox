@@ -1,0 +1,11 @@
+[gd_resource type="Resource" script_class="DropTable" format=3 uid="uid://cw60a18unbhi6"]
+
+[ext_resource type="Script" uid="uid://dsiqdx2ataio6" path="res://Scripts/NPCs/drop_table.gd" id="1_np1vi"]
+
+[resource]
+script = ExtResource("1_np1vi")
+drops = Dictionary[String, float]({
+"healing_potion": 0.5,
+"torch": 0.5
+})
+metadata/_custom_type_script = "uid://dsiqdx2ataio6"

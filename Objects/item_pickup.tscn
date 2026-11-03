@@ -1,6 +1,6 @@
-[gd_scene load_steps=5 format=3]
+[gd_scene format=3 uid="uid://cjiwlwkxrxjdl"]
 
-[ext_resource type="Script" path="res://Objects/item_pickup.gd" id="1_pickup"]
+[ext_resource type="Script" uid="uid://vhy0en5xto30" path="res://Objects/item_pickup.gd" id="1_pickup"]
 [ext_resource type="Script" uid="uid://cr60chex38utm" path="res://Components/interactable.gd" id="2_interact"]
 
 [sub_resource type="BoxMesh" id="BoxMesh_pickup"]
@@ -9,19 +9,20 @@ size = Vector3(0.35, 0.35, 0.35)
 [sub_resource type="BoxShape3D" id="BoxShape3D_pickup"]
 size = Vector3(0.35, 0.35, 0.35)
 
-[node name="ItemPickup" type="RigidBody3D"]
+[node name="ItemPickup" type="RigidBody3D" unique_id=1425393427 groups=["interactable"]]
 script = ExtResource("1_pickup")
 
-[node name="Mesh" type="MeshInstance3D" parent="."]
+[node name="Mesh" type="MeshInstance3D" parent="." unique_id=2046185552]
 transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, 0, 0.175, 0)
 mesh = SubResource("BoxMesh_pickup")
 
-[node name="CollisionShape3D" type="CollisionShape3D" parent="."]
+[node name="CollisionShape3D" type="CollisionShape3D" parent="." unique_id=708324116]
 transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, 0, 0.175, 0)
 shape = SubResource("BoxShape3D_pickup")
 
-[node name="Interactable" type="Node" parent="."]
+[node name="Interactable" type="Node" parent="." unique_id=1984896966]
 script = ExtResource("2_interact")
 prompt = "Pick Up"
+speaker_name = "test"
 
 [connection signal="interacted" from="Interactable" to="." method="_on_interacted"]
